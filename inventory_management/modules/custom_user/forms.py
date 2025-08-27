@@ -9,7 +9,7 @@ from inventory_management.models import CustomUser
 class CustomUserForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ['username', 'id_number', 'license_number', 'phone_number1', 'phone_number2', 'passport_number',
+        fields = ['username', 'phone_number1', 'phone_number2',
                   'first_name', 'last_name', 'email', 'groups']
 
     def clean_id_number(self):

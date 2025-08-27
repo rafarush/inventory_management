@@ -101,6 +101,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'inventory_management.CustomUser'
+LOGIN_URL = 'auth/login/'
+LOGIN_REDIRECT_URL = ''
 
 
 # Internationalization
@@ -119,8 +121,24 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# Email settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'  # o 127.0.0.1 si prefieres
+EMAIL_PORT = 1025         # puerto SMTP de MailHog
+EMAIL_USE_TLS = False     # MailHog no usa TLS por defecto
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+#DEFAULT_FROM_EMAIL = 'tu-email@example.com'  # Cambia al email que uses como remitente

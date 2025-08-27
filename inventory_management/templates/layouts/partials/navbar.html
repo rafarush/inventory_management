@@ -1,0 +1,82 @@
+{% load static %}
+
+<div class="navbar-custom">
+    <div class="topbar">
+        <div class="topbar-menu d-flex align-items-center gap-1">
+
+
+
+            <!-- Sidebar Menu Toggle Button -->
+            <button id="toggle-menu-btn" class="button-toggle-menu">
+                <i class="mdi mdi-menu"></i>
+            </button>
+            {% if not is_client %}
+            	<!-- Dropdown Menu -->
+                <div class="dropdown d-none d-xl-block">
+                    <a class="nav-link dropdown-toggle waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                        Create New
+                        <i class="mdi mdi-chevron-down ms-1"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <!-- item-->
+                        <a href="{% url 'custom_user_create' %}" class="dropdown-item">
+                            <i class="fe-user me-1"></i>
+                            <span>Create Users</span>
+                        </a>
+                        <!--
+                        <a href="#" class="menu-link" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                            <span class="menu-icon"><i data-feather="user-plus"></i></span>
+                            <span class="menu-text"> Create Users </span>
+                        </a> -->
+
+                        {% if is_admin %}
+                            <!-- item-->
+                            <a href="{% url 'product_create' %}" class="dropdown-item">
+                                <i class="fe-briefcase me-1"></i>
+                                <span>Create Product</span>
+                            </a>
+                        	<!-- item-->
+                            <a href="{% url 'product_category_create' %}" class="dropdown-item">
+                                <i class="fe-file-text me-1"></i>
+                                <span>Create Product Category</span>
+                            </a>
+                        {% endif %}
+
+
+                        <div class="dropdown-divider"></div>
+
+                        <!-- item-->
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="fe-headphones me-1"></i>
+                            <span>Example Button</span>
+                        </a>
+
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- User Dropdown -->
+            <li class="dropdown" style="list-style-type: none">
+                <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light" data-bs-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                    <img src="{% static 'assets/images/users/default-user.png' %}" alt="user-image" class="rounded-circle">
+                    <span class="ms-1 d-none d-md-inline-block">
+                        {{ user.username }} <i class="mdi mdi-chevron-down"></i>
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
+
+                    <form method="post" action="{% url 'logout' %}" style="margin: 0;">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item notify-item">
+                            <i class="fe-log-out"></i>
+                            <span>Log out</span>
+                        </button>
+                    </form>
+
+                </div>
+            </li>
+        </div>
+    </div>
+</div>
+<!-- ========== Topbar End ========== -->
+
