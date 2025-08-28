@@ -10,7 +10,7 @@ urlpatterns = [
     path('delete/<int:pk>/', CustomUserDelete.as_view(), name='custom_user_delete'),
     path('detail/<int:pk>', CustomUserDetail.as_view(), name='custom_user_detail'),
     path('update/<int:pk>/', CustomUserUpdate.as_view(), name='custom_user_update'),
-    path('get_clients/', CustomUserClientsList.as_view(), name='custom_user_get_clients'),
+    path('clients/', CustomUserClientsList.as_view(), name='custom_user_get_clients'),
     path('client/<int:pk>/', CustomUserDetailsJSON.as_view(), name='custom_user_get_json'),
     path('form/', CustomUserFormView.as_view(), name='custom_user_form'),  # Nueva ruta
 ]

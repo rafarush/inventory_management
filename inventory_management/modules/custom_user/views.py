@@ -38,9 +38,7 @@ class CustomUserClientsList(LoginRequiredMixin, PermissionRequiredMixin, ListVie
         raise PermissionDenied("You do not have permission to perform this action.")
 
     def get_queryset(self):
-        if self.request.user.groups.filter(name='Administrators').exists():
-            return CustomUser.objects.filter(groups__name='Clients')
-        elif self.request.user.groups.filter(name='Agents').exists():
+        if self.request.user.groups.filter(name='Administrators').exists() or self.request.user.groups.filter(name='Agents').exists():
             return CustomUser.objects.filter(groups__name='Clients')
 
 
