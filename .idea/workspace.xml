@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6b0e834b-983e-4ec9-9e98-b2fd7f8f77df" name="Changes" comment="project almost set up">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+    <list default="true" id="6b0e834b-983e-4ec9-9e98-b2fd7f8f77df" name="Changes" comment="requirements.txt added">
       <change beforePath="$PROJECT_DIR$/djangoProject/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/djangoProject/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory_management/modules/custom_user/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/inventory_management/modules/custom_user/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory_management/modules/custom_user/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/inventory_management/modules/custom_user/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +106,7 @@
       <workItem from="1756271919566" duration="308000" />
       <workItem from="1756273902450" duration="10600000" />
       <workItem from="1756302633100" duration="1952000" />
-      <workItem from="1756336231892" duration="1258000" />
+      <workItem from="1756336231892" duration="3006000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -128,7 +124,23 @@
       <option name="project" value="LOCAL" />
       <updated>1756302725494</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="test-deploy">
+      <option name="closed" value="true" />
+      <created>1756389446651</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1756389446651</updated>
+    </task>
+    <task id="LOCAL-00004" summary="requirements.txt added">
+      <option name="closed" value="true" />
+      <created>1756390223847</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1756390223847</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -137,7 +149,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit" />
     <MESSAGE value="project almost set up" />
-    <option name="LAST_COMMIT_MESSAGE" value="project almost set up" />
+    <MESSAGE value="test-deploy" />
+    <MESSAGE value="requirements.txt added" />
+    <option name="LAST_COMMIT_MESSAGE" value="requirements.txt added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
