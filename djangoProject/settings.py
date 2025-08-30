@@ -11,23 +11,27 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+import psycopg2
+from psycopg2 import OperationalError
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-cfz6=kd1i8c#0^9^1^vtbz)j9yeccoa_-$mxfrw%13p&)xpn@p'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['inventory-management-06qw.onrender.com', 'localhost']
-CSRF_TRUSTED_ORIGINS = ['https://inventory-management-06qw.onrender.com']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
 
 # Application definition
 
@@ -74,18 +78,46 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+def can_connect_to_supabase():
+    try:
+        conn = psycopg2.connect(
+            dbname=os.getenv('DB_NAME'),
+            user=os.getenv('DB_USER'),
+            password=os.getenv('DB_PASSWORD'),
+            host=os.getenv('DB_HOST'),
+            port=os.getenv('DB_PORT'),
+            connect_timeout=10
+        )
+        conn.close()
+        return True
+    except OperationalError:
+        return False
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.ztgzttitpzqnsytjjqak',
-        'PASSWORD': 'e4BmntcqEpdyHbRt',
-        'HOST': 'aws-1-us-east-1.pooler.supabase.com',
-        'PORT': '5432',
+
+if can_connect_to_supabase():
+    print("Conexión real a Supabase exitosa")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST'),
+            'PORT': os.getenv('DB_PORT'),
+        }
     }
-}
-
+else:
+    print("Supabase no disponible, usando PostgreSQL local")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('LOCAL_DB_NAME'),
+            'USER': os.getenv('LOCAL_DB_USER'),
+            'PASSWORD': os.getenv('LOCAL_DB_PASSWORD'),
+            'HOST': os.getenv('LOCAL_DB_HOST'),
+            'PORT': os.getenv('LOCAL_DB_PORT'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -109,7 +141,6 @@ AUTH_USER_MODEL = 'inventory_management.CustomUser'
 LOGIN_URL = 'auth/login/'
 LOGIN_REDIRECT_URL = ''
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -120,7 +151,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -136,14 +166,11 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-
 # Email settings
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'localhost'  # o 127.0.0.1 si prefieres
-EMAIL_PORT = 1025         # puerto SMTP de MailHog
-EMAIL_USE_TLS = False     # MailHog no usa TLS por defecto
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-#DEFAULT_FROM_EMAIL = 'tu-email@example.com'  # Cambia al email que uses como remitente
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 1025))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
