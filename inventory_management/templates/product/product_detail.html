@@ -1,0 +1,58 @@
+{% extends "layouts/base/base.html" %}
+{% load static %}
+{% block title %}
+	Product: {{ product.name }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h1>{{ product.name }}</h1>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <ul class="nav nav-pills nav-justified">
+                                <li class="nav-item">
+                                    <a data-bs-toggle="tab" aria-expanded="false" class="nav-link product-thumb active show">
+                                        {% if product.image != null and product.image.url != "" %}
+                                            <img src="{{ product.image.url }}" alt="Product image" class="img-fluid mx-auto d-block rounded" />
+                                        {% else %}
+                                            <img src="{% static 'assets/images/no-image.jpg' %}" alt="Product image" class="img-fluid">
+                                        {% endif %}
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div> <!-- end col -->
+                        <div class="col-lg-7">
+                            <div class="ps-xl-3 mt-3 mt-xl-0">
+                                <h4 class="mb-3">{{ product.name }}</h4>
+                                <h4 class="mb-3">ID: <span class="text-body me-2">{{ product.id }}</span></h4>
+                                <h4 class="mb-4">Price: <span class="text-body me-2">${{ product.price }} USD</span></h4>
+                                {% if product.stock > 0 %}
+                                    <h4><span class="badge bg-soft-success text-success mb-4">Stock: {{ product.stock }}</span></h4>
+                                {% else %}
+                                    <h4><span class="badge bg-soft-danger text-danger mb-4">No stock</span></h4>
+                                {% endif %}
+
+                                <p class="text-muted mb-4">{{ product.description}}</p>
+                            </div>
+                        </div> <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </div>
+            </div> <!-- end card-->
+        </div> <!-- end col-->
+    </div>
+    <!-- end row-->
+    {% if is_admin %}
+        <a class="btn btn-danger btn-sm" href="{% url 'product_delete' pk=product.id %} %}">Delete</a>
+    {% endif %}
+    {% if is_admin or is_agent %}
+        <a class="btn btn-outline-warning btn-sm" href="{% url 'product_update' pk=product.id %}">Modify</a>
+    {% endif %}
+    <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}">Back</a>
+{% endblock %}

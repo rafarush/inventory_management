@@ -1,0 +1,6 @@
+
+                <form id="createUserForm" method="post" action="{% url 'custom_user_create' %}">
+                    {% csrf_token %}
+                    <!-- Aquí se incluirán los campos del formulario -->
+                    {{ form.as_p }}
+                </form>

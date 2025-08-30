@@ -1,0 +1,226 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+
+    <!-- Plugins css -->
+    <link href="{% static 'assets/libs/flatpickr/flatpickr.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/libs/selectize/css/selectize.bootstrap3.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Theme Config Js -->
+    <script src="{% static 'assets/js/head.js' %}"></script>
+
+    <!-- Bootstrap css -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- App css -->
+    <link href="{% static 'assets/css/app.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Icons css -->
+    <link href="{% static 'assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Custom css -->
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Modal Form CSS -->
+    <style>
+        .modal-dialog-centered {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1050;
+            width: 80%;
+            max-width: 800px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            border-radius: 0.3rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            padding: 1rem;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .modal-body {
+            padding: 1rem 0;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-close i {
+            pointer-events: none;
+        }
+
+        .mb-3 label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .fixed-size-description {
+            width: 100%;
+            height: 70px;
+            resize: none;
+            overflow: auto;
+        }
+
+    </style>
+
+    {% block styles %}{% endblock %}
+</head>
+<body>
+
+    {% include 'layouts/partials/navbar.html' %}
+
+    <div class="d-flex flex-column min-vh-100">
+        <div class="d-flex flex-grow-1">
+            <!-- Menu -->
+            <div id="app-menu" class="app-menu">
+                <div class="logo-box">
+                    <a href="{% url 'index' %}" class="logo-dark">
+                        <img src="{% static 'assets/images/logo-dark.png'%}" alt="dark logo" class="logo-lg">
+                        <img src="{% static 'assets/images/logo-sm.png'%}" alt="small logo" class="logo-sm">
+                    </a>
+                </div>
+
+                <div class="scrollbar">
+                    <ul class="menu">
+                        <li class="menu-title">Sections</li>
+                        <li class="menu-item">
+                            <a href="{% url 'product_list' %}" class="menu-link">
+                                <span class="menu-icon"><i data-feather="shopping-cart"></i></span>
+                                <span class="menu-text"> Products </span>
+                            </a>
+                        </li>
+                        {% if not is_client %}
+                            {% if is_admin %}
+                                <li class="menu-item">
+                                    <a href="{% url 'product_category_list' %}" class="menu-link">
+                                        <span class="menu-icon"><i data-feather="tag"></i></span>
+                                        <span class="menu-text"> Product Categories </span>
+                                    </a>
+                                </li>
+
+                            	<li class="menu-item">
+                                    <a href="#" data-bs-toggle="collapse" class="menu-link">
+                                        <span class="menu-icon"><i data-feather="truck"></i></span>
+                                        <span class="menu-text"> Shipments </span>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{% url 'order_types_list' %}" class="menu-link">
+
+                                        <span class="menu-icon"><i class="dripicons-document-new"></i></span>
+                                        <span class="menu-text"> Order Types </span>
+                                    </a>
+                                </li>
+
+                                <li class="menu-item">
+                                    <a href="{% url 'custom_user_list' %}" class="menu-link">
+                                        <span class="menu-icon"><i class="mdi mdi-account-multiple"></i></span>
+                                        <span class="menu-text"> Users </span>
+                                    </a>
+                                </li>
+
+                            {% endif %}
+                            {% if is_agent or is_admin %}
+
+                                <li class="menu-item">
+                                    <a href="{% url 'order_list' %}" class="menu-link">
+                                        <span class="menu-icon"><i data-feather="box"></i></span>
+                                        <span class="menu-text"> Orders </span>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="#menuDashboards" data-bs-toggle="collapse" class="menu-link">
+                                        <span class="menu-icon"><i class="fe-file-text"></i></span>
+                                        <span class="menu-text"> Records </span>
+                                        <span class="menu-arrow"></span>
+                                        <!--<span class="badge bg-success rounded-pill ms-auto">4</span>-->
+                                    </a>
+                                    <div class="collapse" id="menuDashboards">
+                                        <ul class="sub-menu">
+                                            <li class="menu-item">
+                                                <a href="{% url 'updated_product_list' %}" class="menu-link">
+                                                    <span class="menu-text">Updated Products</span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="{% url 'custom_user_get_clients' %}" class="menu-link">
+                                                    <span class="menu-text">Clients</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            {% endif %}
+
+                        {% endif %}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <!-- End Menu -->
+
+
+
+            <!-- Main Content -->
+            <div class="main-content flex-grow-1">
+                <div class="page-content">
+                    <div class="container-fluid">
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+            <!-- End Main Content -->
+        </div>
+    </div>
+
+
+    <!-- Vendor js -->
+    <script src="{% static 'assets/js/vendor.min.js' %}"></script>
+
+    <!-- App js -->
+    <script src="{% static 'assets/js/app.min.js' %}"></script>
+
+    <!-- Plugins js-->
+    <script src="{% static 'assets/libs/flatpickr/flatpickr.min.js' %}"></script>
+    <script src="{% static 'assets/libs/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'assets/libs/selectize/js/standalone/selectize.min.js' %}"></script>
+
+    <!-- Dashboard 1 init js-->
+    <script src="{% static 'assets/js/pages/dashboard-1.init.js' %}"></script>
+
+    {% block scripts %}
+        <script src="{% static 'assets/js/toggle-menu-action/toggle-menu-action.js' %}"></script>
+        <script>
+            $(document).ready(function() {
+                $('.select2').select2();
+            });
+        </script>
+    {% endblock %}
+</body>
+</html>
+

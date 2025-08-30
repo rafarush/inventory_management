@@ -1,0 +1,32 @@
+# Ignorar archivo de variables de entorno
+.env
+
+# Ignorar archivos compilados de Python
+*.pyc
+__pycache__/
+
+# Ignorar migraciones de Django si se desea (opcional)
+*/migrations/*.pyc
+*/migrations/__pycache__/
+
+# Ignorar base de datos local SQLite
+db.sqlite3
+
+# Ignorar archivos de log
+*.log
+
+# Ignorar archivos temporales del editor
+*.swp
+*~
+.DS_Store
+
+# Ignorar archivos JetBrains IDE (PyCharm)
+.idea/
+
+# Archivos VSCode
+.vscode/
+
+# Archivos de sistema
+Thumbs.db
+
+media/
