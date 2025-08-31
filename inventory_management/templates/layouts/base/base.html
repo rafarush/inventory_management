@@ -112,6 +112,10 @@
                                 <span class="menu-icon"><i data-feather="shopping-cart"></i></span>
                                 <span class="menu-text"> Products </span>
                             </a>
+                            <a href="{% url 'worker_list' %}" class="menu-link">
+                                <span class="menu-icon"></span>
+                                <span class="menu-text"> Worker </span>
+                            </a>
                         </li>
                         {% if not is_client %}
                             {% if is_admin %}
