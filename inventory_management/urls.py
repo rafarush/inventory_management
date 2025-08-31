@@ -9,6 +9,7 @@ urlpatterns = [
     path('users/', include('inventory_management.modules.custom_user.urls')),
     path('confirm-email/', include('inventory_management.modules.email_services.urls')),
     path('workers/', include('inventory_management.modules.worker.urls')),
+    path('account/', include('inventory_management.modules.email_services.urls')),
 ]
 
 

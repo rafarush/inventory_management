@@ -5,20 +5,22 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 
+from inventory_management.modules.custom_user.models import CustomUser
+
 
 def activate_email(request, uidb64, token):
-    user = get_user_model()
     try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = user.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, user.DoesNotExist):
+        uid = force_str(urlsafe_base64_decode(uidb64))  # Convertir bytes a string
+        user = CustomUser.objects.get(pk=uid)           # Buscar usuario por UUID string
+        if user is not None and default_token_generator.check_token(user, token):
+            user.is_confirmed = True
+            user.save()
+            messages.success(request, 'Correo confirmado correctamente.')
+            return redirect('login')
+        else:
+            messages.error(request, 'El enlace no es válido o expiró.')
+            return redirect('login')
+    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
         user = None
-
-    if user is not None and default_token_generator.check_token(user, token):
-        user.is_confirmed = True
-        user.save()
-        messages.success(request, 'Correo confirmado correctamente.')
-        return redirect('auth/login/')
-    else:
         messages.error(request, 'El enlace no es válido o expiró.')
-        return redirect('auth/signup/')
+        return redirect('login')
