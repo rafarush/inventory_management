@@ -105,7 +105,7 @@
 
     <div id="list" class="row" style="margin-top: 20px">
         {% for product in products %}
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" data-product-name="{{ product.name }}">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" data-product-name="{{ product.id }}">
                 <div class="card product-box">
                     <div class="card-body">
 
@@ -131,21 +131,13 @@
 
                         {% endif %}
 
-
-                        <div class="bg-light">
-                            {% if product.image != null and product.image.url != "" %}
-                                <img src="{{ product.image.url }}" alt="Product image" class="img-fluid" />
-                            {% else %}
-                                <img src="{% static 'assets/images/no-image.jpg' %}" alt="Product image" class="img-fluid">
-                            {% endif %}
-                        </div>
-
                         <div class="product-info">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <h5 class="font-16 mt-0 sp-line-1"><a href="{% url 'product_detail' pk=product.pk %}" class="text-dark">{{ product.name }}</a> </h5>
+                                    <h5 class="font-16 mt-0 sp-line-1"><a href="{% url 'product_detail' pk=product.pk %}" class="text-dark">ID: {{ product.id }}</a> </h5>
                                     <div class="text-warning mb-2 font-13"></div>
                                     <h5 class="m-0"> <span class="text-muted"> Stocks : {{ product.stock }}</span></h5>
+                                    <h5 class="m-0"> <span class="text-muted"> Unit : {{ product.unit }}</span></h5>
                                 </div>
                                 <div class="col-auto">
                                     <div class="product-price-tag">
