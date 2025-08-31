@@ -166,6 +166,8 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+PASSWORD_RESET_TIMEOUT = 3600  # segundos, ejemplo para 1 hora
+
 # Email settings
 
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
