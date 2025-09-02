@@ -44,6 +44,7 @@ class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
     template_name = 'product/product_confirm_delete.html'
     success_url = reverse_lazy('product_list')
     permission_required = 'inventory_management.delete_product'
+    context_object_name = 'product'
 
     def handle_no_permission(self):
         raise PermissionDenied("You do not have permission to perform this action.")
