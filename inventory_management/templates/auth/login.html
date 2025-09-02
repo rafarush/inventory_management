@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Log in</title>
+    <title>Iniciar Sesión</title>
     <!-- App favicon -->
     <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
 
@@ -40,7 +40,8 @@
                                     <div class="auth-brand">
                                         <a class="logo logo-dark text-center">
                                             <span class="logo-lg">
-                                                <img src="{% static 'assets/images/logo-dark.png' %}" alt="" height="22">
+                                                   <h1>La Carretilla</h1>
+{#                                                <img src="{% static 'assets/images/logo-dark.png' %}" alt="" height="22">#}
                                             </span>
                                         </a>
 
@@ -50,13 +51,13 @@
                                             </span>
                                         </a>
                                     </div>
-                                    <p class="text-muted mb-4 mt-3">Enter your username and password to access the site.</p>
+                                    <p class="text-muted mb-4 mt-3">Escriba sus credenciales para iniciar sesión.</p>
                                 </div>
 
                                 <form action="" class="form-control" method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="mb-3">
-                                        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                                        <label for="{{ form.username.id_for_label }}" class="form-label">Nombre de usuario</label>
 
                                         <div class="input-group">
                                             {{ form.username }}
@@ -67,7 +68,7 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="{{ form.username.id_for_label }}" class="form-label">Password</label>
+                                        <label for="{{ form.username.id_for_label }}" class="form-label">Contraseña</label>
                                         <div class="input-group input-group-merge">
                                             {{ form.password }}
                                             <div id="password-input" class="input-group-text" data-password="false">
@@ -81,11 +82,11 @@
                                     </div>
 
                                     <div class="text-center d-grid">
-                                        <button class="btn btn-primary" type="submit"> Log In </button>
+                                        <button class="btn btn-primary" type="submit"> Iniciar Sesión </button>
                                     </div>
 
                                     <a href="{% url 'signup' %}" class="text-center text-decoration-underline">
-                                        <span>Sign up</span>
+                                        <span>Registrarse</span>
                                     </a>
 
                                 </form>

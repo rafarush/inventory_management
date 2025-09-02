@@ -1,0 +1,189 @@
+{% extends "layouts/base/base.html" %}
+{% load static %}
+
+{% block title %}
+    Workers List
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    {% if is_admin %}
+        <div style="margin-top: 20px;">
+            <button id="open-worker-dialog" class="btn btn-success btn-sm float-end">Create Worker</button>
+        </div>
+    {% endif %}
+
+        {#    {% if not is_client %}#}
+{#    <div style="margin-top: 20px; display: none">#}
+{#        <span id="change-view-btn" class="btn-info" data-feather="eye" style="cursor: pointer"></span>#}
+{#        <button id="open-worker-dialog" class="btn btn-success btn-sm float-end">Create Worker</button>#}
+{#    </div>#}
+{#    {% endif %}#}
+
+    <!-- Worker Form Dialog -->
+    <div id="worker-form-dialog" class="modal-dialog-centered" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h4 class="modal-title">Create Worker</h4>
+                <button type="button" class="btn-close" id="close-worker-dialog" aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="workerForm" action="{% url 'worker_create' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="container">
+                        <div class="row">
+                            {% for field in form %}
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        {{ field.label_tag }}
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                        {% for error in field.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                                    </div><div class="row">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <input type="submit" class="btn btn-success btn-sm" value="Submit">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="container-fluid">
+        <h4>Filter workers by name:</h4>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <input type="text" id="workerSearch" class="form-control" placeholder="Search workers...">
+            </div>
+        </div>
+    </div>
+
+    {% if workers %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Salario</th>
+                    <th scope="col">Telefono</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for worker in workers %}
+                    <tr>
+                        <td>{{ worker.name }}</td>
+                        <td>${{ worker.salary }}</td>
+                        <td>{{ worker.phone }}</td>
+                        <td>
+                            <a class="btn btn-danger btn-sm" href="{% url 'worker_delete' pk=worker.pk %}">Delete</a>
+                            <a class="btn btn-outline-warning btn-sm" href="{% url 'worker_update' pk=worker.pk %}">Modify</a>
+                            <a class="btn btn-outline-info btn-sm" href="{% url 'worker_detail' pk=worker.pk %}">Details</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h3>No workers to display</h3>
+    {% endif %}
+    
+{#    <div id="list" class="row" style="margin-top: 20px">#}
+{#        {% for worker in workers %}#}
+{#            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" data-worker-name="{{ worker.name }}">#}
+{#                <div class="card worker-box">#}
+{#                    <div class="card-body">#}
+{##}
+{#                        {% if not is_client %}#}
+{#                            <div class="worker-action">#}
+{#                                {% if is_admin %}#}
+{#                                    <a href="{% url 'worker_update' pk=worker.pk %}" class="btn btn-success btn-xs waves-effect waves-light"><i class="mdi mdi-pencil"></i></a>#}
+{#                                    <a href="{% url 'worker_delete' pk=worker.pk %}" class="btn btn-danger btn-xs waves-effect waves-light"><i class="mdi mdi-close"></i></a>#}
+{#                                {% endif %}#}
+{#                            </div>#}
+{#                        {% endif %}#}
+{##}
+{#                        <div class="worker-info">#}
+{#                            <div class="row align-items-center">#}
+{#                                <div class="col">#}
+{#                                    <h5 class="font-16 mt-0 sp-line-1"><a href="{% url 'worker_detail' pk=worker.pk %}" class="text-dark">ID: {{ worker.id }}</a> </h5>#}
+{#                                    <h5 class="m-0"> <span class="text-muted">Name: {{ worker.name }}</span></h5>#}
+{#                                    <h5 class="m-0"> <span class="text-muted">Salary: ${{ worker.salary }}</span></h5>#}
+{#                                    <h5 class="m-0"> <span class="text-muted">Phone: {{ worker.phone }}</span></h5>#}
+{#                                </div>#}
+{#                            </div> <!-- end row -->#}
+{#                        </div> <!-- end worker info-->#}
+{#                    </div>  <!-- end card body-->#}
+{#                </div> <!-- end card-->#}
+{#            </div> <!-- end col-->#}
+{#        {% endfor %}#}
+{#    </div> <!-- end row -->#}
+</div> <!-- end container-fluid -->
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Change view
+        const changeBtn = document.getElementById('change-view-btn');
+        if (changeBtn) {
+            changeBtn.addEventListener('click', function() {
+                let list = document.getElementById('list');
+                let table = document.getElementById('table');
+                if (list.style.display === 'none') {
+                    list.style.display = 'block';
+                    table.style.display = 'none';
+                } else {
+                    list.style.display = 'none';
+                    table.style.display = 'table';
+                }
+            });
+        }
+
+        // Worker modal dialog
+        const openDialogBtn = document.getElementById('open-worker-dialog');
+        const closeDialogBtn = document.getElementById('close-worker-dialog');
+        const workerDialog = document.getElementById('worker-form-dialog');
+
+        if (openDialogBtn && closeDialogBtn && workerDialog) {
+            openDialogBtn.addEventListener('click', function() {
+                workerDialog.style.display = 'block';
+            });
+            closeDialogBtn.addEventListener('click', function() {
+                workerDialog.style.display = 'none';
+            });
+        }
+
+        feather.replace(); // Feather icons
+
+        // Filter workers
+        const workerSearch = document.getElementById('workerSearch');
+        const workerCards = document.querySelectorAll('#list .col-12');
+
+        workerSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            workerCards.forEach(card => {
+                const workerName = card.dataset.workerName.toLowerCase();
+                card.style.display = workerName.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    });
+</script>
+
+{% endblock %}

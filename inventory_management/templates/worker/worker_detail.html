@@ -1,0 +1,43 @@
+{% extends "layouts/base/base.html" %}
+{% load static %}
+
+{% block title %}
+    Worker: {{ worker.id }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ps-xl-3 mt-3 mt-xl-0">
+                                <h4 class="mb-3">ID: <span class="text-body me-2">{{ worker.id }}</span></h4>
+                                <h4 class="mb-3">Name: <span class="text-body me-2">{{ worker.name }}</span></h4>
+                                <h4 class="mb-4">Salary: <span class="text-body me-2">${{ worker.salary }} CUP</span></h4>
+                                {% if worker.phone %}
+                                    <h4>Phone: <span class="text-body me-2">{{ worker.phone }}</span></h4>
+                                {% else %}
+                                    <h4>Phone: <span class="text-muted">Not provided</span></h4>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                </div>
+            </div> <!-- end card-->
+        </div> <!-- end col-->
+    </div>
+    <!-- end row-->
+
+    {% if is_admin %}
+        <a class="btn btn-danger btn-sm" href="{% url 'worker_delete' pk=worker.id %}">Delete</a>
+    {% endif %}
+    {% if is_admin %}
+        <a class="btn btn-outline-warning btn-sm" href="{% url 'worker_update' pk=worker.id %}">Modify</a>
+    {% endif %}
+    <a class="btn btn-secondary btn-sm" href="{% url 'worker_list' %}">Back</a>
+
+{% endblock %}
