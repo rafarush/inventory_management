@@ -65,18 +65,19 @@
 
     <!-- Filter -->
     <div class="container-fluid">
-        <h4>Filter workers by name:</h4>
+        <h4>Filtre trabajadores por id o nombre:</h4>
         <div class="row mb-3">
             <div class="col-md-6">
-                <input type="text" id="workerSearch" class="form-control" placeholder="Search workers...">
+                <input type="text" id="workerSearch" class="form-control" placeholder="Buscar trabajadores...">
             </div>
         </div>
     </div>
 
     {% if workers %}
-        <table class="table">
+        <table class="table" id="worker-table">
             <thead>
                 <tr>
+                    <th scope="col">CI</th>
                     <th scope="col">Nombre</th>
                     <th scope="col">Salario</th>
                     <th scope="col">Telefono</th>
@@ -85,7 +86,8 @@
             </thead>
             <tbody>
                 {% for worker in workers %}
-                    <tr>
+                    <tr data-worker-id="{{ worker.id }}" data-worker-name="{{ worker.name }}">
+                        <td>{{ worker.id }}</td>
                         <td>{{ worker.name }}</td>
                         <td>${{ worker.salary }}</td>
                         <td>{{ worker.phone }}</td>
@@ -171,16 +173,24 @@
         }
 
         feather.replace(); // Feather icons
+    });
 
-        // Filter workers
+    //Filter workers
+    document.addEventListener('DOMContentLoaded', function() {
         const workerSearch = document.getElementById('workerSearch');
-        const workerCards = document.querySelectorAll('#list .col-12');
+        const workerRow = document.querySelectorAll('#worker-table tbody tr');
 
         workerSearch.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
-            workerCards.forEach(card => {
-                const workerName = card.dataset.workerName.toLowerCase();
-                card.style.display = workerName.includes(searchTerm) ? '' : 'none';
+
+            workerRow.forEach(row => {
+                const workerId = row.dataset.workerId;
+                const workerName = row.dataset.workerName.toLowerCase();
+                if (workerId.includes(searchTerm) || workerName.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
             });
         });
     });

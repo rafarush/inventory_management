@@ -1,17 +1,17 @@
 {% extends "layouts/base/base.html" %}
 {% load static %}
 {% block title %}
-	Delete Confirmation: {{ product.id }}
+	Delete Confirmation: {{ cart_status.status }}
 {% endblock %}
 
 
 {% block content %}
-	<h1>Are you sure you want to delete: {{ product.id }}?</h1>
+	<h1>Are you sure you want to delete: {{ cart_status.status }}?</h1>
 
     <form method="post">
         {% csrf_token %}
         <input type="submit" class="btn btn-danger btn-sm" value="Confirm Delete">
-        <button type="button" class="btn btn-info btn-sm" onclick="window.location.href='{% url 'product_list' %}'">Cancel</button>
+        <button type="button" class="btn btn-info btn-sm" onclick="window.location.href='{% url 'cart_status_list' %}'">Cancel</button>
     </form>
 
 {% endblock %}
