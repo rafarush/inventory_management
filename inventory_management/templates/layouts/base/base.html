@@ -109,82 +109,82 @@
                         <li class="menu-title">Sections</li>
                         <li class="menu-item">
                             <a href="{% url 'product_list' %}" class="menu-link">
-                                <span class="menu-icon"><i data-feather="shopping-cart"></i></span>
-                                <span class="menu-text"> Products </span>
+                                <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/basket.svg' %}" alt="Basket icon"></i></span>
+                                <span class="menu-text"> Productos </span>
                             </a>
                             <a href="{% url 'worker_list' %}" class="menu-link">
-                                <span class="menu-icon"></span>
-                                <span class="menu-text"> Worker </span>
+                                <span class="menu-icon"><i data-feather="users"></i></span>
+                                <span class="menu-text"> Trabajadores </span>
                             </a>
                             <a href="{% url 'cart_list' %}" class="menu-link">
-                                <span class="menu-icon"></span>
-                                <span class="menu-text"> Cart </span>
+                                <span class="menu-icon"><i data-feather="shopping-cart"></i></span>
+                                <span class="menu-text"> Carretillas </span>
                             </a>
                         </li>
-                        {% if not is_client %}
-                            {% if is_admin %}
-                                <li class="menu-item">
-                                    <a href="{% url 'product_category_list' %}" class="menu-link">
-                                        <span class="menu-icon"><i data-feather="tag"></i></span>
-                                        <span class="menu-text"> Product Categories </span>
-                                    </a>
-                                </li>
+{#                        {% if not is_client %}#}
+{#                            {% if is_admin %}#}
+{#                                <li class="menu-item">#}
+{#                                    <a href="{% url 'product_category_list' %}" class="menu-link">#}
+{#                                        <span class="menu-icon"><i data-feather="tag"></i></span>#}
+{#                                        <span class="menu-text"> Product Categories </span>#}
+{#                                    </a>#}
+{#                                </li>#}
+{##}
+{#                            	<li class="menu-item">#}
+{#                                    <a href="#" data-bs-toggle="collapse" class="menu-link">#}
+{#                                        <span class="menu-icon"><i data-feather="truck"></i></span>#}
+{#                                        <span class="menu-text"> Shipments </span>#}
+{#                                    </a>#}
+{#                                </li>#}
+{#                                <li class="menu-item">#}
+{#                                    <a href="{% url 'order_types_list' %}" class="menu-link">#}
+{##}
+{#                                        <span class="menu-icon"><i class="dripicons-document-new"></i></span>#}
+{#                                        <span class="menu-text"> Order Types </span>#}
+{#                                    </a>#}
+{#                                </li>#}
+{##}
+{#                                <li class="menu-item">#}
+{#                                    <a href="{% url 'custom_user_list' %}" class="menu-link">#}
+{#                                        <span class="menu-icon"><i class="mdi mdi-account-multiple"></i></span>#}
+{#                                        <span class="menu-text"> Users </span>#}
+{#                                    </a>#}
+{#                                </li>#}
+{##}
+{#                            {% endif %}#}
+{#                            {% if is_agent or is_admin %}#}
+{##}
+{#                                <li class="menu-item">#}
+{#                                    <a href="{% url 'order_list' %}" class="menu-link">#}
+{#                                        <span class="menu-icon"><i data-feather="box"></i></span>#}
+{#                                        <span class="menu-text"> Orders </span>#}
+{#                                    </a>#}
+{#                                </li>#}
+{#                                <li class="menu-item">#}
+{#                                    <a href="#menuDashboards" data-bs-toggle="collapse" class="menu-link">#}
+{#                                        <span class="menu-icon"><i class="fe-file-text"></i></span>#}
+{#                                        <span class="menu-text"> Records </span>#}
+{#                                        <span class="menu-arrow"></span>#}
+{#                                        <!--<span class="badge bg-success rounded-pill ms-auto">4</span>-->#}
+{#                                    </a>#}
+{#                                    <div class="collapse" id="menuDashboards">#}
+{#                                        <ul class="sub-menu">#}
+{#                                            <li class="menu-item">#}
+{#                                                <a href="{% url 'updated_product_list' %}" class="menu-link">#}
+{#                                                    <span class="menu-text">Updated Products</span>#}
+{#                                                </a>#}
+{#                                            </li>#}
+{#                                            <li class="menu-item">#}
+{#                                                <a href="{% url 'custom_user_get_clients' %}" class="menu-link">#}
+{#                                                    <span class="menu-text">Clients</span>#}
+{#                                                </a>#}
+{#                                            </li>#}
+{#                                        </ul>#}
+{#                                    </div>#}
+{#                                </li>#}
+{#                            {% endif %}#}
 
-                            	<li class="menu-item">
-                                    <a href="#" data-bs-toggle="collapse" class="menu-link">
-                                        <span class="menu-icon"><i data-feather="truck"></i></span>
-                                        <span class="menu-text"> Shipments </span>
-                                    </a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="{% url 'order_types_list' %}" class="menu-link">
-
-                                        <span class="menu-icon"><i class="dripicons-document-new"></i></span>
-                                        <span class="menu-text"> Order Types </span>
-                                    </a>
-                                </li>
-
-                                <li class="menu-item">
-                                    <a href="{% url 'custom_user_list' %}" class="menu-link">
-                                        <span class="menu-icon"><i class="mdi mdi-account-multiple"></i></span>
-                                        <span class="menu-text"> Users </span>
-                                    </a>
-                                </li>
-
-                            {% endif %}
-                            {% if is_agent or is_admin %}
-
-                                <li class="menu-item">
-                                    <a href="{% url 'order_list' %}" class="menu-link">
-                                        <span class="menu-icon"><i data-feather="box"></i></span>
-                                        <span class="menu-text"> Orders </span>
-                                    </a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="#menuDashboards" data-bs-toggle="collapse" class="menu-link">
-                                        <span class="menu-icon"><i class="fe-file-text"></i></span>
-                                        <span class="menu-text"> Records </span>
-                                        <span class="menu-arrow"></span>
-                                        <!--<span class="badge bg-success rounded-pill ms-auto">4</span>-->
-                                    </a>
-                                    <div class="collapse" id="menuDashboards">
-                                        <ul class="sub-menu">
-                                            <li class="menu-item">
-                                                <a href="{% url 'updated_product_list' %}" class="menu-link">
-                                                    <span class="menu-text">Updated Products</span>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item">
-                                                <a href="{% url 'custom_user_get_clients' %}" class="menu-link">
-                                                    <span class="menu-text">Clients</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                            {% endif %}
-
-                        {% endif %}
+{#                        {% endif %}#}
                     </ul>
                     <div class="clearfix"></div>
                 </div>

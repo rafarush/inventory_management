@@ -9,14 +9,18 @@
 
 <div class="container-fluid">
 
-    {% if not is_client %}
-        {% if is_admin %}
-            <div style="margin-top: 20px; display: none">
-                <span id="change-view-btn" class="btn-info" data-feather="eye" style="cursor: pointer"></span>
-                <button id="open-worker-dialog" class="btn btn-success btn-sm float-end">Create Worker</button>
-            </div>
-        {% endif %}
+    {% if is_admin %}
+        <div style="margin-top: 20px;">
+            <button id="open-worker-dialog" class="btn btn-success btn-sm float-end">Create Worker</button>
+        </div>
     {% endif %}
+
+        {#    {% if not is_client %}#}
+{#    <div style="margin-top: 20px; display: none">#}
+{#        <span id="change-view-btn" class="btn-info" data-feather="eye" style="cursor: pointer"></span>#}
+{#        <button id="open-worker-dialog" class="btn btn-success btn-sm float-end">Create Worker</button>#}
+{#    </div>#}
+{#    {% endif %}#}
 
     <!-- Worker Form Dialog -->
     <div id="worker-form-dialog" class="modal-dialog-centered" style="display:none;">
@@ -68,37 +72,66 @@
             </div>
         </div>
     </div>
+
+    {% if workers %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Salario</th>
+                    <th scope="col">Telefono</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for worker in workers %}
+                    <tr>
+                        <td>{{ worker.name }}</td>
+                        <td>${{ worker.salary }}</td>
+                        <td>{{ worker.phone }}</td>
+                        <td>
+                            <a class="btn btn-danger btn-sm" href="{% url 'worker_delete' pk=worker.pk %}">Delete</a>
+                            <a class="btn btn-outline-warning btn-sm" href="{% url 'worker_update' pk=worker.pk %}">Modify</a>
+                            <a class="btn btn-outline-info btn-sm" href="{% url 'worker_detail' pk=worker.pk %}">Details</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h3>No workers to display</h3>
+    {% endif %}
     
-    <div id="list" class="row" style="margin-top: 20px">
-        {% for worker in workers %}
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" data-worker-name="{{ worker.name }}">
-                <div class="card worker-box">
-                    <div class="card-body">
-
-                        {% if not is_client %}
-                            <div class="worker-action">
-                                {% if is_admin %}
-                                    <a href="{% url 'worker_update' pk=worker.pk %}" class="btn btn-success btn-xs waves-effect waves-light"><i class="mdi mdi-pencil"></i></a>
-                                    <a href="{% url 'worker_delete' pk=worker.pk %}" class="btn btn-danger btn-xs waves-effect waves-light"><i class="mdi mdi-close"></i></a>
-                                {% endif %}
-                            </div>
-                        {% endif %}
-
-                        <div class="worker-info">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h5 class="font-16 mt-0 sp-line-1"><a href="{% url 'worker_detail' pk=worker.pk %}" class="text-dark">ID: {{ worker.id }}</a> </h5>
-                                    <h5 class="m-0"> <span class="text-muted">Name: {{ worker.name }}</span></h5>
-                                    <h5 class="m-0"> <span class="text-muted">Salary: ${{ worker.salary }}</span></h5>
-                                    <h5 class="m-0"> <span class="text-muted">Phone: {{ worker.phone }}</span></h5>
-                                </div>
-                            </div> <!-- end row -->
-                        </div> <!-- end worker info-->
-                    </div>  <!-- end card body-->
-                </div> <!-- end card-->
-            </div> <!-- end col-->
-        {% endfor %}
-    </div> <!-- end row -->
+{#    <div id="list" class="row" style="margin-top: 20px">#}
+{#        {% for worker in workers %}#}
+{#            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" data-worker-name="{{ worker.name }}">#}
+{#                <div class="card worker-box">#}
+{#                    <div class="card-body">#}
+{##}
+{#                        {% if not is_client %}#}
+{#                            <div class="worker-action">#}
+{#                                {% if is_admin %}#}
+{#                                    <a href="{% url 'worker_update' pk=worker.pk %}" class="btn btn-success btn-xs waves-effect waves-light"><i class="mdi mdi-pencil"></i></a>#}
+{#                                    <a href="{% url 'worker_delete' pk=worker.pk %}" class="btn btn-danger btn-xs waves-effect waves-light"><i class="mdi mdi-close"></i></a>#}
+{#                                {% endif %}#}
+{#                            </div>#}
+{#                        {% endif %}#}
+{##}
+{#                        <div class="worker-info">#}
+{#                            <div class="row align-items-center">#}
+{#                                <div class="col">#}
+{#                                    <h5 class="font-16 mt-0 sp-line-1"><a href="{% url 'worker_detail' pk=worker.pk %}" class="text-dark">ID: {{ worker.id }}</a> </h5>#}
+{#                                    <h5 class="m-0"> <span class="text-muted">Name: {{ worker.name }}</span></h5>#}
+{#                                    <h5 class="m-0"> <span class="text-muted">Salary: ${{ worker.salary }}</span></h5>#}
+{#                                    <h5 class="m-0"> <span class="text-muted">Phone: {{ worker.phone }}</span></h5>#}
+{#                                </div>#}
+{#                            </div> <!-- end row -->#}
+{#                        </div> <!-- end worker info-->#}
+{#                    </div>  <!-- end card body-->#}
+{#                </div> <!-- end card-->#}
+{#            </div> <!-- end col-->#}
+{#        {% endfor %}#}
+{#    </div> <!-- end row -->#}
 </div> <!-- end container-fluid -->
 
 {% endblock %}

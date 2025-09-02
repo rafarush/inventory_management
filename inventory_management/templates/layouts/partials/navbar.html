@@ -14,14 +14,14 @@
             	<!-- Dropdown Menu -->
                 <div class="dropdown d-none d-xl-block">
                     <a class="nav-link dropdown-toggle waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        Create New
+                        Crear Nuevo
                         <i class="mdi mdi-chevron-down ms-1"></i>
                     </a>
                     <div class="dropdown-menu">
                         <!-- item-->
                         <a href="{% url 'custom_user_create' %}" class="dropdown-item">
                             <i class="fe-user me-1"></i>
-                            <span>Create Users</span>
+                            <span>Create Usuario</span>
                         </a>
                         <!--
                         <a href="#" class="menu-link" data-bs-toggle="modal" data-bs-target="#createUserModal">
@@ -33,12 +33,12 @@
                             <!-- item-->
                             <a href="{% url 'product_create' %}" class="dropdown-item">
                                 <i class="fe-briefcase me-1"></i>
-                                <span>Create Product</span>
+                                <span>Crear Producto</span>
                             </a>
                         	<!-- item-->
                             <a href="{% url 'product_category_create' %}" class="dropdown-item">
                                 <i class="fe-file-text me-1"></i>
-                                <span>Create Product Category</span>
+                                <span>Crear Categoria de Producto</span>
                             </a>
                         {% endif %}
 
@@ -69,7 +69,7 @@
                         {% csrf_token %}
                         <button type="submit" class="dropdown-item notify-item">
                             <i class="fe-log-out"></i>
-                            <span>Log out</span>
+                            <span>Cerrar Sesion</span>
                         </button>
                     </form>
 

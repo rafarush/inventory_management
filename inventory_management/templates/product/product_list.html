@@ -11,14 +11,20 @@
 
 <div class="container-fluid">
 
-    {% if not is_client %}
-        {% if is_admin %}
-        	<div style="margin-top: 20px; display: none">
-                <span id="change-view-btn" class="btn-info" data-feather="eye" style="cursor: pointer"></span>
-                <button id="open-product-dialog" class="btn btn-success btn-sm float-end">Create</button>
-            </div>
-        {% endif %}
+{#    {% if not is_client %}#}
+{#        {% if is_admin %}#}
+{#        	<div style="margin-top: 20px; display: none">#}
+{#                <span id="change-view-btn" class="btn-info" data-feather="eye" style="cursor: pointer"></span>#}
+{#                <button id="open-product-dialog" class="btn btn-success btn-sm float-end">Create</button>#}
+{#            </div>#}
+{#        {% endif %}#}
+{##}
+{#    {% endif %}#}
 
+    {% if is_admin %}
+        <div style="margin-top: 20px;">
+            <button href="{% url 'product_create' %}" class="btn btn-success btn-sm float-end">Create Product</button>
+        </div>
     {% endif %}
 
     <!-- Product Form Dialog -->
@@ -134,7 +140,7 @@
                         <div class="product-info">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <h5 class="font-16 mt-0 sp-line-1"><a href="{% url 'product_detail' pk=product.pk %}" class="text-dark">ID: {{ product.id }}</a> </h5>
+                                    <h5 class="font-16 mt-0 sp-line-1"><a href="{% url 'product_detail' pk=product.pk %}" class="text-dark">Nombre: {{ product.id }}</a> </h5>
                                     <div class="text-warning mb-2 font-13"></div>
                                     <h5 class="m-0"> <span class="text-muted"> Stocks : {{ product.stock }}</span></h5>
                                     <h5 class="m-0"> <span class="text-muted"> Unit : {{ product.unit }}</span></h5>
