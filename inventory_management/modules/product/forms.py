@@ -7,7 +7,7 @@ from inventory_management.models import Product
 class ProductAdminForm(ModelForm):
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = ['unit', 'price']
 
     def clean_price(self):
         price = self.cleaned_data['price']
