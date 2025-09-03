@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, DetailView, UpdateView
 from inventory_management.models import Product
-from inventory_management.modules.product.forms import ProductAdminForm
+from inventory_management.modules.product.forms import ProductAdminForm, ProductUpdateForm
 
 
 class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -52,7 +52,7 @@ class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
 
 class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
-    form_class = ProductAdminForm
+    form_class = ProductUpdateForm
     template_name = 'product/product_form.html'
     success_url = reverse_lazy('product_list')
     permission_required = 'inventory_management.change_product'

@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Worker
-from .forms import WorkerAdminForm
+from .forms import WorkerAdminForm, WorkerUpdateForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 
@@ -46,7 +46,7 @@ class WorkerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 # Update worker
 class WorkerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Worker
-    form_class = WorkerAdminForm
+    form_class = WorkerUpdateForm
     template_name = 'worker/worker_form.html'
     success_url = reverse_lazy('worker_list')
     permission_required = 'inventory_management.change_worker'
