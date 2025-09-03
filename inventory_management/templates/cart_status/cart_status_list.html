@@ -67,17 +67,17 @@
             <thead>
                 <tr>
                     <th scope="col">Estado</th>
-                    <th scope="col">Acciones</th>
+{#                    <th scope="col">Acciones</th>#}
                 </tr>
             </thead>
             <tbody>
                 {% for cart_status in cart_status_list %}
                     <tr data-cart-status-id="{{ cart_status.status }}">
                         <td>{{ cart_status.status }}</td>
-                        <td>
-                            <a class="btn btn-danger btn-sm" href="{% url 'cart_status_delete' pk=cart_status.pk %}">Eliminar</a>
-                            <a class="btn btn-outline-warning btn-sm" href="{% url 'cart_status_update' pk=cart_status.pk %}">Modificar</a>
-                        </td>
+{#                        <td>#}
+{#                            <a class="btn btn-danger btn-sm" href="{% url 'cart_status_delete' pk=cart_status.pk %}">Eliminar</a>#}
+{#                            <a class="btn btn-outline-warning btn-sm" href="{% url 'cart_status_update' pk=cart_status.pk %}">Modificar</a>#}
+{#                        </td>#}
                     </tr>
                 {% endfor %}
             </tbody>

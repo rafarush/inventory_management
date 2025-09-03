@@ -5,7 +5,7 @@ from .models import CartStatus
 class CartStatusForm(ModelForm):
     class Meta:
         model = CartStatus
-        fields = ['status']
+        fields = '__all__'
 
     def clean_status(self):
         status = self.cleaned_data['status']
