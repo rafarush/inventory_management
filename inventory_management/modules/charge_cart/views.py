@@ -4,7 +4,8 @@ from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, DetailView, UpdateView
 from inventory_management.modules.charge_cart.models import ChargeCart
-from inventory_management.modules.charge_cart.forms import ChargeCartAdminForm, ChargeCartUpdateForm
+from inventory_management.modules.charge_cart.forms import ChargeCartAdminForm, ChargeCartUpdateForm, \
+    ChargeCartFinishForm
 
 
 class ChargeCartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -21,7 +22,10 @@ class ChargeCartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     def handle_no_permission(self):
         raise PermissionDenied("You do not have permission to perform this action.")
 
-from django.http import HttpResponseNotAllowed
+
+from django.http import HttpResponseNotAllowed, HttpResponseRedirect
+
+
 class ChargeCartCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = ChargeCart
     form_class = ChargeCartAdminForm
@@ -31,6 +35,7 @@ class ChargeCartCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
 
     def handle_no_permission(self):
         raise PermissionDenied("You do not have permission to perform this action.")
+
 
 class ChargeCartDetailView(LoginRequiredMixin, DetailView):
     model = ChargeCart
@@ -58,3 +63,32 @@ class ChargeCartUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
 
     def handle_no_permission(self):
         raise PermissionDenied("You do not have permission to perform this action.")
+
+
+class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = ChargeCart
+    form_class = ChargeCartFinishForm
+    template_name = 'charge_cart/charge_cart_form.html'
+    success_url = reverse_lazy('charge_cart_list')
+    permission_required = 'charge_cart.change_chargecart'
+
+    def handle_no_permission(self):
+        raise PermissionDenied("You do not have permission to perform this action.")
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+
+        for field_name in form.fields:
+            value = getattr(instance, field_name, None)
+            if value in [None, '', 0]:
+                form.add_error(field_name, "This field is required to complete.")
+                return self.form_invalid(form)
+
+        instance.money_returned = (instance.price_sent * (instance.amount_sent - instance.amount_received))
+        instance.revenue_total =  (instance.revenue *  (instance.amount_sent - instance.amount_received))
+
+        # Cambiar estado a finalizado
+        instance.status = "finalizado"
+        instance.save()
+
+        return HttpResponseRedirect(self.get_success_url())
