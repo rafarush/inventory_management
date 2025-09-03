@@ -11,4 +11,4 @@ class CartStatus(models.Model):
     )
 
     def __str__(self):
-        return f"Cart Status: {self.id}"
+        return f"Cart Status: {self.status}"
