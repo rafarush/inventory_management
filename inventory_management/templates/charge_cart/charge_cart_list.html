@@ -25,41 +25,12 @@
                     <i data-feather="x"></i>
                 </button>
             </div>
-            <div class="modal-body">
-                <form id="chargecartForm" action="{% url 'charge_cart_create' %}" method="POST">
-                    {% csrf_token %}
-                    <div class="container">
-                        <div class="row">
-                            {% for field in form %}
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        {{ field.label_tag }}
-                                        {{ field }}
-                                        {% if field.help_text %}
-                                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                                        {% endif %}
-                                        {% for error in field.errors %}
-                                            <div class="invalid-feedback">{{ error }}</div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                {% if forloop.counter|divisibleby:3 and not forloop.last %}
-                                    </div><div class="row">
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <input type="submit" class="btn btn-success btn-sm" value="Submit">
-                    </div>
-                </form>
-            </div>
         </div>
     </div>
 
     <!-- Filter -->
     <div class="container-fluid">
-        <h4>Filtre registros por id o producto:</h4>
+        <h4>Filtre registros producto:</h4>
         <div class="row mb-3">
             <div class="col-md-6">
                 <input type="text" id="chargecartSearch" class="form-control" placeholder="Buscar registros...">
@@ -71,30 +42,35 @@
         <table class="table" id="chargecart-table">
             <thead>
                 <tr>
-                    <th scope="col">ID</th>
                     <th scope="col">Product</th>
                     <th scope="col">Amount Sent</th>
                     <th scope="col">Price Sent</th>
                     <th scope="col">Amount Received</th>
                     <th scope="col">Revenue</th>
                     <th scope="col">Revenue Total</th>
+                    <th scope="col">Money Returned</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for charge in charge_cart_list %}
-                    <tr data-charge-id="{{ charge.id }}" data-product-name="{{ charge.product.name }}">
-                        <td>{{ charge.id }}</td>
+                    <tr data-product-name="{{ charge.product.id }}">
                         <td>{{ charge.product.id }}</td>
                         <td>{{ charge.amount_sent }}</td>
                         <td>${{ charge.price_sent }}</td>
                         <td>{{ charge.amount_received }}</td>
                         <td>${{ charge.revenue }}</td>
                         <td>${{ charge.revenue_total }}</td>
-                        <td>
-                            <a class="btn btn-danger btn-sm" href="{% url 'charge_cart_delete' pk=charge.pk %}">Delete</a>
-                            <a class="btn btn-outline-warning btn-sm" href="{% url 'charge_cart_update' pk=charge.pk %}">Modify</a>
-                        </td>
+                        <td>${{ charge.money_returned }}</td>
+                        <td>{{ charge.get_status_display }}</td>
+                        {% if charge.status != "finalizado" %}
+                            <td>
+                                <a class="btn btn-danger btn-sm" href="{% url 'charge_cart_delete' pk=charge.pk %}">Delete</a>
+                                <a class="btn btn-outline-warning btn-sm" href="{% url 'charge_cart_update' pk=charge.pk %}">Modify</a>
+                                <a class="btn btn-outline-success btn-sm" href="{% url 'charge_cart_finish' pk=charge.pk %}">Finished</a>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
@@ -132,9 +108,8 @@
                 const searchTerm = this.value.toLowerCase();
 
                 chargecartRows.forEach(row => {
-                    const chargeId = row.dataset.chargeId.toLowerCase();
                     const productName = row.dataset.productName.toLowerCase();
-                    if (chargeId.includes(searchTerm) || productName.includes(searchTerm)) {
+                    if ( productName.includes(searchTerm)) {
                         row.style.display = '';
                     } else {
                         row.style.display = 'none';
