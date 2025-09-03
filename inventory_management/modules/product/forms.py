@@ -22,11 +22,16 @@ class ProductAdminForm(ModelForm):
             id = id[0].upper() + id[1:] if id[0].isalpha() else id
         return id
 
+    def clean_amount(self):
+        amount = self.cleaned_data['amount']
+        if amount < 0:
+            raise ValidationError('Price must be greater than 0')
+        return amount
 
 class ProductUpdateForm(ModelForm):
     class Meta:
         model = Product
-        fields = ['price', 'unit']
+        fields = ['price', 'unit', 'amount']
 
     def clean_price(self):
         price = self.cleaned_data['price']
@@ -40,3 +45,11 @@ class ProductUpdateForm(ModelForm):
             # Si el primer carácter es una letra, ponerlo en mayúscula
             id = id[0].upper() + id[1:] if id[0].isalpha() else id
         return id
+
+
+    def clean_amount(self):
+        amount = self.cleaned_data['amount']
+        if amount < 0:
+            raise ValidationError('Price must be greater than 0')
+        return amount
+

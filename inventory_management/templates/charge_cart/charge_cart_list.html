@@ -1,0 +1,149 @@
+{% extends "layouts/base/base.html" %}
+{% load static %}
+
+{% block title %}
+    ChargeCart List
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    {% if perms.charge_cart.add_chargecart %}
+        <a href="{% url 'charge_cart_create' %}" class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
+            Create ChargeCart
+        </a>
+    {% endif %}
+
+
+    <!-- ChargeCart Form Dialog -->
+    <div id="chargecart-form-dialog" class="modal-dialog-centered" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h4 class="modal-title">Create ChargeCart</h4>
+                <button type="button" class="btn-close" id="close-chargecart-dialog" aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="chargecartForm" action="{% url 'charge_cart_create' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="container">
+                        <div class="row">
+                            {% for field in form %}
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        {{ field.label_tag }}
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                        {% for error in field.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                                    </div><div class="row">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <input type="submit" class="btn btn-success btn-sm" value="Submit">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="container-fluid">
+        <h4>Filtre registros por id o producto:</h4>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <input type="text" id="chargecartSearch" class="form-control" placeholder="Buscar registros...">
+            </div>
+        </div>
+    </div>
+
+    {% if charge_cart_list %}
+        <table class="table" id="chargecart-table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Amount Sent</th>
+                    <th scope="col">Price Sent</th>
+                    <th scope="col">Amount Received</th>
+                    <th scope="col">Revenue</th>
+                    <th scope="col">Revenue Total</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for charge in charge_cart_list %}
+                    <tr data-charge-id="{{ charge.id }}" data-product-name="{{ charge.product.name }}">
+                        <td>{{ charge.id }}</td>
+                        <td>{{ charge.product.id }}</td>
+                        <td>{{ charge.amount_sent }}</td>
+                        <td>${{ charge.price_sent }}</td>
+                        <td>{{ charge.amount_received }}</td>
+                        <td>${{ charge.revenue }}</td>
+                        <td>${{ charge.revenue_total }}</td>
+                        <td>
+                            <a class="btn btn-danger btn-sm" href="{% url 'charge_cart_delete' pk=charge.pk %}">Delete</a>
+                            <a class="btn btn-outline-warning btn-sm" href="{% url 'charge_cart_update' pk=charge.pk %}">Modify</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h3>No records to display</h3>
+    {% endif %}
+</div> <!-- end container-fluid -->
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ChargeCart modal dialog
+        const openDialogBtn = document.getElementById('open-chargecart-dialog');
+        const closeDialogBtn = document.getElementById('close-chargecart-dialog');
+        const chargecartDialog = document.getElementById('chargecart-form-dialog');
+
+        if (openDialogBtn && closeDialogBtn && chargecartDialog) {
+            openDialogBtn.addEventListener('click', function() {
+                chargecartDialog.style.display = 'block';
+            });
+            closeDialogBtn.addEventListener('click', function() {
+                chargecartDialog.style.display = 'none';
+            });
+        }
+
+        // Filter charge carts
+        const chargecartSearch = document.getElementById('chargecartSearch');
+        const chargecartRows = document.querySelectorAll('#chargecart-table tbody tr');
+
+        if (chargecartSearch) {
+            chargecartSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+
+                chargecartRows.forEach(row => {
+                    const chargeId = row.dataset.chargeId.toLowerCase();
+                    const productName = row.dataset.productName.toLowerCase();
+                    if (chargeId.includes(searchTerm) || productName.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        feather.replace(); // Feather icons
+    });
+</script>
+{% endblock %}
