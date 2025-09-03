@@ -5,7 +5,7 @@ from .models import Cart
 class CartForm(ModelForm):
     class Meta:
         model = Cart
-        fields = ['id']
+        fields = '__all__'
 
     def clean_id(self):
         id = self.cleaned_data['id']

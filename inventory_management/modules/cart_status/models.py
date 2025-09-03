@@ -6,7 +6,8 @@ class CartStatus(models.Model):
         primary_key=True,
         max_length=50,
         unique=True,
-        verbose_name="Cart Status"
+        verbose_name="Cart Status",
+        editable=False
     )
 
     def __str__(self):
