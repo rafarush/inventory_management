@@ -60,7 +60,11 @@
                         <td>{{ charge.amount_sent }}</td>
                         <td>${{ charge.price_sent }}</td>
                         <td>{{ charge.amount_received }}</td>
-                        <td>${{ charge.revenue }}</td>
+                        {% if charge.revenue %}
+                            <td>${{ charge.revenue }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
                         <td>${{ charge.revenue_total }}</td>
                         <td>${{ charge.money_returned }}</td>
                         <td>{{ charge.get_status_display }}</td>
