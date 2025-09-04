@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'inventory_management',
+    "inventory_management.modules.cart_status.apps.StatusCartConfig",
+    'safedelete'
 ]
 
 MIDDLEWARE = [

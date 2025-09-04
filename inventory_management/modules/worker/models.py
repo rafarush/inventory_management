@@ -1,13 +1,14 @@
 from django.db import models
 
+from inventory_management.modules.base_model.base_model import BaseModel
 
-class Worker(models.Model):
+
+class Worker(BaseModel):
     id = models.CharField(
         primary_key=True,
         max_length=50,
         unique=True,
-        verbose_name="ID",
-        editable=False
+        verbose_name="ID"
     )
     name = models.CharField(max_length=100, verbose_name="name")
     salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="salary")

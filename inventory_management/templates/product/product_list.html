@@ -12,7 +12,7 @@
 <div class="container-fluid">
 
 {#    {% if not is_client %}#}
-{#        {% if is_admin %}#}
+{#        {% if is_perms.charge_cart.add_cart %}#}
 {#        	<div style="margin-top: 20px; display: none">#}
 {#                <span id="change-view-btn" class="btn-info" data-feather="eye" style="cursor: pointer"></span>#}
 {#                <button id="open-product-dialog" class="btn btn-success btn-sm float-end">Create</button>#}
@@ -21,7 +21,7 @@
 {##}
 {#    {% endif %}#}
 
-    {% if is_admin %}
+    {% if perms.inventory_management.add_product %}
         <div style="margin-top: 20px;">
             <button href="{% url 'product_create' %}" class="btn btn-success btn-sm float-end">Create Product</button>
         </div>
@@ -127,10 +127,12 @@
                             {% endif %}
 
 
-                            {% if is_admin %}
-                            	<a href="{% url 'product_update' pk=product.pk %}" class="btn btn-success btn-xs waves-effect waves-light"><i class="mdi mdi-pencil"></i></a>
+                            {% if  perms.inventory_management.delete_product %}
                                 <a href="{% url 'product_delete' pk=product.pk %}" class="btn btn-danger btn-xs waves-effect waves-light"><i class="mdi mdi-close"></i></a>
 
+                            {% endif %}
+                            {% if perms.inventory_management.change_product %}
+                            	<a href="{% url 'product_update' pk=product.pk %}" class="btn btn-success btn-xs waves-effect waves-light"><i class="mdi mdi-pencil"></i></a>
                             {% endif %}
 
                         </div>
@@ -143,7 +145,9 @@
                                     <h5 class="font-16 mt-0 sp-line-1"><a href="{% url 'product_detail' pk=product.pk %}" class="text-dark">{{ product.id }}</a> </h5>
                                     <div class="text-warning mb-2 font-13"></div>
                                     <h5 class="m-0"> <span class="text-muted"> Unit : {{ product.unit }}</span></h5>
+                                    <h5 class="m-0"> <span class="text-muted"> Amount : {{ product.amount }}</span></h5>
                                 </div>
+                                
                                 <div class="col-auto">
                                     <div class="product-price-tag">
                                         ${{ product.price }}

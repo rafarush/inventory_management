@@ -8,7 +8,7 @@
 {% block content %}
 <div class="container-fluid">
 
-    {% if is_admin %}
+    {% if perms.inventory_management.add_cart  %}
         <div style="margin-top: 20px;">
             <button id="open-cart-dialog" class="btn btn-success btn-sm float-end">Create</button>
         </div>
@@ -69,7 +69,7 @@
                 <div class="card">
                     <div class="card-body">
 
-                        {% if is_admin %}
+                        {% if perms.inventory_management.delete_cart %}
                             <div class="cart-action mb-2">
 {#                                <a href="{% url 'cart_update' pk=cart.pk %}" class="btn btn-success btn-xs">#}
 {#                                    <i class="mdi mdi-pencil"></i>#}
