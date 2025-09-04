@@ -17,7 +17,7 @@ class WorkerAdminForm(ModelForm):
         }
 
     def clean_phone(self):
-        phone = self.cleaned_data.get('phone_number')
+        phone = self.cleaned_data.get('phone')
         if phone:
             # Phone should contain only digits
             if not phone.isdigit():
@@ -64,7 +64,7 @@ class WorkerUpdateForm(ModelForm):
         }
 
     def clean_phone(self):
-        phone = self.cleaned_data.get('phone_number')
+        phone = self.cleaned_data.get('phone')
         if phone:
             # Phone should contain only digits
             if not phone.isdigit():
