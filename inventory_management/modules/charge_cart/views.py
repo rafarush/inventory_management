@@ -7,6 +7,7 @@ from inventory_management.modules.charge_cart.models import ChargeCart
 from inventory_management.modules.charge_cart.forms import ChargeCartAdminForm, ChargeCartUpdateForm, \
     ChargeCartFinishForm
 from django.db.models import Case, When, Value, IntegerField
+from django.http import HttpResponseRedirect
 
 
 class ChargeCartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -34,13 +35,10 @@ class ChargeCartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         ).order_by('status_order')
 
 
-from django.http import HttpResponseNotAllowed, HttpResponseRedirect
-
-
 class ChargeCartCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = ChargeCart
     form_class = ChargeCartAdminForm
-    template_name = 'charge_cart/charge_cart_form.html'  # se mostrará en /create/
+    template_name = 'charge_cart/charge_cart_form.html'
     success_url = reverse_lazy('charge_cart_list')
     permission_required = 'charge_cart.add_chargecart'
 
@@ -98,7 +96,6 @@ class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
         instance.money_returned = (instance.price_sent * (instance.amount_sent - instance.amount_received))
         instance.revenue_total =  (instance.revenue *  (instance.amount_sent - instance.amount_received))
 
-        # Cambiar estado a finalizado
         instance.status = "finalizado"
         instance.save()
 
