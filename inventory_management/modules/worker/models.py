@@ -1,7 +1,9 @@
 from django.db import models
 
+from inventory_management.modules.base_model.base_model import BaseModel
 
-class Worker(models.Model):
+
+class Worker(BaseModel):
     id = models.CharField(
         primary_key=True,
         max_length=50,

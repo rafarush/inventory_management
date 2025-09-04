@@ -1,9 +1,11 @@
 import uuid
 from django.db import models
+
+from inventory_management.modules.base_model.base_model import BaseModel
 from inventory_management.modules.product.models import Product  # ajusta la ruta según tu proyecto
 
 
-class ChargeCart(models.Model):
+class ChargeCart(BaseModel):
     STATUS_CHOICES = [
         ("pendiente", "Pendiente"),
         ("finalizado", "Finalizado"),
