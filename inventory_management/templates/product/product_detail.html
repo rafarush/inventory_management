@@ -15,15 +15,13 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="ps-xl-3 mt-3 mt-xl-0">
-                                <h4 class="mb-3">ID: <span class="text-body me-2">{{ product.id }}</span></h4>
-                                <h4 class="mb-4">Price: <span class="text-body me-2">${{ product.price }} CUP</span></h4>
-                                {% if product.stock > 0 %}
-                                    <h4><span class="badge bg-soft-success text-success mb-4">Stock: {{ product.stock }}</span></h4>
+                                <h4 class="mb-3">Nombre: <span class="text-body me-2">{{ product.id }}</span></h4>
+                                <h4 class="mb-4">Precio: <span class="text-body me-2">${{ product.price }} CUP</span></h4>
+                                {% if product.amount > 0 %}
+                                    <h4><span class="badge bg-soft-success text-success mb-4">Cantidad: {{ product.amount }}</span></h4>
                                 {% else %}
-                                    <h4><span class="badge bg-soft-danger text-danger mb-4">No stock</span></h4>
+                                    <h4><span class="badge bg-soft-danger text-danger mb-4">No hay disponibilidad</span></h4>
                                 {% endif %}
-                                <h4 class="mb-4">Price: <span class="text-body me-2">${{ product.amount }} CUP</span></h4>
-
                             </div>
                         </div>
                     </div>
@@ -34,10 +32,10 @@
     </div>
     <!-- end row-->
 
-    {% if is_admin %}
+    {% if perms.inventory_management.delete_product %}
         <a class="btn btn-danger btn-sm" href="{% url 'product_delete' pk=product.id %}">Delete</a>
     {% endif %}
-    {% if is_admin or is_agent %}
+    {% if perms.inventory_management.change_product %}
         <a class="btn btn-outline-warning btn-sm" href="{% url 'product_update' pk=product.id %}">Modify</a>
     {% endif %}
     <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}">Back</a>

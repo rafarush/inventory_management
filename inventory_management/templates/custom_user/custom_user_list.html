@@ -63,7 +63,7 @@
                     <td>{{ user.last_name }}</td>
                     <td>{{ user.groups.all.0.name }}</td>
                     <td>
-                        {% if is_admin %}
+                        {% if perms.charge_cart.add_cart %}
                         	<a class="btn btn-danger btn-sm" href="{% url 'custom_user_delete' pk=user.id %}">Delete</a>
                         {% endif %}
                         <a class="btn btn-outline-warning btn-sm" href="{% url 'custom_user_update' pk=user.id %}">Modify</a>

@@ -9,7 +9,7 @@
 
 <div class="container-fluid">
 
-    {% if is_admin %}
+    {% if perms.inventory_management.add_worker %}
         <div style="margin-top: 20px;">
             <button id="open-worker-dialog" class="btn btn-success btn-sm float-end">Create Worker</button>
         </div>
