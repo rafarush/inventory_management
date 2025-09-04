@@ -6,6 +6,7 @@ from django.views.generic import ListView, CreateView, DeleteView, DetailView, U
 from inventory_management.modules.charge_cart.models import ChargeCart
 from inventory_management.modules.charge_cart.forms import ChargeCartAdminForm, ChargeCartUpdateForm, \
     ChargeCartFinishForm
+from django.db.models import Case, When, Value, IntegerField
 
 
 class ChargeCartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -21,6 +22,16 @@ class ChargeCartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
     def handle_no_permission(self):
         raise PermissionDenied("You do not have permission to perform this action.")
+
+    def get_queryset(self):
+        return ChargeCart.objects.annotate(
+            status_order=Case(
+                When(status='pendiente', then=Value(0)),
+                When(status='finalizado', then=Value(1)),
+                default=Value(2),
+                output_field=IntegerField(),
+            )
+        ).order_by('status_order')
 
 
 from django.http import HttpResponseNotAllowed, HttpResponseRedirect
