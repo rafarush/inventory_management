@@ -62,18 +62,7 @@ class ChargeCartUpdateForm(ModelForm):
 class ChargeCartFinishForm(ModelForm):
     class Meta:
         model = ChargeCart
-        fields = ['amount_received', 'revenue']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['amount_received'].initial = self.instance.amount_received or 0
-        self.fields['revenue'].initial = self.instance.revenue or 0
-
-    def clean_revenue(self):
-        revenue = self.cleaned_data.get('revenue')
-        if revenue is None:
-            revenue = 0
-        return revenue
+        fields = ['amount_received']
 
     def clean_amount_received(self):
         amount_received = self.cleaned_data['amount_received']
