@@ -19,6 +19,9 @@ class ChargeCartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = ChargeCartAdminForm()
+
+        context['current_order'] = self.request.GET.get('order_by', '')
+        context['search_term'] = self.request.GET.get('search', '')
         return context
 
     def handle_no_permission(self):
@@ -39,7 +42,6 @@ class ChargeCartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
             ).order_by('status_order')
         elif order_by in ['product', 'amount_sent', 'price_sent', 'amount_received', 'revenue', 'revenue_total',
                           'money_returned']:
-            # Para ordenar por las columnas normales, si 'product' es FK puedes ordenar por un campo relacionado, por ejemplo product.name
             if order_by == 'product':
                 qs = qs.order_by('product')
             else:
