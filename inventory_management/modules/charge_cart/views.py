@@ -25,14 +25,27 @@ class ChargeCartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         raise PermissionDenied("You do not have permission to perform this action.")
 
     def get_queryset(self):
-        return ChargeCart.objects.annotate(
-            status_order=Case(
-                When(status='pendiente', then=Value(0)),
-                When(status='finalizado', then=Value(1)),
-                default=Value(2),
-                output_field=IntegerField(),
-            )
-        ).order_by('status_order')
+        order_by = self.request.GET.get('order_by', None)
+        qs = ChargeCart.objects.all()
+
+        if order_by == 'status':
+            qs = qs.annotate(
+                status_order=Case(
+                    When(status='pendiente', then=Value(0)),
+                    When(status='finalizado', then=Value(1)),
+                    default=Value(2),
+                    output_field=IntegerField(),
+                )
+            ).order_by('status_order')
+        elif order_by in ['product', 'amount_sent', 'price_sent', 'amount_received', 'revenue', 'revenue_total',
+                          'money_returned']:
+            # Para ordenar por las columnas normales, si 'product' es FK puedes ordenar por un campo relacionado, por ejemplo product.name
+            if order_by == 'product':
+                qs = qs.order_by('product')
+            else:
+                qs = qs.order_by(order_by)
+
+        return qs
 
 
 class ChargeCartCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

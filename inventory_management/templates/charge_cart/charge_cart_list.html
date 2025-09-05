@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    ChargeCart List
+    Cargas de Carretilla
 {% endblock %}
 
 {% block content %}
@@ -38,19 +38,36 @@
         </div>
     </div>
 
+    <form method="get" action="">
+      <label for="order_by">Ordenar por:</label>
+      <select class="dropdown" name="order_by" id="order_by" onchange="this.form.submit()">
+        <option class="dropdown-item" value="">-- Selecciona una opción --</option>
+        <option class="dropdown-item" value="product" {% if request.GET.order_by == 'charge_cart.product' %}selected{% endif %}>Producto</option>
+        <option class="dropdown-item" value="amount_sent" {% if request.GET.order_by == 'amount_sent' %}selected{% endif %}>Cantidad Enviada</option>
+        <option class="dropdown-item" value="price_sent" {% if request.GET.order_by == 'price_sent' %}selected{% endif %}>Precio de Salida</option>
+        <option class="dropdown-item" value="amount_received" {% if request.GET.order_by == 'amount_received' %}selected{% endif %}>Cantidad Recibida</option>
+        <option class="dropdown-item" value="revenue" {% if request.GET.order_by == 'revenue' %}selected{% endif %}>Ganancia</option>
+        <option class="dropdown-item" value="revenue_total" {% if request.GET.order_by == 'revenue_total' %}selected{% endif %}>Ganancia Total</option>
+        <option class="dropdown-item" value="money_returned" {% if request.GET.order_by == 'money_returned' %}selected{% endif %}>Dinero Retornado</option>
+        <option class="dropdown-item" value="status" {% if request.GET.order_by == 'status' %}selected{% endif %}>Estado</option>
+      </select>
+    </form>
+
+
+
     {% if charge_cart_list %}
         <table class="table" id="chargecart-table">
             <thead>
                 <tr>
-                    <th scope="col">Product</th>
-                    <th scope="col">Amount Sent</th>
-                    <th scope="col">Price Sent</th>
-                    <th scope="col">Amount Received</th>
-                    <th scope="col">Revenue</th>
-                    <th scope="col">Revenue Total</th>
-                    <th scope="col">Money Returned</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Cantidad Enviada</th>
+                    <th scope="col">Precio de Salida</th>
+                    <th scope="col">Cantidad Recibida</th>
+                    <th scope="col">Ganancia</th>
+                    <th scope="col">Ganancia Total</th>
+                    <th scope="col">Dinero Retornado</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -73,11 +90,12 @@
                         <td>${{ charge.money_returned }}</td>
                         <td>{{ charge.get_status_display }}</td>
                         {% if charge.status != "finalizado" %}
-                            <td>
-                                <a class="btn btn-danger btn-sm" href="{% url 'charge_cart_delete' pk=charge.pk %}">Delete</a>
-                                <a class="btn btn-outline-warning btn-sm" href="{% url 'charge_cart_update' pk=charge.pk %}">Modify</a>
-                                <a class="btn btn-outline-success btn-sm" href="{% url 'charge_cart_finish' pk=charge.pk %}">Finished</a>
+                            <td class="btn-group-sm d-flex flex-nowrap gap-1">
+                                <a class="btn btn-danger btn-sm flex-fill" href="{% url 'charge_cart_delete' pk=charge.pk %}">Eliminar</a>
+                                <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'charge_cart_update' pk=charge.pk %}">Modificar</a>
+                                <a class="btn btn-outline-success btn-sm flex-fill" href="{% url 'charge_cart_finish' pk=charge.pk %}">Finalizar</a>
                             </td>
+
                         {% else %}
                             <td></td>
                         {% endif %}

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-	Product: {{ product.id }}
+	Producto: {{ product.id }}
 {% endblock %}
 
 {% block content %}
@@ -33,11 +33,11 @@
     <!-- end row-->
 
     {% if perms.inventory_management.delete_product %}
-        <a class="btn btn-danger btn-sm" href="{% url 'product_delete' pk=product.id %}">Delete</a>
+        <a class="btn btn-danger btn-sm" href="{% url 'product_delete' pk=product.id %}">Eliminar</a>
     {% endif %}
     {% if perms.inventory_management.change_product %}
-        <a class="btn btn-outline-warning btn-sm" href="{% url 'product_update' pk=product.id %}">Modify</a>
+        <a class="btn btn-outline-warning btn-sm" href="{% url 'product_update' pk=product.id %}">Modificar</a>
     {% endif %}
-    <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}">Back</a>
+    <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}">Atrás</a>
 
 {% endblock %}
