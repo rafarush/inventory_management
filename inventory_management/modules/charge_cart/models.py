@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 
 from inventory_management.modules.base_model.base_model import BaseModel
+from inventory_management.modules.daily_part_cart.models import DailyPartCart
 from inventory_management.modules.product.models import Product  # ajusta la ruta según tu proyecto
 
 
@@ -34,6 +35,13 @@ class ChargeCart(BaseModel):
         max_length=20,
         choices=STATUS_CHOICES,
         default="pendiente"
+    )
+    daily_part_cart = models.ForeignKey(
+        DailyPartCart,
+        on_delete=models.CASCADE,
+        related_name="charge_carts",
+        null=True,
+        blank=True
     )
 
     def save(self, *args, **kwargs):

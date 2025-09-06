@@ -121,13 +121,13 @@
                                 <span class="menu-icon"><i data-feather="shopping-cart"></i></span>
                                 <span class="menu-text"> Carretillas </span>
                             </a>
-                            <a href="{% url 'cart_status_list' %}" class="menu-link">
-                                <span class="menu-icon"><i data-feather="map-pin"></i></span>
-                                <span class="menu-text"> Estados de Carretillas </span>
-                            </a>
                             <a href="{% url 'charge_cart_list' %}" class="menu-link">
                                 <span class="menu-icon"><i data-feather="package"></i></span>
                                 <span class="menu-text"> Carga por Carretilla </span>
+                            </a>
+                            <a href="{% url 'daily_part_cart_list' %}" class="menu-link">
+                                <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard.svg' %}" alt="Clipboard icon"></span>
+                                <span class="menu-text"> Parte Diario por Carretilla </span>
                             </a>
                         </li>
                     </ul>
