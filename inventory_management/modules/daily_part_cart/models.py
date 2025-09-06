@@ -6,6 +6,10 @@ from inventory_management.modules.worker.models import Worker
 
 
 class DailyPartCart(BaseModel):
+    STATUS_CHOICES = [
+        ("trabajando", "Trabajando"),
+        ("finalizado", "Finalizado"),
+    ]
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
@@ -27,7 +31,25 @@ class DailyPartCart(BaseModel):
     worker_payment = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     revenue = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable= False)
 
-    date = models.DateField(auto_now_add=True)  # opcional, para registrar el día
+    date = models.DateField(auto_now_add=True)
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="trabajando",
+        verbose_name="status"
+    )
+
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding  # detecta si es creación
+        super().save(*args, **kwargs)
+
+        if is_new:
+            self.worker.status = "trabajando"
+            self.worker.save(update_fields=["status"])
+
+            self.cart.status = "trabajando"
+            self.cart.save(update_fields=["status"])
 
     def __str__(self):
         return f"DailyPartCart {self.id} - Worker: {self.worker.name} - Cart: {self.cart.id}"
