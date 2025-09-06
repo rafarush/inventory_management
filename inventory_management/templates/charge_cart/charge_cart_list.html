@@ -30,33 +30,33 @@
 
     <!-- Filter -->
     <div class="container-fluid mt-3 mb-3">
-    <form method="get" class="row g-2 align-items-center">
-        <!-- Buscar producto -->
-        <div class="col-md-6">
-            <input type="text" 
-                   name="search" 
-                   class="form-control" 
-                   placeholder="Buscar por producto..." 
-                   value="{{ search_term }}">
-        </div>
+        <form method="get" class="row g-2 align-items-center">
+            <!-- Buscar producto -->
+            <div class="col-md-6">
+                <input type="text"
+                       name="search"
+                       class="form-control"
+                       placeholder="Buscar por producto..."
+                       value="{{ search_term }}">
+            </div>
 
-        <!-- Ordenar por -->
-        <div class="col-md-4">
-            <select class="form-select" name="order_by" onchange="this.form.submit()">
-                <option value="">-- Ordenar por --</option>
-                <option value="product" {% if current_order == 'product' %}selected{% endif %}>Producto</option>
-                <option value="amount_sent" {% if current_order == 'amount_sent' %}selected{% endif %}>Cantidad Enviada</option>
-                <option value="price_sent" {% if current_order == 'price_sent' %}selected{% endif %}>Precio de Salida</option>
-                <option value="amount_received" {% if current_order == 'amount_received' %}selected{% endif %}>Cantidad Recibida</option>
-                <option value="revenue" {% if current_order == 'revenue' %}selected{% endif %}>Ganancia</option>
-                <option value="revenue_total" {% if current_order == 'revenue_total' %}selected{% endif %}>Ganancia Total</option>
-                <option value="money_returned" {% if current_order == 'money_returned' %}selected{% endif %}>Dinero Retornado</option>
-                <option value="status" {% if current_order == 'status' %}selected{% endif %}>Estado</option>
-            </select>
+            <!-- Ordenar por -->
+            <div class="col-md-4">
+                <select class="form-select" name="order_by" onchange="this.form.submit()">
+                    <option value="">-- Ordenar por --</option>
+                    <option value="product" {% if current_order == 'product' %}selected{% endif %}>Producto</option>
+                    <option value="amount_sent" {% if current_order == 'amount_sent' %}selected{% endif %}>Cantidad Enviada</option>
+                    <option value="price_sent" {% if current_order == 'price_sent' %}selected{% endif %}>Precio de Salida</option>
+                    <option value="amount_received" {% if current_order == 'amount_received' %}selected{% endif %}>Cantidad Recibida</option>
+                    <option value="revenue" {% if current_order == 'revenue' %}selected{% endif %}>Ganancia</option>
+                    <option value="revenue_total" {% if current_order == 'revenue_total' %}selected{% endif %}>Ganancia Total</option>
+                    <option value="money_returned" {% if current_order == 'money_returned' %}selected{% endif %}>Dinero Retornado</option>
+                    <option value="status" {% if current_order == 'status' %}selected{% endif %}>Estado</option>
+                </select>
 
-        </div>
-    </form>
-</div>
+            </div>
+        </form>
+    </div>
 
 
 

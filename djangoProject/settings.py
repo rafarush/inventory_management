@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -144,6 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'inventory_management.CustomUser'
 LOGIN_URL = 'auth/login/'
 LOGIN_REDIRECT_URL = ''
+SESSION_COOKIE_AGE = 600
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
