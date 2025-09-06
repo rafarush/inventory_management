@@ -15,6 +15,26 @@
         </a>
     {% endif %}
 
+    {% for part in daily_part_carts %}
+    <tr>
+        <td>{{ part.worker.name }}</td>
+        <td>{{ part.cart.id }}</td>
+        <td>{{ part.status }}</td>
+        <td>
+            {% if part.status == "trabajando" %}
+                <form method="post" action="{% url 'daily_part_cart_finish' part.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success btn-sm">
+                        Finalizar Parte Diario
+                    </button>
+                </form>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+
+
+
 
     <!-- Filter -->
     <div class="container-fluid mt-3 mb-3">
@@ -55,6 +75,7 @@
                 <th scope="col">Pago al Worker</th>
                 <th scope="col">Ingresos</th>
                 <th scope="col">Fecha</th>
+                <th scope="col">Estado</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
@@ -68,6 +89,7 @@
                     <td>${{ part.worker_payment }}</td>
                     <td>${{ part.revenue }}</td>
                     <td>{{ part.date }}</td>
+                    <td>{{ part.get_status_display }}</td>
                     <td class="btn-group-sm d-flex flex-nowrap gap-1">
                         <!-- Botón Details -->
                         <a class="btn btn-info btn-sm flex-fill" href="{% url 'daily_part_cart_detail' pk=part.pk %}">Detalles</a>

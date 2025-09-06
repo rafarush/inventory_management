@@ -81,6 +81,7 @@
                     <th scope="col">Nombre</th>
                     <th scope="col">Salario</th>
                     <th scope="col">Telefono</th>
+                    <th scope="col">Estado</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
@@ -91,6 +92,7 @@
                         <td>{{ worker.name }}</td>
                         <td>${{ worker.salary }}</td>
                         <td>{{ worker.phone }}</td>
+                        <td>{{ worker.get_status_display }}</td>
                         <td>
                             <a class="btn btn-danger btn-sm" href="{% url 'worker_delete' pk=worker.pk %}">Delete</a>
                             <a class="btn btn-outline-warning btn-sm" href="{% url 'worker_update' pk=worker.pk %}">Modify</a>
