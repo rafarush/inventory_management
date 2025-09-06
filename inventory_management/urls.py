@@ -11,6 +11,7 @@ urlpatterns = [
     path('users/', include('inventory_management.modules.custom_user.urls')),
     path('confirm-email/', include('inventory_management.modules.email_services.urls')),
     path('workers/', include('inventory_management.modules.worker.urls')),
+    path('daily_part_cart/', include('inventory_management.modules.daily_part_cart.urls')),
     path('account/', include('inventory_management.modules.email_services.urls')),
     path('cart-status/', include('inventory_management.modules.cart_status.urls')),
 ]

@@ -1,0 +1,115 @@
+{% extends "layouts/base/base.html" %}
+{% load static %}
+
+{% block title %}
+    Partes Diarios de Carretilla
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    {% if perms.daily_part_cart.add_dailypartcart %}
+        <a href="{% url 'daily_part_cart_create' %}" class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
+            Crear Parte Diario
+        </a>
+    {% endif %}
+
+
+    <!-- Filter -->
+    <div class="container-fluid mt-3 mb-3">
+    <form method="get" class="row g-2 align-items-center">
+        <!-- Buscar worker -->
+        <div class="col-md-6">
+            <input type="text" 
+                   name="search" 
+                   class="form-control" 
+                   placeholder="Buscar por worker..." 
+                   value="{{ search_term }}">
+        </div>
+
+        <!-- Ordenar por -->
+        <div class="col-md-4">
+            <select class="form-select" name="order_by" onchange="this.form.submit()">
+                <option value="">-- Ordenar por --</option>
+                <option value="worker" {% if current_order == 'worker' %}selected{% endif %}>Worker</option>
+                <option value="cart" {% if current_order == 'cart' %}selected{% endif %}>Cart</option>
+                <option value="money_return_total" {% if current_order == 'money_return_total' %}selected{% endif %}>Dinero Retornado Total</option>
+                <option value="net_profit" {% if current_order == 'net_profit' %}selected{% endif %}>Ganancia Neta</option>
+                <option value="worker_payment" {% if current_order == 'worker_payment' %}selected{% endif %}>Pago al Worker</option>
+                <option value="revenue" {% if current_order == 'revenue' %}selected{% endif %}>Ingresos</option>
+                <option value="date" {% if current_order == 'date' %}selected{% endif %}>Fecha</option>
+            </select>
+        </div>
+    </form>
+</div>
+
+{% if daily_part_carts %}
+    <table class="table" id="daily-part-cart-table">
+        <thead>
+            <tr>
+                <th scope="col">Worker</th>
+                <th scope="col">Cart</th>
+                <th scope="col">Dinero Retornado Total</th>
+                <th scope="col">Ganancia Neta</th>
+                <th scope="col">Pago al Worker</th>
+                <th scope="col">Ingresos</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for part in daily_part_carts %}
+                <tr data-worker-name="{{ part.worker.name }}">
+                    <td>{{ part.worker.name }}</td>
+                    <td>{{ part.cart.id }}</td>
+                    <td>${{ part.money_return_total }}</td>
+                    <td>${{ part.net_profit }}</td>
+                    <td>${{ part.worker_payment }}</td>
+                    <td>${{ part.revenue }}</td>
+                    <td>{{ part.date }}</td>
+                    <td class="btn-group-sm d-flex flex-nowrap gap-1">
+                        <!-- Botón Details -->
+                        <a class="btn btn-info btn-sm flex-fill" href="{% url 'daily_part_cart_detail' pk=part.pk %}">Detalles</a>
+                        
+                        {% if perms.daily_part_cart.change_dailypartcart %}
+                            <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'daily_part_cart_update' pk=part.pk %}">Modificar</a>
+                        {% endif %}
+                        {% if perms.daily_part_cart.delete_dailypartcart %}
+                            <a class="btn btn-danger btn-sm flex-fill" href="{% url 'daily_part_cart_delete' pk=part.pk %}">Eliminar</a>
+                        {% endif %}
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <h3>No hay registros para mostrar</h3>
+{% endif %}
+
+</div> <!-- end container-fluid -->
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filter daily part carts by worker
+        const searchInput = document.querySelector('input[name="search"]');
+        const rows = document.querySelectorAll('#daily-part-cart-table tbody tr');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const term = this.value.toLowerCase();
+                rows.forEach(row => {
+                    const workerName = row.dataset.workerName.toLowerCase();
+                    row.style.display = workerName.includes(term) ? '' : 'none';
+                });
+            });
+        }
+
+        feather.replace(); // Feather icons
+    });
+</script>
+{% endblock %}
