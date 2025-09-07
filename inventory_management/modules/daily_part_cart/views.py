@@ -102,9 +102,17 @@ class DailyPartCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, View)
             messages.error(request, "No puedes finalizar: hay ChargeCart pendientes.")
             return redirect("daily_part_cart_detail", pk=pk)
 
-        # Cambiar estados
+        # ---- Cálculos de totales ----
+        money_return_total = sum(cc.money_returned or 0 for cc in daily_part.charge_carts.all())
+        revenue_total = sum(cc.revenue_total or 0 for cc in daily_part.charge_carts.all())
+        net_profit = revenue_total - (daily_part.worker_payment or 0)
+
+        # Guardar en el DailyPartCart
+        daily_part.money_return_total = money_return_total
+        daily_part.revenue = revenue_total
+        daily_part.net_profit = net_profit
         daily_part.status = "finalizado"
-        daily_part.save(update_fields=["status"])
+        daily_part.save(update_fields=["money_return_total", "revenue", "net_profit", "status"])
 
         # Cambiar estado del worker y cart
         daily_part.worker.status = "pendiente"

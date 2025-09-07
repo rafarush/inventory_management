@@ -123,7 +123,7 @@ class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     model = ChargeCart
     form_class = ChargeCartFinishForm
     template_name = 'charge_cart/charge_cart_form.html'
-    success_url = reverse_lazy('charge_cart_list')
+    #success_url = reverse_lazy('charge_cart_list_by_daily')
     permission_required = 'charge_cart.change_chargecart'
 
     def handle_no_permission(self):
@@ -146,3 +146,9 @@ class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
         instance.save()
 
         return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        # Obtén el daily_part_cart_id del ChargeCart actual
+        daily_part_cart_id = self.object.daily_part_cart.id
+        # Haz el reverse pasando el argumento
+        return reverse_lazy('charge_cart_list_by_daily', kwargs={'daily_part_cart_id': daily_part_cart_id})
