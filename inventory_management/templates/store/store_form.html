@@ -1,12 +1,33 @@
 {% extends "layouts/base/base.html" %}
+
 {% block content %}
 <div class="container mt-4">
-  <h2>Editar Almacén</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Guardar</button>
-    <a href="{% url 'store_detail' %}" class="btn btn-secondary">Cancelar</a>
-  </form>
+    <h2>Editar Almacén</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="{{ form.name.id_for_label }}" class="form-label">Nombre</label>
+                {{ form.name }}
+            </div>
+            <div class="col-md-6">
+                <label for="{{ form.percent.id_for_label }}" class="form-label">Porcentaje</label>
+                {{ form.percent }}
+            </div>
+            <div class="col-md-6">
+                <label for="{{ form.own_money.id_for_label }}" class="form-label">Dinero Propio</label>
+                {{ form.own_money }}
+            </div>
+            <div class="col-md-6">
+                <label for="{{ form.money_business.id_for_label }}" class="form-label">Dinero del Negocio</label>
+                {{ form.money_business }}
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <a href="{% url 'store_detail' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
 </div>
 {% endblock %}
