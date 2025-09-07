@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 
 <div class="navbar-custom">
@@ -12,7 +13,7 @@
                 <!-- Dropdown Menu -->
                 <div class="dropdown d-none d-xl-block">
                     <a class="nav-link dropdown-toggle waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        Crear Nuevo
+                        {% trans "Crear Nuevo" %}
                         <i class="mdi mdi-chevron-down ms-1"></i>
                     </a>
                     <div class="dropdown-menu">
@@ -40,7 +41,7 @@
                         {% csrf_token %}
                         <button type="submit" class="dropdown-item notify-item">
                             <i class="fe-log-out"></i>
-                            <span>Cerrar Sesión</span>
+                            <span>{% trans "Cerrar Sesión" %}</span>
                         </button>
                     </form>
 
@@ -51,25 +52,74 @@
 </div>
 
 <script>
-    const languageToggle = document.getElementById('language-toggle');
-    const flagIcon = document.getElementById('flag-icon');
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
 
-    // Estado inicial: inglés (UK)
-    let currentLang = 'en';
+    let currentLang = getCookie('django_language') || 'es';
+
+    const flagIcon = document.getElementById('flag-icon');
+    const languageToggle = document.getElementById('language-toggle');
+
+    function updateFlag() {
+      flagIcon.src = {
+        'es': "{% static 'assets/images/flags/es.png' %}",
+        'en': "{% static 'assets/images/flags/gb.png' %}"
+      }[currentLang];
+      flagIcon.alt = currentLang === 'es' ? 'Spanish Flag' : 'UK Flag';
+    }
+
+    updateFlag();
 
     languageToggle.addEventListener('click', () => {
-        if (currentLang === 'en') {
-            // Cambiar a español
-            flagIcon.src = "{% static 'assets/images/flags/es.png' %}";
-            flagIcon.alt = "Spanish Flag";
-            currentLang = 'es';
-            // Aquí agregar lógica para cambiar idioma de la página
-        } else {
-            // Cambiar a inglés
-            flagIcon.src = "{% static 'assets/images/flags/gb.png' %}";
-            flagIcon.alt = "UK Flag";
-            currentLang = 'en';
-            // Aquí agregar lógica para cambiar idioma de la página
-        }
+      currentLang = currentLang === 'es' ? 'en' : 'es';
+      updateFlag();
+
+      const formData = new FormData();
+      formData.append('language', currentLang);
+      formData.append('next', window.location.pathname);
+
+      fetch('/i18n/setlang/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken'),
+        },
+      }).then(() => {
+        window.location.reload();
+      });
     });
+
+
+    {#const languageToggle = document.getElementById('language-toggle');#}
+    {#const flagIcon = document.getElementById('flag-icon');#}
+    {##}
+    {#// Estado inicial: inglés (UK)#}
+    {#let currentLang = 'en';#}
+    {##}
+    {#languageToggle.addEventListener('click', () => {#}
+    {#    if (currentLang === 'en') {#}
+    {#        // Cambiar a español#}
+    {#        flagIcon.src = "{% static 'assets/images/flags/es.png' %}";#}
+    {#        flagIcon.alt = "Spanish Flag";#}
+    {#        currentLang = 'es';#}
+    {#        // Aquí agregar lógica para cambiar idioma de la página#}
+    {#    } else {#}
+    {#        // Cambiar a inglés#}
+    {#        flagIcon.src = "{% static 'assets/images/flags/gb.png' %}";#}
+    {#        flagIcon.alt = "UK Flag";#}
+    {#        currentLang = 'en';#}
+    {#        // Aquí agregar lógica para cambiar idioma de la página#}
+    {#    }#}
 </script>

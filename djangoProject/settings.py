@@ -152,6 +152,17 @@ SESSION_COOKIE_AGE = 600
 
 LANGUAGE_CODE = 'en-us'
 
+
+USE_I18N = True
+LANGUAGES = [
+    ('en', 'English'),
+    ('es', 'Español'),
+]
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True

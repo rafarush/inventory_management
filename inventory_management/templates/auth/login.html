@@ -1,9 +1,10 @@
+{% load i18n %}
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Iniciar Sesión</title>
+    <title>{% trans "Iniciar Sesión" %}</title>
     <!-- App favicon -->
     <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
 
@@ -51,13 +52,13 @@
                                             </span>
                                         </a>
                                     </div>
-                                    <p class="text-muted mb-4 mt-3">Escriba sus credenciales para iniciar sesión.</p>
+                                    <p class="text-muted mb-4 mt-3">{% trans "Escriba sus credenciales para iniciar sesión." %}</p>
                                 </div>
 
                                 <form action="" class="form-control" method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="mb-3">
-                                        <label for="{{ form.username.id_for_label }}" class="form-label">Nombre de usuario</label>
+                                        <label for="{{ form.username.id_for_label }}" class="form-label">{% trans "Nombre de usuario" %}</label>
 
                                         <div class="input-group">
                                             {{ form.username }}
@@ -68,7 +69,7 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="{{ form.username.id_for_label }}" class="form-label">Contraseña</label>
+                                        <label for="{{ form.username.id_for_label }}" class="form-label">{% trans "Contraseña" %}</label>
                                         <div class="input-group input-group-merge">
                                             {{ form.password }}
                                             <div id="password-input" class="input-group-text" data-password="false">
@@ -82,11 +83,11 @@
                                     </div>
 
                                     <div class="text-center d-grid">
-                                        <button class="btn btn-primary" type="submit"> Iniciar Sesión </button>
+                                        <button class="btn btn-primary" type="submit">{% trans "Iniciar Sesión" %} </button>
                                     </div>
 
                                     <a href="{% url 'signup' %}" class="text-center text-decoration-underline">
-                                        <span>Registrarse</span>
+                                        <span>{% trans "Registrarse" %}</span>
                                     </a>
 
                                 </form>
