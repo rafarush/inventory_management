@@ -1,0 +1,12 @@
+{% extends "layouts/base/base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Editar Almacén</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a href="{% url 'store_detail' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

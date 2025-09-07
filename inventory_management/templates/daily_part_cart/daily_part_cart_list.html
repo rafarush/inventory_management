@@ -97,9 +97,7 @@
                         {% if perms.daily_part_cart.change_dailypartcart %}
                             <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'daily_part_cart_update' pk=part.pk %}">Modificar</a>
                         {% endif %}
-                        {% if perms.daily_part_cart.delete_dailypartcart %}
-                            <a class="btn btn-danger btn-sm flex-fill" href="{% url 'daily_part_cart_delete' pk=part.pk %}">Eliminar</a>
-                        {% endif %}
+                        
                     </td>
 
                 </tr>
