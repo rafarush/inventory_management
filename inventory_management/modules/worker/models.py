@@ -4,6 +4,10 @@ from inventory_management.modules.base_model.base_model import BaseModel
 
 
 class Worker(BaseModel):
+    STATUS_CHOICES = [
+        ("pendiente", "Pendiente"),
+        ("trabajando", "Trabajando"),
+    ]
     id = models.CharField(
         primary_key=True,
         max_length=50,
@@ -17,6 +21,12 @@ class Worker(BaseModel):
         blank=True,
         null=True,
         verbose_name="phone"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="pendiente",
+        verbose_name="status"
     )
 
     def __str__(self):

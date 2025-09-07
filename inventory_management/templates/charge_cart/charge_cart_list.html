@@ -2,18 +2,32 @@
 {% load static %}
 
 {% block title %}
-    ChargeCart List
+    Cargas de Carretilla
 {% endblock %}
 
 {% block content %}
 
 <div class="container-fluid">
 
-    {% if perms.charge_cart.add_chargecart %}
-        <a href="{% url 'charge_cart_create' %}" class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
-            Crear Carga de Carretilla
-        </a>
+
+    {% if daily_part_cart %}
+        <h3 class="mb-3">Cargas de Carretilla para el Parte Diario: {{ daily_part_cart.date }}-{{ daily_part_cart.cart.id }}-{{ daily_part_cart.worker.name }}</h3>
+        <a class="btn btn-secondary btn-sm mb-3" href="{% url 'daily_part_cart_detail' daily_part_cart.id %}">Volver al Parte Diario</a>
     {% endif %}
+
+    {% if perms.charge_cart.add_chargecart %}
+        {% if daily_part_cart %}
+            <a href="{% url 'charge_cart_create_by_daily' daily_part_cart.id %}" 
+            class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
+                Crear Carga de Carretilla</a>
+        {% else %}
+            <a href="{% url 'charge_cart_create' %}" 
+            class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
+                Crear Carga de Carretilla</a>
+        {% endif %}
+        
+    {% endif %}
+
 
 
     <!-- ChargeCart Form Dialog -->
@@ -29,28 +43,51 @@
     </div>
 
     <!-- Filter -->
-    <div class="container-fluid">
-        <h4>Filtre registros producto:</h4>
-        <div class="row mb-3">
+    <div class="container-fluid mt-3 mb-3">
+        <form method="get" class="row g-2 align-items-center">
+            <!-- Buscar producto -->
             <div class="col-md-6">
-                <input type="text" id="chargecartSearch" class="form-control" placeholder="Buscar registros...">
+                <input type="text"
+                       name="search"
+                       class="form-control"
+                       placeholder="Buscar por producto..."
+                       value="{{ search_term }}">
             </div>
-        </div>
+
+            <!-- Ordenar por -->
+            <div class="col-md-4">
+                <select class="form-select" name="order_by" onchange="this.form.submit()">
+                    <option value="">-- Ordenar por --</option>
+                    <option value="product" {% if current_order == 'product' %}selected{% endif %}>Producto</option>
+                    <option value="amount_sent" {% if current_order == 'amount_sent' %}selected{% endif %}>Cantidad Enviada</option>
+                    <option value="price_sent" {% if current_order == 'price_sent' %}selected{% endif %}>Precio de Salida</option>
+                    <option value="amount_received" {% if current_order == 'amount_received' %}selected{% endif %}>Cantidad Recibida</option>
+                    <option value="revenue" {% if current_order == 'revenue' %}selected{% endif %}>Ganancia</option>
+                    <option value="revenue_total" {% if current_order == 'revenue_total' %}selected{% endif %}>Ganancia Total</option>
+                    <option value="money_returned" {% if current_order == 'money_returned' %}selected{% endif %}>Dinero Retornado</option>
+                    <option value="status" {% if current_order == 'status' %}selected{% endif %}>Estado</option>
+                </select>
+
+            </div>
+        </form>
     </div>
+
+
+
 
     {% if charge_cart_list %}
         <table class="table" id="chargecart-table">
             <thead>
                 <tr>
-                    <th scope="col">Product</th>
-                    <th scope="col">Amount Sent</th>
-                    <th scope="col">Price Sent</th>
-                    <th scope="col">Amount Received</th>
-                    <th scope="col">Revenue</th>
-                    <th scope="col">Revenue Total</th>
-                    <th scope="col">Money Returned</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Cantidad Enviada</th>
+                    <th scope="col">Precio de Salida</th>
+                    <th scope="col">Cantidad Recibida</th>
+                    <th scope="col">Ganancia</th>
+                    <th scope="col">Ganancia Total</th>
+                    <th scope="col">Dinero Retornado</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,17 +96,26 @@
                         <td>{{ charge.product.id }}</td>
                         <td>{{ charge.amount_sent }}</td>
                         <td>${{ charge.price_sent }}</td>
-                        <td>{{ charge.amount_received }}</td>
-                        <td>${{ charge.revenue }}</td>
+                        {% if charge.revenue %}
+                            <td>{{ charge.amount_received }}</td>
+                        {% else %}
+                            <td>0</td>
+                        {% endif %}
+                        {% if charge.revenue %}
+                            <td>${{ charge.revenue }}</td>
+                        {% else %}
+                            <td>$0.00</td>
+                        {% endif %}
                         <td>${{ charge.revenue_total }}</td>
                         <td>${{ charge.money_returned }}</td>
                         <td>{{ charge.get_status_display }}</td>
                         {% if charge.status != "finalizado" %}
-                            <td>
-                                <a class="btn btn-danger btn-sm" href="{% url 'charge_cart_delete' pk=charge.pk %}">Delete</a>
-                                <a class="btn btn-outline-warning btn-sm" href="{% url 'charge_cart_update' pk=charge.pk %}">Modify</a>
-                                <a class="btn btn-outline-success btn-sm" href="{% url 'charge_cart_finish' pk=charge.pk %}">Finished</a>
+                            <td class="btn-group-sm d-flex flex-nowrap gap-1">
+                                <a class="btn btn-danger btn-sm flex-fill" href="{% url 'charge_cart_delete' pk=charge.pk %}">Eliminar</a>
+                                <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'charge_cart_update' pk=charge.pk %}">Modificar</a>
+                                <a class="btn btn-outline-success btn-sm flex-fill" href="{% url 'charge_cart_finish' pk=charge.pk %}">Finalizar</a>
                             </td>
+
                         {% else %}
                             <td></td>
                         {% endif %}
