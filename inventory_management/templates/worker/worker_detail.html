@@ -23,6 +23,7 @@
                                 {% else %}
                                     <h4>{% trans "Phone" %}: <span class="text-muted">{% trans "Not provided" %}</span></h4>
                                 {% endif %}
+                                <h4 class="mb-4">Estado: <span class="text-body me-2">{{ worker.get_status_display }} </span></h4>
                             </div>
                         </div>
                     </div>

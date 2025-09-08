@@ -75,6 +75,7 @@
                     <th scope="col">{% trans "Name" %}</th>
                     <th scope="col">{% trans "Salary" %}</th>
                     <th scope="col">{% trans "Phone" %}</th>
+                    <th scope="col">Estado</th>
                     <th scope="col">{% trans "Actions" %}</th>
                 </tr>
             </thead>
@@ -85,6 +86,7 @@
                         <td>{{ worker.name }}</td>
                         <td>${{ worker.salary }}</td>
                         <td>{{ worker.phone }}</td>
+                        <td>{{ worker.get_status_display }}</td>
                         <td>
                             <a class="btn btn-danger btn-sm" href="{% url 'worker_delete' pk=worker.pk %}">{% trans "Delete" %}</a>
                             <a class="btn btn-outline-warning btn-sm" href="{% url 'worker_update' pk=worker.pk %}">{% trans "Modify" %}</a>

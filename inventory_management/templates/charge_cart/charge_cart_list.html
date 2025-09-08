@@ -10,11 +10,20 @@
 
 <div class="container-fluid">
 
-    {% if perms.charge_cart.add_chargecart %}
-        <a href="{% url 'charge_cart_create' %}" class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
-            {% trans "Create Cart Load" %}
-        </a>
+
+    {% if daily_part_cart %}
+        <h3 class="mb-3">Cargas de Carretilla para el Parte Diario: {{ daily_part_cart.date }}-{{ daily_part_cart.cart.id }}-{{ daily_part_cart.worker.name }}</h3>
+        <a class="btn btn-secondary btn-sm mb-3" href="{% url 'daily_part_cart_detail' daily_part_cart.id %}">Volver al Parte Diario</a>
     {% endif %}
+
+    {% if perms.charge_cart.add_chargecart %}
+        {% if daily_part_cart %}
+            <a href="{% url 'charge_cart_create_by_daily' daily_part_cart.id %}" 
+            class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
+                {% trans "Create Cart Load" %}</a>
+        {% endif %}   
+    {% endif %}
+
 
 
     <!-- ChargeCart Form Dialog -->

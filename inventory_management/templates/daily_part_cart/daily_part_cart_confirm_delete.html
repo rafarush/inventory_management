@@ -1,0 +1,20 @@
+{% extends "layouts/base/base.html" %}
+{% load static %}
+
+{% block title %}
+    Confirmar Eliminación: {{ daily_part_cart.id }}
+{% endblock %}
+
+{% block content %}
+    <h3>¿Estás seguro que deseas eliminar este Daily Part Cart?</h3>
+    <p><strong>Worker:</strong> {{ daily_part_cart.worker.name }}</p>
+    <p><strong>Cart:</strong> {{ daily_part_cart.cart.id }}</p>
+    <p><strong>Fecha:</strong> {{ daily_part_cart.date }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-danger btn-sm" value="Confirmar Eliminación">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='{% url 'daily_part_cart_list' %}'">Cancelar</button>
+    </form>
+
+{% endblock %}
