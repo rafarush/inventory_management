@@ -139,9 +139,14 @@ class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
                 form.add_error(field_name, "This field is required to complete.")
                 return self.form_invalid(form)
 
-        # cálculos
-        instance.money_returned = instance.price_sent * (instance.amount_sent - instance.amount_received)
-        instance.revenue_total = instance.revenue * (instance.amount_sent - instance.amount_received)
+        amount_v=(instance.amount_sent - instance.amount_received)
+        instance.money_returned = instance.price_sent * amount_v
+        instance.revenue_total = instance.revenue * amount_v
+        print("amount_v:", amount_v)
+        print("instance.revenue_total:", instance.revenue_total)
+        print("instance.money_returned:", instance.money_returned)
+        print("instance.amount_received:", instance.amount_received)
+        print("instance.amount_sent:", instance.amount_sent)
         instance.status = "finalizado"
         instance.save()
 
