@@ -14,7 +14,7 @@ urlpatterns = [
     path('daily/<uuid:daily_part_cart_id>/', ChargeCartListView.as_view(), name='charge_cart_list_by_daily'),  # filtrado por DailyPartCart
 
     # 🔹 CREAR
-    path('create/', ChargeCartCreateView.as_view(), name='charge_cart_create'),  # crear sin daily
+    path('create/', ChargeCartCreateView.as_view(), name='charge_cart_create'),
     path('create/<uuid:daily_part_cart_id>/', ChargeCartCreateView.as_view(), name='charge_cart_create_by_daily'),  # crear vinculado a DailyPartCart
 
     path('<uuid:pk>/', ChargeCartDetailView.as_view(), name='charge_cart_detail'),

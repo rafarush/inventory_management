@@ -123,7 +123,7 @@ class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     model = ChargeCart
     form_class = ChargeCartFinishForm
     template_name = 'charge_cart/charge_cart_form.html'
-    success_url = reverse_lazy('charge_cart_list')
+    #success_url = reverse_lazy('charge_cart_list_by_daily')
     permission_required = 'charge_cart.change_chargecart'
 
     def handle_no_permission(self):
@@ -139,10 +139,21 @@ class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
                 form.add_error(field_name, "This field is required to complete.")
                 return self.form_invalid(form)
 
-        # cálculos
-        instance.money_returned = instance.price_sent * (instance.amount_sent - instance.amount_received)
-        instance.revenue_total = instance.revenue * (instance.amount_sent - instance.amount_received)
+        amount_v=(instance.amount_sent - instance.amount_received)
+        instance.money_returned = instance.price_sent * amount_v
+        instance.revenue_total = instance.revenue * amount_v
+        print("amount_v:", amount_v)
+        print("instance.revenue_total:", instance.revenue_total)
+        print("instance.money_returned:", instance.money_returned)
+        print("instance.amount_received:", instance.amount_received)
+        print("instance.amount_sent:", instance.amount_sent)
         instance.status = "finalizado"
         instance.save()
 
         return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        # Obtén el daily_part_cart_id del ChargeCart actual
+        daily_part_cart_id = self.object.daily_part_cart.id
+        # Haz el reverse pasando el argumento
+        return reverse_lazy('charge_cart_list_by_daily', kwargs={'daily_part_cart_id': daily_part_cart_id})

@@ -22,10 +22,10 @@ class ChargeCart(BaseModel):
         on_delete=models.CASCADE,
         related_name="charges"
     )
-    amount_sent = models.PositiveIntegerField(default=0, null=True, blank=True)
+    amount_sent = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True)
     price_sent = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True)
 
-    amount_received = models.PositiveIntegerField(null=True, blank=True)
+    amount_received = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True)
     revenue = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, editable=False)
 
     revenue_total = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True, editable= False)
@@ -49,7 +49,7 @@ class ChargeCart(BaseModel):
             self.revenue = self.price_sent - self.product.price
 
             if self.amount_sent:
-                self.revenue_total = (self.price_sent - self.product.price) * self.amount_sent
+                self.revenue_total = (self.amount_sent - self.amount_received) * self.revenue
             else:
                 self.revenue_total = 0
         else:
