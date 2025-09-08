@@ -1,6 +1,7 @@
 {% extends "layouts/base/base.html" %}
+{% load i18n %}
 {% block title %}
-    ChargeCart Form
+    {% trans "ChargeCart Form" %}
 {% endblock %}
 
 {% block content %}
@@ -30,7 +31,7 @@
             {% endfor %}
         </div>
         <div class="d-flex justify-content-end">
-            <input type="submit" class="btn btn-success btn-sm" value="Submit">
+            <input type="submit" class="btn btn-success btn-sm" value="{% trans "Submit" %}">
         </div>
     </form>
 </div>

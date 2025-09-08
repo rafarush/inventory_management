@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load form_tags %}
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +13,7 @@
 
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
-            <h2 class="mb-4 text-center">Crear una cuenta</h2>
+            <h2 class="mb-4 text-center">{% trans "Create Account" %}</h2>
             <form method="post" action="{% url 'signup' %}">
                 {% csrf_token %}
                 <!-- Convert form fields to Bootstrap form-groups -->
@@ -28,7 +29,7 @@
                         {% endfor %}
                     </div>
                 {% endfor %}
-                <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+                <button type="submit" class="btn btn-primary w-100">{% trans "Register" %}</button>
             </form>
         </div>
     </div>
