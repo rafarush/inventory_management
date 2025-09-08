@@ -1,16 +1,17 @@
 {% extends "layouts/base/base.html" %}
+{% load i18n %}
 {% block title %}
-    Worker Form
+    {% trans "Worker Form" %}
 {% endblock %}
 
 {% block content %}
 
-    <a class="btn btn-secondary btn-sm" href="{% url 'worker_list' %}" style="margin-top: 20px; margin-bottom: 20px">Back</a>
+    <a class="btn btn-secondary btn-sm" href="{% url 'worker_list' %}" style="margin-top: 20px; margin-bottom: 20px">{% trans "Back" %}</a>
     <div>
         <form action="" class="form-control" method="POST">
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" class="btn btn-success btn-sm" value="Submit">
+            <input type="submit" class="btn btn-success btn-sm" value="{% trans "Submit" %}">
         </form>
     </div>
 

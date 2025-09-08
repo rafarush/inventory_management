@@ -1,8 +1,9 @@
 {% extends "layouts/base/base.html" %}
+{% load i18n %}
 {% load static %}
 
 {% block title %}
-    Cargas de Carretilla
+    {% trans "Cart Loads" %}
 {% endblock %}
 
 {% block content %}
@@ -11,7 +12,7 @@
 
     {% if perms.charge_cart.add_chargecart %}
         <a href="{% url 'charge_cart_create' %}" class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
-            Crear Carga de Carretilla
+            {% trans "Create Cart Load" %}
         </a>
     {% endif %}
 
@@ -20,7 +21,7 @@
     <div id="chargecart-form-dialog" class="modal-dialog-centered" style="display:none;">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center justify-content-between">
-                <h4 class="modal-title">Create ChargeCart</h4>
+                <h4 class="modal-title">{% trans "Create Cart Load" %}</h4>
                 <button type="button" class="btn-close" id="close-chargecart-dialog" aria-label="Close">
                     <i data-feather="x"></i>
                 </button>
@@ -36,22 +37,22 @@
                 <input type="text"
                        name="search"
                        class="form-control"
-                       placeholder="Buscar por producto..."
+                       placeholder="{% trans "Filter by product name..." %}"
                        value="{{ search_term }}">
             </div>
 
             <!-- Ordenar por -->
             <div class="col-md-4">
                 <select class="form-select" name="order_by" onchange="this.form.submit()">
-                    <option value="">-- Ordenar por --</option>
-                    <option value="product" {% if current_order == 'product' %}selected{% endif %}>Producto</option>
-                    <option value="amount_sent" {% if current_order == 'amount_sent' %}selected{% endif %}>Cantidad Enviada</option>
-                    <option value="price_sent" {% if current_order == 'price_sent' %}selected{% endif %}>Precio de Salida</option>
-                    <option value="amount_received" {% if current_order == 'amount_received' %}selected{% endif %}>Cantidad Recibida</option>
-                    <option value="revenue" {% if current_order == 'revenue' %}selected{% endif %}>Ganancia</option>
-                    <option value="revenue_total" {% if current_order == 'revenue_total' %}selected{% endif %}>Ganancia Total</option>
-                    <option value="money_returned" {% if current_order == 'money_returned' %}selected{% endif %}>Dinero Retornado</option>
-                    <option value="status" {% if current_order == 'status' %}selected{% endif %}>Estado</option>
+                    <option value="">-- {% trans "Order by" %} --</option>
+                    <option value="product" {% if current_order == 'product' %}selected{% endif %}>{% trans "Product" %}</option>
+                    <option value="amount_sent" {% if current_order == 'amount_sent' %}selected{% endif %}>{% trans "Sent Quantity" %}</option>
+                    <option value="price_sent" {% if current_order == 'price_sent' %}selected{% endif %}>{% trans "Sent Price" %}</option>
+                    <option value="amount_received" {% if current_order == 'amount_received' %}selected{% endif %}>{% trans "Received Quantity" %}</option>
+                    <option value="revenue" {% if current_order == 'revenue' %}selected{% endif %}>{% trans "Income" %}</option>
+                    <option value="revenue_total" {% if current_order == 'revenue_total' %}selected{% endif %}>{% trans "Total Income" %}</option>
+                    <option value="money_returned" {% if current_order == 'money_returned' %}selected{% endif %}>{% trans "Returned Money" %}</option>
+                    <option value="status" {% if current_order == 'status' %}selected{% endif %}>{% trans "Status" %}</option>
                 </select>
 
             </div>
@@ -65,15 +66,15 @@
         <table class="table" id="chargecart-table">
             <thead>
                 <tr>
-                    <th scope="col">Producto</th>
-                    <th scope="col">Cantidad Enviada</th>
-                    <th scope="col">Precio de Salida</th>
-                    <th scope="col">Cantidad Recibida</th>
-                    <th scope="col">Ganancia</th>
-                    <th scope="col">Ganancia Total</th>
-                    <th scope="col">Dinero Retornado</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Acciones</th>
+                    <th scope="col">{% trans "Product" %}</th>
+                    <th scope="col">{% trans "Sent Quantity" %}</th>
+                    <th scope="col">{% trans "Sent Price" %}</th>
+                    <th scope="col">{% trans "Received Quantity" %}</th>
+                    <th scope="col">{% trans "Income" %}</th>
+                    <th scope="col">{% trans "Total Income" %}</th>
+                    <th scope="col">{% trans "Returned Money" %}</th>
+                    <th scope="col">{% trans "Status" %}</th>
+                    <th scope="col">{% trans "Actions" %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -97,9 +98,9 @@
                         <td>{{ charge.get_status_display }}</td>
                         {% if charge.status != "finalizado" %}
                             <td class="btn-group-sm d-flex flex-nowrap gap-1">
-                                <a class="btn btn-danger btn-sm flex-fill" href="{% url 'charge_cart_delete' pk=charge.pk %}">Eliminar</a>
-                                <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'charge_cart_update' pk=charge.pk %}">Modificar</a>
-                                <a class="btn btn-outline-success btn-sm flex-fill" href="{% url 'charge_cart_finish' pk=charge.pk %}">Finalizar</a>
+                                <a class="btn btn-danger btn-sm flex-fill" href="{% url 'charge_cart_delete' pk=charge.pk %}">{% trans "Delete" %}</a>
+                                <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'charge_cart_update' pk=charge.pk %}">{% trans "Modify" %}</a>
+                                <a class="btn btn-outline-success btn-sm flex-fill" href="{% url 'charge_cart_finish' pk=charge.pk %}">{% trans "Finish" %}</a>
                             </td>
 
                         {% else %}
@@ -110,7 +111,7 @@
             </tbody>
         </table>
     {% else %}
-        <h3>No records to display</h3>
+        <h3>{% trans "No records to display" %}</h3>
     {% endif %}
 </div> <!-- end container-fluid -->
 

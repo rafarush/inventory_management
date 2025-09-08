@@ -1,25 +1,26 @@
 {% extends "layouts/base/base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
-	User: {{ user.username }}
+	{% trans "User:" %} {{ user.username }}
 {% endblock %}
 
 {% block content %}
         <div class="text-body rounded-3 p-1 shadow-lg text-black custom-border">
         <h1>{{ user.username }}</h1>
         <p>
-            name: {{ user.first_name }}
+            {% trans "name" %}: {{ user.first_name }}
         </p>
         <p>
-            email: {{ user.email }}
+            {% trans "email" %}: {{ user.email }}
         </p>
         {% if is_admin %}
-            <a class="btn btn-danger btn-sm" href="{% url 'custom_user_delete' pk=user.id %} %}">Delete</a>
+            <a class="btn btn-danger btn-sm" href="{% url 'custom_user_delete' pk=user.id %} %}">{% trans "Delete" %}</a>
         {% endif %}
         {% if is_admin or is_agent %}
-            <a class="btn btn-outline-warning btn-sm" href="{% url 'custom_user_update' pk=user.id %}">Modify</a>
+            <a class="btn btn-outline-warning btn-sm" href="{% url 'custom_user_update' pk=user.id %}">{% trans "Modify" %}</a>
         {% endif %}
-        <a class="btn btn-secondary btn-sm" href="{% url 'custom_user_list' %}">Back</a>
+        <a class="btn btn-secondary btn-sm" href="{% url 'custom_user_list' %}">{% trans "Back" %}</a>
     </div>
 {% endblock %}

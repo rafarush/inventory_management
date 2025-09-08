@@ -1,17 +1,18 @@
 {% extends "layouts/base/base.html" %}
+{% load i18n %}
 {% block title %}
-	Product Form
+	{% trans "Product Form" %}
 {% endblock %}
 
 
 {% block content %}
 
-    <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}" style="margin-top: 20px; margin-bottom: 20px">Atrás</a>
+    <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}" style="margin-top: 20px; margin-bottom: 20px">{% trans "Back" %}</a>
     <div>
         <form action="" class="form-control" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" class="btn btn-success btn-sm" value="Submit">
+            <input type="submit" class="btn btn-success btn-sm" value="{% trans "Submit" %}">
         </form>
     </div>
 

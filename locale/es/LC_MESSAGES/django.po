@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-05 22:47-0400\n"
+"POT-Creation-Date: 2025-09-08 16:36-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,77 +18,468 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
 "1 : 2;\n"
+
+#: .\inventory_management\templates\access_denied.html:16
+msgid "Access Denied"
+msgstr "Acceso Denegado"
+
 #: .\inventory_management\templates\auth\login.html:7
 #: .\inventory_management\templates\auth\login.html:86
-msgid "Iniciar Sesión"
-msgstr ""
+msgid "Log in"
+msgstr "Iniciar Sesión"
 
 #: .\inventory_management\templates\auth\login.html:55
-msgid "Escriba sus credenciales para iniciar sesión."
-msgstr ""
+msgid "Type your credentials to log in"
+msgstr "Escriba sus credenciales para iniciar sesión"
 
 #: .\inventory_management\templates\auth\login.html:61
-msgid "Nombre de usuario"
-msgstr ""
+msgid "User name"
+msgstr "Nombre de usuario"
 
 #: .\inventory_management\templates\auth\login.html:72
-msgid "Contraseña"
-msgstr ""
+msgid "Password"
+msgstr "Contraseña"
 
 #: .\inventory_management\templates\auth\login.html:90
-msgid "Registrarse"
-msgstr ""
+#: .\inventory_management\templates\auth\signup.html:32
+msgid "Register"
+msgstr "Registrarse"
 
 #: .\inventory_management\templates\auth\logout.html:7
 #: .\inventory_management\templates\auth\logout.html:18
 #: .\inventory_management\templates\layouts\partials\navbar.html:44
-msgid "Cerrar Sesión"
-msgstr ""
+msgid "Log out"
+msgstr "Cerrar sesión"
 
 #: .\inventory_management\templates\auth\logout.html:15
-msgid "Se ha cerrado su sesión"
-msgstr ""
+msgid "You've just logged out"
+msgstr "Acaba de cerrar sesión"
 
 #: .\inventory_management\templates\auth\logout.html:20
-msgid "Iniciar Sesión Nuevamente"
-msgstr ""
+msgid "Log in Again"
+msgstr "Iniciar Sesión Nuevamente"
+
+#: .\inventory_management\templates\auth\signup.html:16
+msgid "Create Account"
+msgstr "Crear Cuenta"
+
+#: .\inventory_management\templates\cart\cart_confirm_delete.html:5
+msgid "Delete Confirmation"
+msgstr "Confirmación de eliminación"
+
+#: .\inventory_management\templates\cart\cart_confirm_delete.html:10
+#: .\inventory_management\templates\worker\worker_confirm_delete.html:10
+msgid "Are you sure you want to delete"
+msgstr "¿Está seguro de que desea eliminar"
+
+#: .\inventory_management\templates\cart\cart_confirm_delete.html:15
+#: .\inventory_management\templates\charge_cart\charge_cart_confirm_delete.html:15
+#: .\inventory_management\templates\custom_user\custom_user_confirm_delete.html:16
+#: .\inventory_management\templates\product\product_confirm_delete.html:15
+#: .\inventory_management\templates\worker\worker_confirm_delete.html:15
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: .\inventory_management\templates\cart\cart_form.html:4
+msgid "Cart Form"
+msgstr "Formulario de Carretilla"
+
+#: .\inventory_management\templates\cart\cart_form.html:10
+#: .\inventory_management\templates\custom_user\custom_user_detail.html:24
+#: .\inventory_management\templates\custom_user\custom_user_update.html:11
+#: .\inventory_management\templates\product\product_detail.html:42
+#: .\inventory_management\templates\product\product_form.html:10
+#: .\inventory_management\templates\worker\worker_detail.html:42
+#: .\inventory_management\templates\worker\worker_form.html:9
+msgid "Back"
+msgstr "Atrás"
+
+#: .\inventory_management\templates\cart\cart_list.html:6
+msgid "Carts (Cart list)"
+msgstr "Carretillas"
+
+#: .\inventory_management\templates\cart\cart_list.html:14
+#: .\inventory_management\templates\custom_user\custom_user_list.html:28
+msgid "Create"
+msgstr "Crear"
+
+#: .\inventory_management\templates\cart\cart_list.html:22
+msgid "Create Cart"
+msgstr "Crear Carretilla"
+
+#: .\inventory_management\templates\cart\cart_list.html:49
+#: .\inventory_management\templates\charge_cart\charge_cart_form.html:34
+#: .\inventory_management\templates\custom_user\custom_user_form.html:61
+#: .\inventory_management\templates\custom_user\custom_user_update.html:16
+#: .\inventory_management\templates\custom_user\partials\custom_user_form.html:23
+#: .\inventory_management\templates\product\product_form.html:15
+#: .\inventory_management\templates\product\product_list.html:55
+#: .\inventory_management\templates\worker\worker_form.html:14
+#: .\inventory_management\templates\worker\workers_list.html:53
+msgid "Submit"
+msgstr "Enviar"
+
+#: .\inventory_management\templates\cart\cart_list.html:58
+msgid "Filter carts by ID"
+msgstr "Filtrar carretillas por ID"
+
+#: .\inventory_management\templates\cart\cart_list.html:61
+msgid "Filter carts..."
+msgstr "Filtrar carretillas"
+
+#: .\inventory_management\templates\cart\cart_list.html:93
+msgid "No carts available."
+msgstr "No hay carretillas"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_confirm_delete.html:5
+msgid "Delete Confirmation: "
+msgstr "Confirmación de eliminación"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_confirm_delete.html:10
+msgid "Are you sure you want to delete: "
+msgstr "¿Está seguro de que desea eliminar"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_confirm_delete.html:14
+#: .\inventory_management\templates\custom_user\custom_user_confirm_delete.html:15
+#: .\inventory_management\templates\worker\worker_confirm_delete.html:14
+msgid "Confirm Delete"
+msgstr "Confirmación de eliminación"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_form.html:4
+msgid "ChargeCart Form"
+msgstr "Formulario de Carga de Carretilla"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:6
+#: .\inventory_management\templates\layouts\base\base.html:131
+msgid "Cart Loads"
+msgstr "Carga de Carretillas"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:15
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:24
+msgid "Create Cart Load"
+msgstr "Crear Carga de Carretillas"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:40
+msgid "Filter by product name..."
+msgstr "Filtrar productos por el nombre"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:47
+msgid "Order by"
+msgstr "Ordenar por"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:48
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:69
+#, fuzzy
+#| msgid "Products"
+msgid "Product"
+msgstr "Productos"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:49
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:70
+msgid "Sent Quantity"
+msgstr "Cantidad enviada"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:50
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:71
+msgid "Sent Price"
+msgstr "Precio de salida"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:51
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:72
+msgid "Received Quantity"
+msgstr "Cantidad Recibida"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:52
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:73
+msgid "Income"
+msgstr "Ganancia"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:53
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:74
+msgid "Total Income"
+msgstr "Ganancia Total"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:54
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:75
+msgid "Returned Money"
+msgstr "Dinero Retornado"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:55
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:76
+msgid "Status"
+msgstr "Estado"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:77
+#: .\inventory_management\templates\custom_user\custom_user_list.html:53
+#: .\inventory_management\templates\worker\workers_list.html:78
+#, fuzzy
+#| msgid "Sections"
+msgid "Actions"
+msgstr "Acciones"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:101
+#: .\inventory_management\templates\custom_user\custom_user_detail.html:19
+#: .\inventory_management\templates\custom_user\custom_user_list.html:67
+#: .\inventory_management\templates\product\product_detail.html:37
+#: .\inventory_management\templates\worker\worker_detail.html:37
+#: .\inventory_management\templates\worker\workers_list.html:89
+msgid "Delete"
+msgstr "Eliminar"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:102
+#: .\inventory_management\templates\custom_user\custom_user_detail.html:22
+#: .\inventory_management\templates\custom_user\custom_user_list.html:69
+#: .\inventory_management\templates\product\product_detail.html:40
+#: .\inventory_management\templates\worker\worker_detail.html:40
+#: .\inventory_management\templates\worker\workers_list.html:90
+msgid "Modify"
+msgstr "Modificar"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:103
+msgid "Finish"
+msgstr "Finalizar"
+
+#: .\inventory_management\templates\charge_cart\charge_cart_list.html:114
+msgid "No records to display"
+msgstr "No hay filas para mostrar"
+
+#: .\inventory_management\templates\custom_user\custom_user_confirm_delete.html:6
+msgid "Confirm User Deleting:"
+msgstr "Confirmación de eliminación de usuario"
+
+#: .\inventory_management\templates\custom_user\custom_user_confirm_delete.html:11
+msgid "Are you sure you want to delete the user:"
+msgstr "¿Está seguro de que desea eliminar"
+
+#: .\inventory_management\templates\custom_user\custom_user_detail.html:6
+msgid "User:"
+msgstr "User:"
+
+#: .\inventory_management\templates\custom_user\custom_user_detail.html:13
+msgid "name"
+msgstr "name"
+
+#: .\inventory_management\templates\custom_user\custom_user_detail.html:16
+msgid "email"
+msgstr "correo electrónico"
+
+#: .\inventory_management\templates\custom_user\custom_user_form.html:7
+#: .\inventory_management\templates\custom_user\custom_user_update.html:6
+#: .\inventory_management\templates\layouts\partials\new_client_modal.html:8
+msgid "Create User"
+msgstr "Crear Usuario"
+
+#: .\inventory_management\templates\custom_user\custom_user_list.html:6
+msgid "User List"
+msgstr "Lista de Usuario"
+
+#: .\inventory_management\templates\custom_user\custom_user_list.html:36
+msgid "Filter users by name or username:"
+msgstr "Filtrar usuarios por nombre y nombre de usuario"
+
+#: .\inventory_management\templates\custom_user\custom_user_list.html:39
+msgid "Search users..."
+msgstr "Buscar Usuarios"
+
+#: .\inventory_management\templates\custom_user\custom_user_list.html:47
+msgid "ID Number"
+msgstr "Numero de CI"
+
+#: .\inventory_management\templates\custom_user\custom_user_list.html:48
+msgid "User Name"
+msgstr "Nombre de Usuario"
+
+#: .\inventory_management\templates\custom_user\custom_user_list.html:49
+msgid "Email"
+msgstr "Correo Electrónico"
+
+#: .\inventory_management\templates\custom_user\custom_user_list.html:50
+msgid "First Name"
+msgstr "Nombre"
+
+#: .\inventory_management\templates\custom_user\custom_user_list.html:51
+msgid "Last Name"
+msgstr "Apellidos"
+
+#: .\inventory_management\templates\custom_user\custom_user_list.html:52
+msgid "Group"
+msgstr "Grupo"
+
+#: .\inventory_management\templates\custom_user\custom_user_list.html:73
+msgid "No users to display"
+msgstr "No hay usuarios para mostrar"
+
+#: .\inventory_management\templates\index.html:8
+msgid "This is the index page"
+msgstr "Esta es la página de inicio"
 
 #: .\inventory_management\templates\layouts\base\base.html:111
-msgid "Secciones"
-msgstr ""
+msgid "Sections"
+msgstr "Secciones"
 
 #: .\inventory_management\templates\layouts\base\base.html:115
-msgid "Productos"
-msgstr ""
+msgid "Products"
+msgstr "Productos"
 
 #: .\inventory_management\templates\layouts\base\base.html:119
-msgid "Trabajadores"
-msgstr ""
+msgid "Workers"
+msgstr "Trabajadores"
 
 #: .\inventory_management\templates\layouts\base\base.html:123
-msgid "Carretillas"
-msgstr ""
+msgid "Carts"
+msgstr "Carretillas"
 
 #: .\inventory_management\templates\layouts\base\base.html:127
-msgid "Estados de Carretillas"
-msgstr ""
-
-#: .\inventory_management\templates\layouts\base\base.html:131
-msgid "Carga por Carretilla"
-msgstr ""
+msgid "Carts Status"
+msgstr "Estados de Carretilla"
 
 #: .\inventory_management\templates\layouts\partials\footer.html:12
-msgid "Acerca de nosotros"
-msgstr ""
+msgid "About us"
+msgstr "Acerca de nosotros"
 
 #: .\inventory_management\templates\layouts\partials\footer.html:13
-msgid "Supporte"
-msgstr ""
+msgid "Support"
+msgstr "Soporte"
 
 #: .\inventory_management\templates\layouts\partials\footer.html:14
-msgid "Contactarnos"
-msgstr ""
+msgid "Contact us"
+msgstr "Contáctenos"
 
 #: .\inventory_management\templates\layouts\partials\navbar.html:16
-msgid "Crear Nuevo"
+msgid "Create New"
+msgstr "Crear Nuevo"
+
+#: .\inventory_management\templates\product\product_confirm_delete.html:5
+#: .\inventory_management\templates\worker\worker_confirm_delete.html:6
+msgid "Delete Confirmation:"
 msgstr ""
+
+#: .\inventory_management\templates\product\product_confirm_delete.html:10
+msgid "Are you sure you want to delete:"
+msgstr ""
+
+#: .\inventory_management\templates\product\product_confirm_delete.html:14
+msgid "Confirm Delete:"
+msgstr ""
+
+#: .\inventory_management\templates\product\product_detail.html:6
+#, fuzzy
+#| msgid "Products"
+msgid "Product:"
+msgstr "Productos"
+
+#: .\inventory_management\templates\product\product_detail.html:19
+msgid "Nombre"
+msgstr ""
+
+#: .\inventory_management\templates\product\product_detail.html:20
+msgid "Price"
+msgstr ""
+
+#: .\inventory_management\templates\product\product_detail.html:22
+msgid "Quantity"
+msgstr ""
+
+#: .\inventory_management\templates\product\product_detail.html:24
+msgid "There is no stock"
+msgstr ""
+
+#: .\inventory_management\templates\product\product_form.html:4
+#, fuzzy
+#| msgid "Products"
+msgid "Product Form"
+msgstr "Productos"
+
+#: .\inventory_management\templates\product\product_list.html:6
+msgid "Stock(Product list)"
+msgstr ""
+
+#: .\inventory_management\templates\product\product_list.html:17
+#: .\inventory_management\templates\product\product_list.html:25
+#, fuzzy
+#| msgid "Products"
+msgid "Create Product"
+msgstr "Productos"
+
+#: .\inventory_management\templates\product\product_list.html:94
+msgid "Filter products by name:"
+msgstr ""
+
+#: .\inventory_management\templates\product\product_list.html:97
+msgid "Search products..."
+msgstr ""
+
+#: .\inventory_management\templates\product\product_list.html:130
+msgid "Unit:"
+msgstr ""
+
+#: .\inventory_management\templates\product\product_list.html:131
+msgid "Amount:"
+msgstr ""
+
+#: .\inventory_management\templates\worker\worker_detail.html:6
+#, fuzzy
+#| msgid "Workers"
+msgid "Worker"
+msgstr "Trabajadores"
+
+#: .\inventory_management\templates\worker\worker_detail.html:19
+#: .\inventory_management\templates\worker\workers_list.html:75
+msgid "Name"
+msgstr ""
+
+#: .\inventory_management\templates\worker\worker_detail.html:20
+#: .\inventory_management\templates\worker\workers_list.html:76
+msgid "Salary"
+msgstr ""
+
+#: .\inventory_management\templates\worker\worker_detail.html:22
+#: .\inventory_management\templates\worker\worker_detail.html:24
+#: .\inventory_management\templates\worker\workers_list.html:77
+msgid "Phone"
+msgstr ""
+
+#: .\inventory_management\templates\worker\worker_detail.html:24
+msgid "Not provided"
+msgstr ""
+
+#: .\inventory_management\templates\worker\worker_form.html:4
+#, fuzzy
+#| msgid "Workers"
+msgid "Worker Form"
+msgstr "Trabajadores"
+
+#: .\inventory_management\templates\worker\workers_list.html:6
+#, fuzzy
+#| msgid "Workers"
+msgid "Workers List"
+msgstr "Trabajadores"
+
+#: .\inventory_management\templates\worker\workers_list.html:15
+#: .\inventory_management\templates\worker\workers_list.html:23
+#, fuzzy
+#| msgid "Workers"
+msgid "Create Worker"
+msgstr "Trabajadores"
+
+#: .\inventory_management\templates\worker\workers_list.html:62
+msgid "Filter workers by id or name:"
+msgstr ""
+
+#: .\inventory_management\templates\worker\workers_list.html:65
+msgid "Search workers..."
+msgstr ""
+
+#: .\inventory_management\templates\worker\workers_list.html:91
+msgid "Details"
+msgstr ""
+
+#: .\inventory_management\templates\worker\workers_list.html:98
+msgid "No workers to display"
+msgstr ""
+
+#~ msgid "Iniciar Sesión"
+#~ msgstr "Log in"
+
+#~ msgid "Secciones"
+#~ msgstr "Sections"

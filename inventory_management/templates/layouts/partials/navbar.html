@@ -13,7 +13,7 @@
                 <!-- Dropdown Menu -->
                 <div class="dropdown d-none d-xl-block">
                     <a class="nav-link dropdown-toggle waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        {% trans "Crear Nuevo" %}
+                        {% trans "Create New" %}
                         <i class="mdi mdi-chevron-down ms-1"></i>
                     </a>
                     <div class="dropdown-menu">
@@ -41,7 +41,7 @@
                         {% csrf_token %}
                         <button type="submit" class="dropdown-item notify-item">
                             <i class="fe-log-out"></i>
-                            <span>{% trans "Cerrar Sesión" %}</span>
+                            <span>{% trans "Log out" %}</span>
                         </button>
                     </form>
 
@@ -67,7 +67,7 @@
       return cookieValue;
     }
 
-    let currentLang = getCookie('django_language') || 'es';
+    let currentLang = getCookie('django_language') || 'en';
 
     const flagIcon = document.getElementById('flag-icon');
     const languageToggle = document.getElementById('language-toggle');
@@ -77,7 +77,7 @@
         'es': "{% static 'assets/images/flags/es.png' %}",
         'en': "{% static 'assets/images/flags/gb.png' %}"
       }[currentLang];
-      flagIcon.alt = currentLang === 'es' ? 'Spanish Flag' : 'UK Flag';
+      flagIcon.alt = currentLang === 'es' ? 'UK Flag' : 'Spanish Flag';
     }
 
     updateFlag();

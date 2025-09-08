@@ -4,7 +4,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{% trans "Cerrar Sesión" %}</title>
+    <title>{% trans "Log out" %}</title>
     <link rel="stylesheet " href="{% static 'bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/btns-styles.css' %}">
@@ -15,9 +15,9 @@
         <h1 class="header-title">{% trans "You've just logged out" %}</h1>
         <form method="post" action="">
             {% csrf_token %}
-            <button type="submit">{% trans "Cerrar Sesión" %}</button>
+            <button type="submit">{% trans "Log out" %}</button>
         </form>
-        <a class="button" href="{% url 'login' %}">{% trans "Iniciar Sesión Nuevamente" %}</a>
+        <a class="button" href="{% url 'login' %}">{% trans "Log in Again" %}</a>
     </div>
 </body>
 </html>

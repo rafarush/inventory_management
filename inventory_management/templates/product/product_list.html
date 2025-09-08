@@ -1,8 +1,9 @@
 {% extends "layouts/base/base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
-    Stock(Product list)
+    {% trans "Stock(Product list)" %}
 {% endblock %}
 
 
@@ -11,19 +12,9 @@
 
 <div class="container-fluid">
 
-{#    {% if not is_client %}#}
-{#        {% if is_perms.charge_cart.add_cart %}#}
-{#        	<div style="margin-top: 20px; display: none">#}
-{#                <span id="change-view-btn" class="btn-info" data-feather="eye" style="cursor: pointer"></span>#}
-{#                <button id="open-product-dialog" class="btn btn-success btn-sm float-end">Create</button>#}
-{#            </div>#}
-{#        {% endif %}#}
-{##}
-{#    {% endif %}#}
-
     {% if perms.inventory_management.add_product %}
         <div style="margin-top: 20px;">
-            <button href="{% url 'product_create' %}" class="btn btn-success btn-sm float-end">Create Product</button>
+            <button href="{% url 'product_create' %}" class="btn btn-success btn-sm float-end">{% trans "Create Product" %}</button>
         </div>
     {% endif %}
 
@@ -31,7 +22,7 @@
     <div id="product-form-dialog" class="modal-dialog-centered" style="display:none;">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center justify-content-between">
-                <h4 class="modal-title">Create Product</h4>
+                <h4 class="modal-title">{% trans "Create Product" %}</h4>
                 <button type="button" class="btn-close" id="close-product-dialog" aria-label="Close">
                     <i data-feather="x"></i>
                 </button>
@@ -61,7 +52,7 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <input type="submit" class="btn btn-success btn-sm" value="Submit">
+                        <input type="submit" class="btn btn-success btn-sm" value="{% trans "Submit" %}">
                     </div>
                 </form>
             </div>
@@ -69,41 +60,41 @@
     </div>
 
     <!-- Update Price Dialog -->
-    <div id="update-price-dialog" class="modal-dialog-centered" style="display:none;">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center justify-content-between">
-                <h4 class="modal-title">Update Price</h4>
-                <button type="button" class="btn-close" id="close-update-price-dialog" aria-label="Close">
-                    <i data-feather="x"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="updatePriceForm" action="" method="POST">
-                    {% csrf_token %}
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label for="id_price" class="form-label">New Price</label>
-                                    <input type="number" name="price" id="id_price" class="form-control" step="0.01" required>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <input type="submit" class="btn btn-success btn-sm" value="Update">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+{#    <div id="update-price-dialog" class="modal-dialog-centered" style="display:none;">#}
+{#        <div class="modal-content">#}
+{#            <div class="modal-header d-flex align-items-center justify-content-between">#}
+{#                <h4 class="modal-title">Update Price</h4>#}
+{#                <button type="button" class="btn-close" id="close-update-price-dialog" aria-label="Close">#}
+{#                    <i data-feather="x"></i>#}
+{#                </button>#}
+{#            </div>#}
+{#            <div class="modal-body">#}
+{#                <form id="updatePriceForm" action="" method="POST">#}
+{#                    {% csrf_token %}#}
+{#                    <div class="container">#}
+{#                        <div class="row">#}
+{#                            <div class="col-md-12">#}
+{#                                <div class="mb-3">#}
+{#                                    <label for="id_price" class="form-label">New Price</label>#}
+{#                                    <input type="number" name="price" id="id_price" class="form-control" step="0.01" required>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="d-flex justify-content-end">#}
+{#                        <input type="submit" class="btn btn-success btn-sm" value="Update">#}
+{#                    </div>#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
 
     <!--Filter-->
     <div class="container-fluid">
-        <h4>Filtrar productos por nombre:</h4>
+        <h4>{% trans "Filter products by name:" %}</h4>
         <div class="row mb-3">
             <div class="col-md-6">
-                <input type="text" id="productSearch" class="form-control" placeholder="Buscar productos...">
+                <input type="text" id="productSearch" class="form-control" placeholder="{% trans "Search products..." %}">
             </div>
         </div>
     </div>
@@ -118,14 +109,6 @@
                         {% if not is_client %}
 
                         	<div class="product-action">
-
-                            {% if is_agent %}
-                            <a href="#" class="btn btn-success btn-xs waves-effect waves-light open-update-price-dialog" data-url="{% url 'updated_product_create' pk=product.pk %}">
-                                <i class="mdi mdi-pencil"></i>
-                            </a>    
-                            <!--<a href="{% url 'updated_product_create' pk=product.pk %}" class="btn btn-success btn-xs waves-effect waves-light"><i class="mdi mdi-pencil"></i></a>-->
-                            {% endif %}
-
 
                             {% if  perms.inventory_management.delete_product %}
                                 <a href="{% url 'product_delete' pk=product.pk %}" class="btn btn-danger btn-xs waves-effect waves-light"><i class="mdi mdi-close"></i></a>
@@ -144,8 +127,8 @@
                                 <div class="col">
                                     <h5 class="font-16 mt-0 sp-line-1"><a href="{% url 'product_detail' pk=product.pk %}" class="text-dark">{{ product.id }}</a> </h5>
                                     <div class="text-warning mb-2 font-13"></div>
-                                    <h5 class="m-0"> <span class="text-muted"> Unit : {{ product.unit }}</span></h5>
-                                    <h5 class="m-0"> <span class="text-muted"> Amount : {{ product.amount }}</span></h5>
+                                    <h5 class="m-0"> <span class="text-muted">{% trans "Unit:" %} {{ product.unit }}</span></h5>
+                                    <h5 class="m-0"> <span class="text-muted">{% trans "Amount:" %} {{ product.amount }}</span></h5>
                                 </div>
                                 
                                 <div class="col-auto">

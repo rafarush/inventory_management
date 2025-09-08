@@ -1,8 +1,9 @@
 {% extends "layouts/base/base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
-	Producto: {{ product.id }}
+	{% trans "Product:"%} {{ product.id }}
 {% endblock %}
 
 {% block content %}
@@ -15,12 +16,12 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="ps-xl-3 mt-3 mt-xl-0">
-                                <h4 class="mb-3">Nombre: <span class="text-body me-2">{{ product.id }}</span></h4>
-                                <h4 class="mb-4">Precio: <span class="text-body me-2">${{ product.price }} CUP</span></h4>
+                                <h4 class="mb-3">{% trans "Nombre"%}: <span class="text-body me-2">{{ product.id }}</span></h4>
+                                <h4 class="mb-4">{% trans "Price"%}: <span class="text-body me-2">${{ product.price }} CUP</span></h4>
                                 {% if product.amount > 0 %}
-                                    <h4><span class="badge bg-soft-success text-success mb-4">Cantidad: {{ product.amount }}</span></h4>
+                                    <h4><span class="badge bg-soft-success text-success mb-4">{% trans "Quantity"%}: {{ product.amount }}</span></h4>
                                 {% else %}
-                                    <h4><span class="badge bg-soft-danger text-danger mb-4">No hay disponibilidad</span></h4>
+                                    <h4><span class="badge bg-soft-danger text-danger mb-4">{% trans "There is no stock" %}</span></h4>
                                 {% endif %}
                             </div>
                         </div>
@@ -33,11 +34,11 @@
     <!-- end row-->
 
     {% if perms.inventory_management.delete_product %}
-        <a class="btn btn-danger btn-sm" href="{% url 'product_delete' pk=product.id %}">Eliminar</a>
+        <a class="btn btn-danger btn-sm" href="{% url 'product_delete' pk=product.id %}">{% trans "Delete"%}</a>
     {% endif %}
     {% if perms.inventory_management.change_product %}
-        <a class="btn btn-outline-warning btn-sm" href="{% url 'product_update' pk=product.id %}">Modificar</a>
+        <a class="btn btn-outline-warning btn-sm" href="{% url 'product_update' pk=product.id %}">{% trans "Modify"%}</a>
     {% endif %}
-    <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}">Atrás</a>
+    <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}">{% trans "Back"%}</a>
 
 {% endblock %}
