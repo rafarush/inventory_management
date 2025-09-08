@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
@@ -63,20 +65,33 @@ class ChargeCartUpdateForm(ModelForm):
         return price_sent
 
 
+from decimal import Decimal
+from django import forms
+from django.core.exceptions import ValidationError
+from django.forms import ModelForm
+from .models import ChargeCart
+
 class ChargeCartFinishForm(ModelForm):
+    amount_received = forms.DecimalField(
+        required=False,
+        min_value=0,
+        decimal_places=2,
+        widget=forms.TextInput(attrs={'type': 'text'}),  # permite vacío
+        initial=Decimal('0.00')
+    )
+
     class Meta:
         model = ChargeCart
         fields = ['amount_received']
 
     def clean_amount_received(self):
-        amount_received = self.cleaned_data['amount_received']
-        amount_sent = self.instance.amount_sent
-        if amount_received is None:
-            return 0
-        if amount_received < 0:
+        value = self.cleaned_data.get('amount_received')
+        if value in (None, ''):
+            value = Decimal('0.00')
+        amount_sent = self.instance.amount_sent or Decimal('0.00')
+
+        if value < 0:
             raise ValidationError('The amount received must be >= 0.')
-        if amount_received > amount_sent:
-            raise ValidationError(
-                'The amount received cannot be greater than the amount that was sent.'
-            )
-        return amount_received
+        if value > amount_sent:
+            raise ValidationError('The amount received cannot be greater than the amount sent.')
+        return value
