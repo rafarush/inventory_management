@@ -8,7 +8,28 @@
 
 {% block content %}
 
-<div class="container-fluid">
+{% if messages %}
+<div class="container mt-2">
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.transition = "opacity 0.5s ease";
+            alert.style.opacity = 0;
+            setTimeout(() => alert.remove(), 500); // elimina del DOM
+        }, 3000); // desaparece después de 3 segundos
+    });
+});
+</script>
+{% endif %}
 
     {% if perms.daily_part_cart.add_dailypartcart %}
         <a href="{% url 'daily_part_cart_create' %}" class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
@@ -33,14 +54,9 @@
         </td>
     </tr>
     {% endfor %}
-
-
-
-
-    <!-- Filter -->
+    
     <div class="container-fluid mt-3 mb-3">
     <form method="get" class="row g-2 align-items-center">
-        <!-- Buscar worker -->
         <div class="col-md-6">
             <input type="text" 
                    name="search" 
@@ -49,7 +65,6 @@
                    value="{{ search_term }}">
         </div>
 
-        <!-- Ordenar por -->
         <div class="col-md-4">
             <select class="form-select" name="order_by" onchange="this.form.submit()">
                 <option value="">-- Ordenar por --</option>
@@ -92,10 +107,11 @@
                     <td>{{ part.date }}</td>
                     <td>{{ part.get_status_display }}</td>
                     <td class="btn-group-sm d-flex flex-nowrap gap-1">
-                        <!-- Botón Details -->
                         <a class="btn btn-info btn-sm flex-fill" href="{% url 'daily_part_cart_detail' pk=part.pk %}">{% trans "Details" %}</a>
-                        
+
                         {% if perms.daily_part_cart.change_dailypartcart %}
+                            <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'daily_part_cart_update' pk=part.pk %}">{% trans "Modify" %}</a>
+                        {% if perms.daily_part_cart.change_dailypartcart and part.status != "finalizado" %}
                             <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'daily_part_cart_update' pk=part.pk %}">{% trans "Modify" %}</a>
                         {% endif %}
                         
@@ -109,14 +125,14 @@
     <h3>{% trans "There is no records to show" %}</h3>
 {% endif %}
 
-</div> <!-- end container-fluid -->
+</div> 
 
 {% endblock %}
 
 {% block scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Filter daily part carts by worker
+        
         const searchInput = document.querySelector('input[name="search"]');
         const rows = document.querySelectorAll('#daily-part-cart-table tbody tr');
 
@@ -130,7 +146,7 @@
             });
         }
 
-        feather.replace(); // Feather icons
+        feather.replace(); 
     });
 </script>
 {% endblock %}

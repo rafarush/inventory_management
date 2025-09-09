@@ -17,7 +17,7 @@
     {% endif %}
 
     {% if perms.charge_cart.add_chargecart %}
-        {% if daily_part_cart %}
+        {% if daily_part_cart and daily_part_cart.status != "finalizado" %}
             <a href="{% url 'charge_cart_create_by_daily' daily_part_cart.id %}" 
             class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
                 {% trans "Create Cart Load" %}</a>
@@ -41,7 +41,6 @@
     <!-- Filter -->
     <div class="container-fluid mt-3 mb-3">
         <form method="get" class="row g-2 align-items-center">
-            <!-- Buscar producto -->
             <div class="col-md-6">
                 <input type="text"
                        name="search"
@@ -50,7 +49,6 @@
                        value="{{ search_term }}">
             </div>
 
-            <!-- Ordenar por -->
             <div class="col-md-4">
                 <select class="form-select" name="order_by" onchange="this.form.submit()">
                     <option value="">-- {% trans "Order by" %} --</option>
@@ -83,7 +81,9 @@
                     <th scope="col">{% trans "Total Income" %}</th>
                     <th scope="col">{% trans "Returned Money" %}</th>
                     <th scope="col">{% trans "Status" %}</th>
-                    <th scope="col">{% trans "Actions" %}</th>
+                    {% if daily_part_cart and daily_part_cart.status != "finalizado" %}
+                        <th scope="col">{% trans "Actions" %}</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -105,7 +105,7 @@
                         <td>${{ charge.revenue_total }}</td>
                         <td>${{ charge.money_returned }}</td>
                         <td>{{ charge.get_status_display }}</td>
-                        {% if charge.status != "finalizado" %}
+                        {% if charge.status != "finalizado" and daily_part_cart.status != "finalizado" and daily_part_cart %}
                             <td class="btn-group-sm d-flex flex-nowrap gap-1">
                                 <a class="btn btn-danger btn-sm flex-fill" href="{% url 'charge_cart_delete' pk=charge.pk %}">{% trans "Delete" %}</a>
                                 <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'charge_cart_update' pk=charge.pk %}">{% trans "Modify" %}</a>
@@ -122,14 +122,13 @@
     {% else %}
         <h3>{% trans "No records to display" %}</h3>
     {% endif %}
-</div> <!-- end container-fluid -->
+</div>
 
 {% endblock %}
 
 {% block scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // ChargeCart modal dialog
         const openDialogBtn = document.getElementById('open-chargecart-dialog');
         const closeDialogBtn = document.getElementById('close-chargecart-dialog');
         const chargecartDialog = document.getElementById('chargecart-form-dialog');
@@ -143,7 +142,6 @@
             });
         }
 
-        // Filter charge carts
         const chargecartSearch = document.getElementById('chargecartSearch');
         const chargecartRows = document.querySelectorAll('#chargecart-table tbody tr');
 
@@ -162,7 +160,7 @@
             });
         }
 
-        feather.replace(); // Feather icons
+        feather.replace(); 
     });
 </script>
 {% endblock %}
