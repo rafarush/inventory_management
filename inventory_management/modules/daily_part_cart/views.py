@@ -100,7 +100,7 @@ class DailyPartCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, View)
         all_finalized = all(cc.status == "finalizado" for cc in daily_part.charge_carts.all())
         if not all_finalized:
             messages.error(request, "No puedes finalizar: hay ChargeCart pendientes.")
-            return redirect("daily_part_cart_detail", pk=pk)
+            return redirect("daily_part_cart_list")
 
         # ---- Cálculos de totales ----
         money_return_total = sum(cc.money_returned or 0 for cc in daily_part.charge_carts.all())
@@ -122,4 +122,4 @@ class DailyPartCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, View)
         daily_part.cart.save(update_fields=["status"])
 
         messages.success(request, "Parte diario finalizado correctamente.")
-        return redirect("daily_part_cart_detail", pk=pk)
+        return redirect("daily_part_cart_list")
