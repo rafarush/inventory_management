@@ -109,8 +109,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td class="btn-group-sm d-flex flex-nowrap gap-1">
                         <a class="btn btn-info btn-sm flex-fill" href="{% url 'daily_part_cart_detail' pk=part.pk %}">{% trans "Details" %}</a>
 
-                        {% if perms.daily_part_cart.change_dailypartcart %}
-                            <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'daily_part_cart_update' pk=part.pk %}">{% trans "Modify" %}</a>
                         {% if perms.daily_part_cart.change_dailypartcart and part.status != "finalizado" %}
                             <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'daily_part_cart_update' pk=part.pk %}">{% trans "Modify" %}</a>
                         {% endif %}
