@@ -1,12 +1,13 @@
 {% extends "layouts/base/base.html" %}
+{% load i18n %}
 {% block content %}
 <div class="container mt-4">
-  <h2>Editar Almacén</h2>
+  <h2>{% trans "Modify Store" %}</h2>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Guardar</button>
-    <a href="{% url 'store_detail' %}" class="btn btn-secondary">Cancelar</a>
+    <button type="submit" class="btn btn-success">{% trans "Save" %}</button>
+    <a href="{% url 'store_detail' %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
   </form>
 </div>
 {% endblock %}

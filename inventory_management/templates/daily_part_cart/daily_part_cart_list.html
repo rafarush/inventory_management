@@ -1,8 +1,9 @@
 {% extends "layouts/base/base.html" %}
+{% load i18n %}
 {% load static %}
 
 {% block title %}
-    Partes Diarios de Carretilla
+    {% trans "Daily Part Cart" %}
 {% endblock %}
 
 {% block content %}
@@ -11,7 +12,7 @@
 
     {% if perms.daily_part_cart.add_dailypartcart %}
         <a href="{% url 'daily_part_cart_create' %}" class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
-            Crear Parte Diario
+            {% trans "Create Daily Part Cart" %}
         </a>
     {% endif %}
 
@@ -25,7 +26,7 @@
                 <form method="post" action="{% url 'daily_part_cart_finish' part.id %}" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-success btn-sm">
-                        Finalizar Parte Diario
+                        {% trans "Finish Daily Part Cart" %}
                     </button>
                 </form>
             {% endif %}
@@ -44,7 +45,7 @@
             <input type="text" 
                    name="search" 
                    class="form-control" 
-                   placeholder="Buscar por worker..." 
+                   placeholder="{% trans "Search worker..." %}"
                    value="{{ search_term }}">
         </div>
 
@@ -52,13 +53,13 @@
         <div class="col-md-4">
             <select class="form-select" name="order_by" onchange="this.form.submit()">
                 <option value="">-- Ordenar por --</option>
-                <option value="worker" {% if current_order == 'worker' %}selected{% endif %}>Worker</option>
-                <option value="cart" {% if current_order == 'cart' %}selected{% endif %}>Cart</option>
-                <option value="money_return_total" {% if current_order == 'money_return_total' %}selected{% endif %}>Dinero Retornado Total</option>
-                <option value="net_profit" {% if current_order == 'net_profit' %}selected{% endif %}>Ganancia Neta</option>
-                <option value="worker_payment" {% if current_order == 'worker_payment' %}selected{% endif %}>Pago al Worker</option>
-                <option value="revenue" {% if current_order == 'revenue' %}selected{% endif %}>Ingresos</option>
-                <option value="date" {% if current_order == 'date' %}selected{% endif %}>Fecha</option>
+                <option value="worker" {% if current_order == 'worker' %}selected{% endif %}>{% trans "Worker" %}</option>
+                <option value="cart" {% if current_order == 'cart' %}selected{% endif %}>{% trans "Cart" %}</option>
+                <option value="money_return_total" {% if current_order == 'money_return_total' %}selected{% endif %}>{% trans "Returned Money Total" %}</option>
+                <option value="net_profit" {% if current_order == 'net_profit' %}selected{% endif %}>{% trans "Net Profit" %}</option>
+                <option value="worker_payment" {% if current_order == 'worker_payment' %}selected{% endif %}>{% trans "Worker Payment" %}</option>
+                <option value="revenue" {% if current_order == 'revenue' %}selected{% endif %}>{% trans "Revenue" %}</option>
+                <option value="date" {% if current_order == 'date' %}selected{% endif %}>{% trans "Date" %}</option>
             </select>
         </div>
     </form>
@@ -68,15 +69,15 @@
     <table class="table" id="daily-part-cart-table">
         <thead>
             <tr>
-                <th scope="col">Worker</th>
-                <th scope="col">Cart</th>
-                <th scope="col">Dinero Retornado Total</th>
-                <th scope="col">Ganancia Neta</th>
-                <th scope="col">Pago al Worker</th>
-                <th scope="col">Ingresos</th>
-                <th scope="col">Fecha</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Acciones</th>
+                <th scope="col">{% trans "Worker" %}</th>
+                <th scope="col">{% trans "Cart" %}</th>
+                <th scope="col">{% trans "Returned Money Total" %}</th>
+                <th scope="col">{% trans "Net Profit" %}</th>
+                <th scope="col">{% trans "Worker Payment" %}</th>
+                <th scope="col">{% trans "Revenue" %}</th>
+                <th scope="col">{% trans "Date" %}</th>
+                <th scope="col">{% trans "Status" %}</th>
+                <th scope="col">{% trans "Actions" %}</th>
             </tr>
         </thead>
         <tbody>
@@ -92,10 +93,10 @@
                     <td>{{ part.get_status_display }}</td>
                     <td class="btn-group-sm d-flex flex-nowrap gap-1">
                         <!-- Botón Details -->
-                        <a class="btn btn-info btn-sm flex-fill" href="{% url 'daily_part_cart_detail' pk=part.pk %}">Detalles</a>
+                        <a class="btn btn-info btn-sm flex-fill" href="{% url 'daily_part_cart_detail' pk=part.pk %}">{% trans "Details" %}</a>
                         
                         {% if perms.daily_part_cart.change_dailypartcart %}
-                            <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'daily_part_cart_update' pk=part.pk %}">Modificar</a>
+                            <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'daily_part_cart_update' pk=part.pk %}">{% trans "Modify" %}</a>
                         {% endif %}
                         
                     </td>
@@ -105,7 +106,7 @@
         </tbody>
     </table>
 {% else %}
-    <h3>No hay registros para mostrar</h3>
+    <h3>{% trans "There is no records to show" %}</h3>
 {% endif %}
 
 </div> <!-- end container-fluid -->

@@ -1,16 +1,17 @@
 {% extends "layouts/base/base.html" %}
+{% load i18n %}
 
 {% block title %}
-    Daily Part Cart Form
+    {% trans "Daily Part Cart Form" %}
 {% endblock %}
 
 {% block content %}
 
-<a class="btn btn-secondary btn-sm mb-3" href="{% url 'daily_part_cart_list' %}">Volver</a>
+<a class="btn btn-secondary btn-sm mb-3" href="{% url 'daily_part_cart_list' %}">{% trans "Back" %}</a>
 
 <div class="card shadow-sm">
     <div class="card-header bg-light">
-        <h5 class="mb-0">Formulario Daily Part Cart</h5>
+        <h5 class="mb-0">{% trans "Daily Part Cart Form" %}</h5>
     </div>
     <div class="card-body">
         <form action="" method="POST">
@@ -18,21 +19,21 @@
             
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <label for="id_worker" class="form-label">Worker</label>
+                    <label for="id_worker" class="form-label">{% trans "Worker" %}</label>
                     {{ form.worker }}
                 </div>
                 <div class="col-md-4">
-                    <label for="id_cart" class="form-label">Cart</label>
+                    <label for="id_cart" class="form-label">{% trans "Cart" %}</label>
                     {{ form.cart }}
                 </div>
                 <div class="col-md-4">
-                    <label for="id_worker_payment" class="form-label">Pago al Worker</label>
+                    <label for="id_worker_payment" class="form-label">{% trans "Worker Payment" %}</label>
                     {{ form.worker_payment }}
                 </div>
             </div>
 
             <div class="text-end">
-                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="submit" class="btn btn-success">{% trans "Save" %}</button>
             </div>
         </form>
     </div>
