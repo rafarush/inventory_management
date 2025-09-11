@@ -1,12 +1,13 @@
 {% extends "layouts/base/base.html" %}
+{% load i18n %}
 {% block title %}
-	Cart Form
+	{% trans "Cart Form" %}
 {% endblock %}
 
 
 {% block content %}
 
-    <a class="btn btn-secondary btn-sm" href="{% url 'cart_list' %}" style="margin-top: 20px; margin-bottom: 20px">Back</a>
+    <a class="btn btn-secondary btn-sm" href="{% url 'cart_list' %}" style="margin-top: 20px; margin-bottom: 20px">{% trans "Back" %}</a>
     <div>
         <form action="" class="form-control" method="POST" enctype="multipart/form-data">
             {% csrf_token %}

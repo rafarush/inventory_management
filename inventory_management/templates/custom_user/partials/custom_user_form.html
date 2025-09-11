@@ -1,3 +1,4 @@
+{% load i18n %}
 <form id="userForm" method="POST">
     {% csrf_token %}
     <div class="container">
@@ -19,6 +20,6 @@
         </div>
     </div>
     <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-success btn-sm">Submit</button>
+        <button type="submit" class="btn btn-success btn-sm">{% trans "Submit" %}</button>
     </div>
 </form>

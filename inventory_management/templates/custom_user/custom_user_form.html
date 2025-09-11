@@ -1,9 +1,10 @@
 {% extends "layouts/base/base.html" %}
 {% load static %}
+{% load i18n %}
 {% load form_tags %}
 
 {% block title %}
-	Create User
+	{% trans "Create User" %}
 {% endblock %}
 
 {% block content %}
@@ -57,7 +58,7 @@
                 {{ form.groups}}
             </div>
 
-            <input type="submit" class="btn btn-success btn-sm" value="Submit">
+            <input type="submit" class="btn btn-success btn-sm" value="{% trans "Submit" %}">
         </form>
 
 {#    <a class="btn btn-secondary btn-sm" style="margin-top: 20px" href="{% url 'custom_user_list' %}">Back</a>#}

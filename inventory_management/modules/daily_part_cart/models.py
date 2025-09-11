@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from inventory_management.modules.base_model.base_model import BaseModel
 from inventory_management.modules.cart.models import Cart
+from inventory_management.modules.daily_part.models import DailyPart
 from inventory_management.modules.worker.models import Worker
 
 
@@ -38,6 +39,11 @@ class DailyPartCart(BaseModel):
         choices=STATUS_CHOICES,
         default="trabajando",
         verbose_name="status"
+    )
+    daily_part = models.ForeignKey(
+        DailyPart,
+        on_delete=models.CASCADE,
+        related_name="daily_part_carts"
     )
 
     def save(self, *args, **kwargs):

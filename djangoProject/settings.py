@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'inventory_management',
-    "inventory_management.modules.cart_status.apps.StatusCartConfig",
     'safedelete'
 ]
 
@@ -151,6 +150,17 @@ SESSION_COOKIE_AGE = 600
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+
+
+USE_I18N = True
+LANGUAGES = [
+    ('en', 'English'),
+    ('es', 'Español'),
+]
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+
 
 TIME_ZONE = 'UTC'
 

@@ -1,8 +1,9 @@
 {% extends "layouts/base/base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
-    Daily Part Cart: {{ daily_part_cart.id }}
+    {% trans "Daily Part Cart" %}: {{ daily_part_cart.id }}
 {% endblock %}
 
 {% block content %}
@@ -14,21 +15,21 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="ps-xl-3 mt-3 mt-xl-0">
-                            <h4 class="mb-3">Worker: 
+                            <h4 class="mb-3">{% trans "Worker" %}:
                                 <span class="text-body me-2">{{ daily_part_cart.worker.name }}</span>
                             </h4>
-                            <h4 class="mb-3">Cart: 
+                            <h4 class="mb-3">{% trans "Cart" %}:
                                 <span class="text-body me-2">{{ daily_part_cart.cart.id }}</span>
                             </h4>
-                            <h4 class="mb-3">Payment: 
+                            <h4 class="mb-3">{% trans "Payment" %}:
                                 <span class="text-body me-2">${{ daily_part_cart.worker_payment }} CUP</span>
                             </h4>
                             {% if daily_part_cart.date %}
-                                <h4 class="mb-3">Date: 
+                                <h4 class="mb-3">{% trans "Date" %}:
                                     <span class="text-body me-2">{{ daily_part_cart.date }}</span>
                                 </h4>
                             {% else %}
-                                <h4>Date: <span class="text-muted">Not provided</span></h4>
+                                <h4>Date: <span class="text-muted">{% trans "Not provided" %}</span></h4>
                             {% endif %}
                         </div>
                     </div>
@@ -42,13 +43,13 @@
 
 <div class="mt-3 d-flex gap-2">
     <a class="btn btn-success btn-sm" href="{% url 'charge_cart_list_by_daily' daily_part_cart.id %}">
-        Crear / Ver Cargas de Carretilla
+        {% trans "Create / See Cart Loads" %}
     </a>
     {% if is_admin %}
-        <a class="btn btn-danger btn-sm" href="{% url 'daily_part_cart_delete' pk=daily_part_cart.id %}">Delete</a>
-        <a class="btn btn-outline-warning btn-sm" href="{% url 'daily_part_cart_update' pk=daily_part_cart.id %}">Modify</a>
+        <a class="btn btn-danger btn-sm" href="{% url 'daily_part_cart_delete' pk=daily_part_cart.id %}">{% trans "Delete" %}</a>
+        <a class="btn btn-outline-warning btn-sm" href="{% url 'daily_part_cart_update' pk=daily_part_cart.id %}">{% trans "Modify" %}</a>
     {% endif %}
-    <a class="btn btn-secondary btn-sm" href="{% url 'daily_part_cart_list' %}">Back</a>
+    <a class="btn btn-secondary btn-sm" href="{% url 'daily_part_cart_list' %}">{% trans "Back" %}</a>
 </div>
 
 {% endblock %}

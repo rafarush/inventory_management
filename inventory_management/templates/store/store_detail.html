@@ -1,12 +1,13 @@
 {% extends "layouts/base/base.html" %}
+{% load i18n %}
 {% block content %}
 <div class="container mt-4">
-  <h2>Detalles del Almacén</h2>
-  <p><strong>Nombre:</strong> {{ store.name }}</p>
-  <p><strong>Dinero propio:</strong> {{ store.own_money }}</p>
-  <p><strong>Dinero del negocio:</strong> {{ store.money_business }}</p>
-  <p><strong>Porcentaje:</strong> {{ store.percent }}</p>
+  <h2>{% trans "Store Detail" %}</h2>
+  <p><strong>{% trans "Name" %}:</strong> {{ store.name }}</p>
+  <p><strong>{% trans "Own Money" %}:</strong> {{ store.own_money }}</p>
+  <p><strong>{% trans "Business Money" %}:</strong> {{ store.money_business }}</p>
+  <p><strong>{% trans "Percentage" %}:</strong> {{ store.percent }}</p>
 
-  <a href="{% url 'store_update' %}" class="btn btn-primary">Editar</a>
+  <a href="{% url 'store_update' %}" class="btn btn-primary">{% trans "Modify" %}</a>
 </div>
 {% endblock %}

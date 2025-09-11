@@ -7,14 +7,13 @@ urlpatterns = [
     path('products/', include('inventory_management.modules.product.urls')),
     path('cart/', include('inventory_management.modules.cart.urls')),
     path('charge_cart/', include('inventory_management.modules.charge_cart.urls')),
-    path('product_categories/', include('inventory_management.modules.product_category.urls')),
     path('users/', include('inventory_management.modules.custom_user.urls')),
     path('confirm-email/', include('inventory_management.modules.email_services.urls')),
     path('workers/', include('inventory_management.modules.worker.urls')),
     path('daily_part_cart/', include('inventory_management.modules.daily_part_cart.urls')),
+    path('daily_part/', include('inventory_management.modules.daily_part.urls')),
     path('store/', include('inventory_management.modules.store.urls')),
     path('account/', include('inventory_management.modules.email_services.urls')),
-    path('cart-status/', include('inventory_management.modules.cart_status.urls')),
 ]
 
 

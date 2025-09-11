@@ -26,7 +26,8 @@ class Worker(BaseModel):
         max_length=20,
         choices=STATUS_CHOICES,
         default="pendiente",
-        verbose_name="status"
+        verbose_name="status",
+        editable=False,
     )
 
     def __str__(self):

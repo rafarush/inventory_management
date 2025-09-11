@@ -123,7 +123,6 @@ class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     model = ChargeCart
     form_class = ChargeCartFinishForm
     template_name = 'charge_cart/charge_cart_form.html'
-    success_url = reverse_lazy('charge_cart_list')
     permission_required = 'charge_cart.change_chargecart'
 
     def handle_no_permission(self):
@@ -132,17 +131,22 @@ class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     def form_valid(self, form):
         instance = form.save(commit=False)
 
-        # validación de campos obligatorios
+        # validación de campos obligatorios (0 es válido, no se bloquea)
         for field_name in form.fields:
             value = getattr(instance, field_name, None)
-            if value in [None, '', 0]:
+            if value in [None, '']:  # <-- eliminar el 0
                 form.add_error(field_name, "This field is required to complete.")
                 return self.form_invalid(form)
 
-        # cálculos
-        instance.money_returned = instance.price_sent * (instance.amount_sent - instance.amount_received)
-        instance.revenue_total = instance.revenue * (instance.amount_sent - instance.amount_received)
+        # cálculo de revenue_total y money_returned
+        amount_v = instance.amount_sent - instance.amount_received
+        instance.money_returned = instance.price_sent * amount_v
+        instance.revenue_total = instance.revenue * amount_v
         instance.status = "finalizado"
         instance.save()
 
         return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        daily_part_cart_id = self.object.daily_part_cart.id
+        return reverse_lazy('charge_cart_list_by_daily', kwargs={'daily_part_cart_id': daily_part_cart_id})
