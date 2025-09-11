@@ -1,0 +1,125 @@
+{% extends "layouts/base/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% trans "Daily Part" %}
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<div class="container mt-2">
+    {% for message in messages %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.transition = "opacity 0.5s ease";
+            alert.style.opacity = 0;
+            setTimeout(() => alert.remove(), 500); // elimina del DOM
+        }, 3000); // desaparece después de 3 segundos
+    });
+});
+</script>
+{% endif %}
+
+    <div class="container-fluid mt-3 mb-3">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-6">
+            <input type="text" 
+                   name="search" 
+                   class="form-control" 
+                   placeholder="{% trans "Search daily part..." %}"
+                   value="{{ search_term }}">
+        </div>
+
+        <div class="col-md-4  align-items-center">
+            <select class="form-select" name="order_by" onchange="this.form.submit()">
+                <option value="">{% trans "-- Order by --" %}</option>
+                <option value="date" {% if current_order == 'date' %}selected{% endif %}>{% trans "Date" %}</option>
+                <option value="money_return_total" {% if current_order == 'money_return_total' %}selected{% endif %}>{% trans "Returned Money Total" %}</option>
+                <option value="net_profit" {% if current_order == 'net_profit' %}selected{% endif %}>{% trans "Net Profit" %}</option>
+                <option value="status" {% if current_order == 'status' %}selected{% endif %}>{% trans "Status" %}</option>
+            </select>
+        </div>
+    </form>
+</div>
+
+{% if daily_parts %}
+    <table class="table" id="daily-part-cart-table">
+        <thead>
+            <tr>
+                <th scope="col">{% trans "Date" %}</th>
+                <th scope="col">{% trans "Returned Money Total" %}</th>
+                <th scope="col">{% trans "Net Profit" %}</th>
+                <th scope="col">{% trans "Status" %}</th>
+                <th scope="col">{% trans "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for part in daily_parts %}
+                <tr data-date="{{ part.date }}">
+                    <td>{{ part.date }}</td>
+                    <td>${{ part.money_return_total }}</td>
+                    <td>${{ part.net_profit }}</td>
+                    <td>{{ part.get_status_display }}</td>
+                    <td>
+                        <div class="btn-group d-flex" role="group" aria-label="acciones">
+                            <a class="btn btn-outline-info btn-sm me-1" href="{% url 'daily_part_detail' pk=part.pk %}">{% trans "Details" %}</a>
+
+                            {% if part.status == "trabajando" %}
+                                <form method="post" action="{% url 'daily_part_finish' part.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-success btn-sm">{% trans "Finish Daily Part" %}</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </td>
+
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <h3>{% trans "There is no records to show" %}</h3>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const searchInput = document.querySelector('input[name="search"]');
+        const rows = document.querySelectorAll('#daily-part-cart-table tbody tr');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const term = this.value.toLowerCase();
+                rows.forEach(row => {
+                    const date = row.dataset.date.toLowerCase();
+                    row.style.display = date.includes(term) ? '' : 'none';
+                });
+            });
+        }
+
+        feather.replace(); 
+    });
+
+    {# tool tips trigger #}
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+     })
+
+</script>
+{% endblock %}

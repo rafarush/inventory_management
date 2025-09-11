@@ -130,6 +130,10 @@
                                 <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard.svg' %}" alt="Clipboard icon"></span>
                                 <span class="menu-text">{% trans "Daily Part Cart" %} </span>
                             </a>
+                            <a href="{% url 'daily_part_list' %}" class="menu-link">
+                                <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard2-check.svg' %}" alt="Clipboard icon"></span>
+                                <span class="menu-text">{% trans "Daily Part" %} </span>
+                            </a>
                             <a href="{% url 'store_detail' %}" class="menu-link">
                                 <span class="menu-icon"><i data-feather="archive"></i></span>
                                 <span class="menu-text"> {% trans "Store" %} </span>

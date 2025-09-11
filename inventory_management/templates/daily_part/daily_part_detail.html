@@ -31,26 +31,31 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 {% endif %}
 
+    <a class="btn btn-secondary btn-sm" href="{% url 'daily_part_list' %}" style="margin-bottom: 20px; margin-top: 20px">{% trans "Back"%}</a>
 
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ps-xl-3 mt-3 mt-xl-0">
+                                <h4 class="mb-3">{% trans "Date"%}: <span class="text-body me-2">{{ daily_part.date }}</span></h4>
+                                <h4 class="mb-4">{% trans "Returned Money Total" %}: <span class="text-body me-2">${{ daily_part.money_return_total }} CUP</span></h4>
+                                <h4 class="mb-4">{% trans "Net Profit" %}: <span class="text-body me-2">${{ daily_part.net_profit }} CUP</span></h4>
+                                <h4 class="mb-4">{% trans "Status"%}: <span class="text-body me-2">{{ daily_part.get_status_display }}</span></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                </div>
+            </div> <!-- end card-->
+        </div> <!-- end col-->
+    </div>
+    <!-- end row-->
 
-{#    {% for part in daily_part_carts %}#}
-{#    <tr>#}
-{#        <td>{{ part.worker.name }}</td>#}
-{#        <td>{{ part.cart.id }}</td>#}
-{#        <td>{{ part.status }}</td>#}
-{#        <td>#}
-{#            {% if part.status == "trabajando" %}#}
-{#                <form method="post" action="{% url 'daily_part_cart_finish' part.id %}" style="display:inline;">#}
-{#                    {% csrf_token %}#}
-{#                    <button type="submit" class="btn btn-outline-success btn-sm">#}
-{#                        {% trans "Finish Daily Part Cart" %}#}
-{#                    </button>#}
-{#                </form>#}
-{#            {% endif %}#}
-{#        </td>#}
-{#    </tr>#}
-{#    {% endfor %}#}
-    
+    <div class="row"><h1>{% trans "All daily part carts of the day" %}:</h1></div>
+
     <div class="container-fluid mt-3 mb-3">
     <form method="get" class="row g-2 align-items-center">
         <div class="col-md-6">
@@ -63,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <div class="col-md-4  align-items-center">
             <select class="form-select" name="order_by" onchange="this.form.submit()">
-                <option value="">-- Ordenar por --</option>
+                <option value="">{% trans "-- Order by --" %}</option>
                 <option value="worker" {% if current_order == 'worker' %}selected{% endif %}>{% trans "Worker" %}</option>
                 <option value="cart" {% if current_order == 'cart' %}selected{% endif %}>{% trans "Cart" %}</option>
                 <option value="money_return_total" {% if current_order == 'money_return_total' %}selected{% endif %}>{% trans "Returned Money Total" %}</option>
@@ -76,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
 
         {% if perms.daily_part_cart.add_dailypartcart %}
-            {% if finished %}
+            {% if daily_part.status == 'finalizado' %}
                 <div  class="col-md-2 align-items-center">
                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{% trans "Today's Daily Part finished, you cant add a Daily Part Cart. " %}" style="cursor: not-allowed;">
                       <a href="{% url 'daily_part_cart_create' %}" class="btn btn-success btn-sm float-end disabled" tabindex="-1" aria-disabled="true" style="pointer-events: none;">
