@@ -1,0 +1,119 @@
+{% extends "layouts/base/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% trans "Wastage Records" %}
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<div class="container mt-2">
+    {% for message in messages %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.transition = "opacity 0.5s ease";
+            alert.style.opacity = 0;
+            setTimeout(() => alert.remove(), 500); // elimina del DOM
+        }, 3000); // desaparece después de 3 segundos
+    });
+});
+</script>
+{% endif %}
+
+    <div class="container-fluid mt-3 mb-3">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-6">
+            <input type="text"
+                   name="search"
+                   class="form-control"
+                   placeholder="{% trans "Search wastage records..." %}"
+                   value="{{ search_term }}">
+        </div>
+
+        <div class="col-md-4  align-items-center">
+            <select class="form-select" name="order_by" onchange="this.form.submit()">
+                <option value="">{% trans "-- Order by --" %}</option>
+                <option value="-date" {% if current_order == '-date' %}selected{% endif %}>{% trans "Date" %}</option>
+                <option value="product" {% if current_order == 'product' %}selected{% endif %}>{% trans "Product" %}</option>
+                <option value="quantity" {% if current_order == 'quantity' %}selected{% endif %}>{% trans "Quantity" %}</option>
+            </select>
+        </div>
+    </form>
+    {% if perms.charge_cart.add_wastagerecord %}
+            <a href="{% url 'wastage_record_create' %}"
+            class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
+                {% trans "Create Wastage Record" %}</a>
+    {% endif %}
+</div>
+
+{% if records %}
+    <table class="table" id="wastage-record-table">
+        <thead>
+            <tr>
+                <th scope="col">{% trans "Date" %}</th>
+                <th scope="col">{% trans "Product" %}</th>
+                <th scope="col">{% trans "Quantity" %}</th>
+                <th scope="col">{% trans "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+                <tr data-date="{{ record.date }}">
+                    <td>{{ record.date }}</td>
+                    <td>{{ record.product }}</td>
+                    <td>{{ record.quantity }}</td>
+                    <td>
+                        <div class="btn-group d-flex" role="group" aria-label="acciones">
+                            <a class="btn btn-danger btn-sm me-1" href="{% url 'wastage_record_delete' pk=record.pk %}">{% trans "Delete" %}</a>
+                            <a class="btn btn-outline-warning btn-sm" href="{% url 'wastage_record_update' pk=record.pk %}">{% trans "Modify" %}</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <h3>{% trans "There is no records to show" %}</h3>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const searchInput = document.querySelector('input[name="search"]');
+        const rows = document.querySelectorAll('#wastage-record-table tbody tr');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const term = this.value.toLowerCase();
+                rows.forEach(row => {
+                    const date = row.dataset.date.toLowerCase();
+                    row.style.display = date.includes(term) ? '' : 'none';
+                });
+            });
+        }
+
+        feather.replace();
+    });
+
+    {# tool tips trigger #}
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+     })
+
+</script>
+{% endblock %}

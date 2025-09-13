@@ -1,8 +1,6 @@
 import uuid
 from decimal import Decimal
-
 from django.db import models
-
 from inventory_management.modules.base_model.base_model import BaseModel
 from inventory_management.modules.daily_part_cart.models import DailyPartCart
 from inventory_management.modules.product.models import Product  # ajusta la ruta según tu proyecto

@@ -5,3 +5,4 @@ from inventory_management.modules.cart.models import Cart
 from inventory_management.modules.charge_cart.models import ChargeCart
 from inventory_management.modules.daily_part_cart.models import DailyPartCart
 from inventory_management.modules.store.models import Store
+from inventory_management.modules.wastage_record.models import WastageRecord
