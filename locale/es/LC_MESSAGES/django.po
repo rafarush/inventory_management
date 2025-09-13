@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 10:45-0400\n"
+"POT-Creation-Date: 2025-09-12 23:30-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,29 +19,44 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
 "1 : 2;\n"
 
-#: .\inventory_management\modules\daily_part_cart\views.py:28
-#: .\inventory_management\modules\daily_part_cart\views.py:52
-#: .\inventory_management\modules\daily_part_cart\views.py:62
-#: .\inventory_management\modules\daily_part_cart\views.py:73
+#: .\inventory_management\modules\daily_part\views.py:109
+msgid "Cannot finish Daily Part: there are pending daily part carts."
+msgstr "No se puede finalizar el Parte Diario: hay partes por carretillas pendientes"
+
+#: .\inventory_management\modules\daily_part\views.py:115
+#: .\inventory_management\modules\daily_part_cart\views.py:174
+msgid "Daily Part finished successfully"
+msgstr "Parte Diario por Carretilla finalizado satisfactoriamente"
+
+#: .\inventory_management\modules\daily_part_cart\views.py:54
+#: .\inventory_management\modules\daily_part_cart\views.py:78
 #: .\inventory_management\modules\daily_part_cart\views.py:88
+#: .\inventory_management\modules\daily_part_cart\views.py:99
+#: .\inventory_management\modules\daily_part_cart\views.py:114
 msgid "You do not have permission to perform this action."
 msgstr "No tiene permisos para realizar esta acción"
 
-#: .\inventory_management\modules\daily_part_cart\views.py:44
+#: .\inventory_management\modules\daily_part_cart\views.py:70
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:86
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:81
 msgid "Today's Daily Part finished, you cant add a Daily Part Cart. "
 msgstr "Parte Diario del día actual fue finalizado, no se pueden agregar más partes por carretilla"
 
-#: .\inventory_management\modules\daily_part_cart\views.py:107
+#: .\inventory_management\modules\daily_part_cart\views.py:133
 msgid "Daily Part Cart and its Load Carts deleted successfully."
 msgstr "Parte Diario por Carretilla y sus cargas eliminados satisfactoriamente"
 
-#: .\inventory_management\modules\daily_part_cart\views.py:120
+#: .\inventory_management\modules\daily_part_cart\views.py:146
 msgid "Daily Part cannot be finished: there is some cart loads pending."
 msgstr "Parte Diario por Carretilla no puede finalizar: existen cargas por carretillas pendientes"
 
-#: .\inventory_management\modules\daily_part_cart\views.py:148
-msgid "Daily Part finished successfully"
-msgstr "Parte Diario por Carretilla finalizado satisfactoriamente"
+#: .\inventory_management\modules\wastage_record\forms.py:22
+msgid "The quantity must be greater than 0"
+msgstr "La cantidad debe ser mayor que 0"
+
+#: .\inventory_management\modules\wastage_record\forms.py:24
+msgid "The quantity cannot be greater than the current stock"
+msgstr "La acntidad no puede ser mayor que la cantidad de producto actual"
 
 #: .\inventory_management\templates\access_denied.html:16
 msgid "Access Denied"
@@ -102,7 +117,7 @@ msgstr "¿Está seguro de que desea eliminar"
 #: .\inventory_management\templates\custom_user\custom_user_confirm_delete.html:16
 #: .\inventory_management\templates\daily_part_cart\daily_part_cart_confirm_delete.html:18
 #: .\inventory_management\templates\product\product_confirm_delete.html:15
-#: .\inventory_management\templates\store\store_form.html:10
+#: .\inventory_management\templates\wastage_records\wastage_record_confirm_delete.html:15
 #: .\inventory_management\templates\worker\worker_confirm_delete.html:15
 msgid "Cancel"
 msgstr "Cancelar"
@@ -114,6 +129,7 @@ msgstr "Formulario de Carretilla"
 #: .\inventory_management\templates\cart\cart_form.html:10
 #: .\inventory_management\templates\custom_user\custom_user_detail.html:24
 #: .\inventory_management\templates\custom_user\custom_user_update.html:11
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:34
 #: .\inventory_management\templates\daily_part_cart\daily_part_cart_detail.html:52
 #: .\inventory_management\templates\daily_part_cart\daily_part_cart_form.html:10
 #: .\inventory_management\templates\product\product_detail.html:42
@@ -143,6 +159,7 @@ msgstr "Crear Carretilla"
 #: .\inventory_management\templates\custom_user\partials\custom_user_form.html:23
 #: .\inventory_management\templates\product\product_form.html:15
 #: .\inventory_management\templates\product\product_list.html:55
+#: .\inventory_management\templates\wastage_records\wastage_record_form.html:34
 #: .\inventory_management\templates\worker\worker_form.html:14
 #: .\inventory_management\templates\worker\workers_list.html:53
 msgid "Submit"
@@ -159,7 +176,13 @@ msgstr "Filtrar carretillas"
 #: .\inventory_management\templates\cart\cart_list.html:88
 #: .\inventory_management\templates\charge_cart\charge_cart_list.html:62
 #: .\inventory_management\templates\charge_cart\charge_cart_list.html:83
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:94
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:46
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:79
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:120
+#: .\inventory_management\templates\daily_part\daily_part_list.html:50
+#: .\inventory_management\templates\daily_part\daily_part_list.html:63
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:74
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:115
 #: .\inventory_management\templates\worker\workers_list.html:78
 msgid "Status"
 msgstr "Estado"
@@ -169,15 +192,18 @@ msgid "No carts available."
 msgstr "No hay carretillas"
 
 #: .\inventory_management\templates\charge_cart\charge_cart_confirm_delete.html:5
+#: .\inventory_management\templates\wastage_records\wastage_record_confirm_delete.html:5
 msgid "Delete Confirmation: "
 msgstr "Confirmación de eliminación"
 
 #: .\inventory_management\templates\charge_cart\charge_cart_confirm_delete.html:10
+#: .\inventory_management\templates\wastage_records\wastage_record_confirm_delete.html:10
 msgid "Are you sure you want to delete: "
 msgstr "¿Está seguro de que desea eliminar"
 
 #: .\inventory_management\templates\charge_cart\charge_cart_confirm_delete.html:14
 #: .\inventory_management\templates\custom_user\custom_user_confirm_delete.html:15
+#: .\inventory_management\templates\wastage_records\wastage_record_confirm_delete.html:14
 #: .\inventory_management\templates\worker\worker_confirm_delete.html:14
 msgid "Confirm Delete"
 msgstr "Confirmación de eliminación"
@@ -206,6 +232,8 @@ msgstr "Ordenar por"
 
 #: .\inventory_management\templates\charge_cart\charge_cart_list.html:55
 #: .\inventory_management\templates\charge_cart\charge_cart_list.html:76
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:48
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:65
 #, fuzzy
 #| msgid "Products"
 msgid "Product"
@@ -243,7 +271,10 @@ msgstr "Dinero Retornado"
 
 #: .\inventory_management\templates\charge_cart\charge_cart_list.html:85
 #: .\inventory_management\templates\custom_user\custom_user_list.html:53
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:95
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:121
+#: .\inventory_management\templates\daily_part\daily_part_list.html:64
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:116
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:67
 #: .\inventory_management\templates\worker\workers_list.html:79
 #, fuzzy
 msgid "Actions"
@@ -255,18 +286,21 @@ msgstr "Acciones"
 #: .\inventory_management\templates\daily_part_cart\daily_part_cart_confirm_delete.html:17
 #: .\inventory_management\templates\daily_part_cart\daily_part_cart_detail.html:49
 #: .\inventory_management\templates\product\product_detail.html:37
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:78
 #: .\inventory_management\templates\worker\worker_detail.html:38
-#: .\inventory_management\templates\worker\workers_list.html:91
+#: .\inventory_management\templates\worker\workers_list.html:93
 msgid "Delete"
 msgstr "Eliminar"
 
 #: .\inventory_management\templates\charge_cart\charge_cart_list.html:111
 #: .\inventory_management\templates\custom_user\custom_user_detail.html:22
 #: .\inventory_management\templates\custom_user\custom_user_list.html:69
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:140
 #: .\inventory_management\templates\daily_part_cart\daily_part_cart_detail.html:50
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:113
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:135
 #: .\inventory_management\templates\product\product_detail.html:40
-#: .\inventory_management\templates\store\store_detail.html:11
+#: .\inventory_management\templates\store\store_detail.html:44
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:79
 #: .\inventory_management\templates\worker\worker_detail.html:41
 #: .\inventory_management\templates\worker\workers_list.html:92
 msgid "Modify"
@@ -346,43 +380,161 @@ msgstr "Grupo"
 msgid "No users to display"
 msgstr "No hay usuarios para mostrar"
 
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_confirm_delete.html:10
-#, fuzzy
-#| msgid "Are you sure you want to delete the user:"
-msgid "Are you sure you want to delete this Daily Part Cart"
-msgstr "¿Está seguro de que desea eliminar"
-
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_confirm_delete.html:11
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_detail.html:18
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_form.html:33
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:71
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:87
-#: .\inventory_management\templates\worker\worker_detail.html:6
-#, fuzzy
-msgid "Worker"
-msgstr "Trabajador"
-
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_confirm_delete.html:12
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_detail.html:21
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_form.html:37
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:72
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:88
-#, fuzzy
-msgid "Cart"
-msgstr "Carretilla"
-
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_confirm_delete.html:13
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_detail.html:28
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:77
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:93
-msgid "Date"
-msgstr "Fecha"
-
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:6
 #: .\inventory_management\templates\daily_part_cart\daily_part_cart_detail.html:6
 #: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:6
 #: .\inventory_management\templates\layouts\base\base.html:131
 msgid "Daily Part Cart"
 msgstr "Parte Diario Por Carretilla"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:43
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:78
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:119
+#: .\inventory_management\templates\daily_part\daily_part_list.html:47
+#: .\inventory_management\templates\daily_part\daily_part_list.html:60
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_confirm_delete.html:13
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_detail.html:28
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:73
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:114
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:47
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:64
+msgid "Date"
+msgstr "Fecha"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:44
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:74
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:115
+#: .\inventory_management\templates\daily_part\daily_part_list.html:48
+#: .\inventory_management\templates\daily_part\daily_part_list.html:61
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:69
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:110
+#, fuzzy
+msgid "Returned Money Total"
+msgstr "Dinero Retornado Total"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:45
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:75
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:116
+#: .\inventory_management\templates\daily_part\daily_part_list.html:49
+#: .\inventory_management\templates\daily_part\daily_part_list.html:62
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:70
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:111
+#, fuzzy
+msgid "Net Profit"
+msgstr "Ganancia Neta"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:57
+msgid "All daily part carts of the day"
+msgstr "Todos los partes por carretillas del día"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:65
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:60
+#, fuzzy
+#| msgid "Search workers..."
+msgid "Search worker..."
+msgstr "Buscar trabajadores"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:71
+#: .\inventory_management\templates\daily_part\daily_part_list.html:46
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:46
+#, fuzzy
+#| msgid "Order by"
+msgid "-- Order by --"
+msgstr "Ordenar por"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:72
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:113
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_confirm_delete.html:11
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_detail.html:18
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_form.html:33
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:67
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:108
+#: .\inventory_management\templates\worker\worker_detail.html:6
+#, fuzzy
+msgid "Worker"
+msgstr "Trabajador"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:73
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:114
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_confirm_delete.html:12
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_detail.html:21
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_form.html:37
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:68
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:109
+#, fuzzy
+msgid "Cart"
+msgstr "Carretilla"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:76
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:117
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_form.html:41
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:71
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:112
+#, fuzzy
+msgid "Worker Payment"
+msgstr "Formulario de Trabajador"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:77
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:118
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:72
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:113
+msgid "Revenue"
+msgstr "Ganancia"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:88
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:97
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:83
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:92
+#, fuzzy
+#| msgid "Create Cart"
+msgid "Create Daily Part Cart"
+msgstr "Crear Carretilla"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:137
+#: .\inventory_management\templates\daily_part\daily_part_list.html:76
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:132
+#: .\inventory_management\templates\worker\workers_list.html:91
+msgid "Details"
+msgstr "Detalles"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:146
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:141
+msgid "Finish Daily Part Cart"
+msgstr "Finalizar Parte Diario Por Carretilla"
+
+#: .\inventory_management\templates\daily_part\daily_part_detail.html:158
+#: .\inventory_management\templates\daily_part\daily_part_list.html:93
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:153
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:87
+#, fuzzy
+#| msgid "There is no stock"
+msgid "There is no records to show"
+msgstr "No hay disponibilidad"
+
+#: .\inventory_management\templates\daily_part\daily_part_list.html:6
+#: .\inventory_management\templates\layouts\base\base.html:135
+#, fuzzy
+#| msgid "Daily Part Cart"
+msgid "Daily Part"
+msgstr "Parte Diario Por Carretilla"
+
+#: .\inventory_management\templates\daily_part\daily_part_list.html:40
+#, fuzzy
+#| msgid "Search products..."
+msgid "Search daily part..."
+msgstr "Buscar productos"
+
+#: .\inventory_management\templates\daily_part\daily_part_list.html:81
+#, fuzzy
+#| msgid "Finish Daily Part Cart"
+msgid "Finish Daily Part"
+msgstr "Finalizar Parte Diario Por Carretilla"
+
+#: .\inventory_management\templates\daily_part_cart\daily_part_cart_confirm_delete.html:10
+#, fuzzy
+#| msgid "Are you sure you want to delete the user:"
+msgid "Are you sure you want to delete this Daily Part Cart"
+msgstr "¿Está seguro de que desea eliminar"
 
 #: .\inventory_management\templates\daily_part_cart\daily_part_cart_detail.html:24
 msgid "Payment"
@@ -406,62 +558,9 @@ msgstr "Crear Carga de Carretillas"
 msgid "Daily Part Cart Form"
 msgstr "Formulario de Carga de Carretilla"
 
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_form.html:41
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:75
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:91
-#, fuzzy
-msgid "Worker Payment"
-msgstr "Formulario de Trabajador"
-
 #: .\inventory_management\templates\daily_part_cart\daily_part_cart_form.html:55
-#: .\inventory_management\templates\store\store_form.html:9
 msgid "Save"
 msgstr "Guardar"
-
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:36
-#, fuzzy
-#| msgid "Create Cart"
-msgid "Create Daily Part Cart"
-msgstr "Crear Carretilla"
-
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:50
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:120
-msgid "Finish Daily Part Cart"
-msgstr "Finalizar Parte Diario Por Carretilla"
-
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:64
-#, fuzzy
-#| msgid "Search workers..."
-msgid "Search worker..."
-msgstr "Buscar trabajadores"
-
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:73
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:89
-#, fuzzy
-msgid "Returned Money Total"
-msgstr "Dinero Retornado Total"
-
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:74
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:90
-#, fuzzy
-msgid "Net Profit"
-msgstr "Ganancia Neta"
-
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:76
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:92
-msgid "Revenue"
-msgstr "Ganancia"
-
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:110
-#: .\inventory_management\templates\worker\workers_list.html:93
-msgid "Details"
-msgstr "Detalles"
-
-#: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:132
-#, fuzzy
-#| msgid "There is no stock"
-msgid "There is no records to show"
-msgstr "No hay disponibilidad"
 
 #: .\inventory_management\templates\index.html:8
 msgid "This is the index page"
@@ -484,7 +583,12 @@ msgstr "Trabajadores"
 msgid "Carts"
 msgstr "Carretillas"
 
-#: .\inventory_management\templates\layouts\base\base.html:135
+#: .\inventory_management\templates\layouts\base\base.html:139
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:6
+msgid "Wastage Records"
+msgstr "Registro de Merma"
+
+#: .\inventory_management\templates\layouts\base\base.html:143
 msgid "Store"
 msgstr "Almacén"
 
@@ -531,6 +635,8 @@ msgid "Price"
 msgstr "Precio"
 
 #: .\inventory_management\templates\product\product_detail.html:22
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:49
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:66
 msgid "Quantity"
 msgstr "Cantidad"
 
@@ -576,33 +682,43 @@ msgstr "Cantidad"
 msgid "Store Detail"
 msgstr "Detalles"
 
-#: .\inventory_management\templates\store\store_detail.html:6
+#: .\inventory_management\templates\store\store_detail.html:11
 #: .\inventory_management\templates\worker\worker_detail.html:19
 #: .\inventory_management\templates\worker\workers_list.html:75
 msgid "Name"
 msgstr "Nombre"
 
-#: .\inventory_management\templates\store\store_detail.html:7
+#: .\inventory_management\templates\store\store_detail.html:19
 #, fuzzy
 #| msgid "Returned Money"
 msgid "Own Money"
 msgstr "Dinero Retornado"
 
-#: .\inventory_management\templates\store\store_detail.html:8
+#: .\inventory_management\templates\store\store_detail.html:27
 #, fuzzy
 #| msgid "Returned Money"
 msgid "Business Money"
 msgstr "Dinero Retornado"
 
-#: .\inventory_management\templates\store\store_detail.html:9
+#: .\inventory_management\templates\store\store_detail.html:35
 msgid "Percentage"
 msgstr "Porcentaje"
 
-#: .\inventory_management\templates\store\store_form.html:5
+#: .\inventory_management\templates\wastage_records\wastage_record_form.html:4
+msgid "Wastage Record Form"
+msgstr "Formulario de Registro de Merma"
+
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:40
 #, fuzzy
-#| msgid "Modify"
-msgid "Modify Store"
-msgstr "Modificar"
+#| msgid "Search workers..."
+msgid "Search wastage records..."
+msgstr "Buscar trabajadores"
+
+#: .\inventory_management\templates\wastage_records\wastage_records_list.html:56
+#, fuzzy
+#| msgid "Create Cart Load"
+msgid "Create Wastage Record"
+msgstr "Crear Carga de Carretillas"
 
 #: .\inventory_management\templates\worker\worker_detail.html:20
 #: .\inventory_management\templates\worker\workers_list.html:76
@@ -642,3 +758,8 @@ msgstr "Buscar trabajadores"
 #: .\inventory_management\templates\worker\workers_list.html:100
 msgid "No workers to display"
 msgstr "No hay trabajadores para mostrar"
+
+#, fuzzy
+#~| msgid "Modify"
+#~ msgid "Modify Store"
+#~ msgstr "Modificar"
