@@ -111,7 +111,7 @@
                         <li class="menu-title">{% trans "Sections" %}</li>
                         <li class="menu-item">
                             <a href="{% url 'product_list' %}" class="menu-link">
-                                <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/basket.svg' %}" alt="Basket icon"></span>
+                                <span class="menu-icon"><i class="bi bi-basket"></i></span>
                                 <span class="menu-text">{% trans "Products" %} </span>
                             </a>
                             <a href="{% url 'worker_list' %}" class="menu-link">
@@ -133,6 +133,10 @@
                             <a href="{% url 'daily_part_list' %}" class="menu-link">
                                 <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard2-check.svg' %}" alt="Clipboard icon"></span>
                                 <span class="menu-text">{% trans "Daily Part" %} </span>
+                            </a>
+                            <a href="{% url 'wastage_record_list' %}" class="menu-link">
+                                <span class="menu-icon"><i class="bi bi-bag-x"></i></span>
+                                <span class="menu-text"> {% trans "Wastage Records" %} </span>
                             </a>
                             <a href="{% url 'store_detail' %}" class="menu-link">
                                 <span class="menu-icon"><i data-feather="archive"></i></span>

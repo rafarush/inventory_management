@@ -14,6 +14,7 @@ urlpatterns = [
     path('daily_part/', include('inventory_management.modules.daily_part.urls')),
     path('store/', include('inventory_management.modules.store.urls')),
     path('account/', include('inventory_management.modules.email_services.urls')),
+    path('wastage_records/', include('inventory_management.modules.wastage_record.urls'))
 ]
 
 

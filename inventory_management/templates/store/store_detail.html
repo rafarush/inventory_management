@@ -2,12 +2,47 @@
 {% load i18n %}
 {% block content %}
 <div class="container mt-4">
-  <h2>{% trans "Store Detail" %}</h2>
-  <p><strong>{% trans "Name" %}:</strong> {{ store.name }}</p>
-  <p><strong>{% trans "Own Money" %}:</strong> {{ store.own_money }}</p>
-  <p><strong>{% trans "Business Money" %}:</strong> {{ store.money_business }}</p>
-  <p><strong>{% trans "Percentage" %}:</strong> {{ store.percent }}</p>
+  <h2 class="mb-4">{% trans "Store Detail" %}</h2>
 
-  <a href="{% url 'store_update' %}" class="btn btn-primary">{% trans "Modify" %}</a>
+  <div class="row g-3">
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm border-0">
+        <div class="card-body">
+          <h6 class="text-muted">{% trans "Name" %}</h6>
+          <h4 class="fw-bold">{{ store.name }}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm border-0">
+        <div class="card-body">
+          <h6 class="text-muted">{% trans "Own Money" %}</h6>
+          <h4 class="fw-bold text-success">{{ store.own_money }}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm border-0">
+        <div class="card-body">
+          <h6 class="text-muted">{% trans "Business Money" %}</h6>
+          <h4 class="fw-bold text-primary">{{ store.money_business }}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm border-0">
+        <div class="card-body">
+          <h6 class="text-muted">{% trans "Percentage" %}</h6>
+          <h4 class="fw-bold">{{ store.percent }}%</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 text-end">
+    <a href="{% url 'store_update' %}" class="btn btn-primary btn-lg">
+      {% trans "Modify" %}
+    </a>
+  </div>
 </div>
 {% endblock %}
