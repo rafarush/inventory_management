@@ -140,23 +140,22 @@ class DailyPartCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, View)
     def post(self, request, pk):
         daily_part = get_object_or_404(DailyPartCart, pk=pk)
 
-        # Verificar que todos los charge_cart estén finalizados
         all_finalized = all(cc.status == "finalizado" for cc in daily_part.charge_carts.all())
         if not all_finalized:
             messages.error(request, _("Daily Part cannot be finished: there is some cart loads pending."))
             return redirect("daily_part_cart_list")
 
-        # ---- Cálculos de totales ----
         money_return_total = sum(cc.money_returned or 0 for cc in daily_part.charge_carts.all())
         revenue_total = sum(cc.revenue_total or 0 for cc in daily_part.charge_carts.all())
+        money_invested = sum(cc.money_invested or 0 for cc in daily_part.charge_carts.all())
         net_profit = revenue_total - (daily_part.worker_payment or 0)
 
-        # Guardar en el DailyPartCart
         daily_part.money_return_total = money_return_total
         daily_part.revenue = revenue_total
         daily_part.net_profit = net_profit
+        daily_part.money_invested = money_invested
         daily_part.status = "finalizado"
-        daily_part.save(update_fields=["money_return_total", "revenue", "net_profit", "status"])
+        daily_part.save(update_fields=["money_return_total", "revenue", "net_profit", "status", "money_invested"])
 
         # Cambiar estado del worker y cart
         daily_part.worker.status = "pendiente"
@@ -167,9 +166,10 @@ class DailyPartCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, View)
 
         # Sumar totales al parte diario
         daily_part_parent = get_object_or_404(DailyPart, pk=daily_part.daily_part.pk)
+        daily_part_parent.money_invested += money_invested
         daily_part_parent.money_return_total += money_return_total
         daily_part_parent.net_profit += net_profit
-        daily_part_parent.save(update_fields=["money_return_total", "net_profit", ])
+        daily_part_parent.save(update_fields=["money_return_total", "net_profit", "money_invested" ])
 
         messages.success(request, _("Daily Part finished successfully"))
         return redirect("daily_part_cart_list")

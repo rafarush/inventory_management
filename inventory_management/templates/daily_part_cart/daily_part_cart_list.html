@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <th scope="col">{% trans "Worker Payment" %}</th>
                 <th scope="col">{% trans "Revenue" %}</th>
                 <th scope="col">{% trans "Date" %}</th>
+                <th scope="col">{% trans "Invested Money" %}</th>
                 <th scope="col">{% trans "Status" %}</th>
                 <th scope="col">{% trans "Actions" %}</th>
             </tr>
@@ -126,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>${{ part.worker_payment }}</td>
                     <td>${{ part.revenue }}</td>
                     <td>{{ part.date }}</td>
+                    <td>{{ part.money_invested }}</td>
                     <td>{{ part.get_status_display }}</td>
                     <td>
                         <div class="btn-group d-flex" role="group" aria-label="acciones">

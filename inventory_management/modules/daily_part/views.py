@@ -109,6 +109,13 @@ class DailyPartFinishView(LoginRequiredMixin, PermissionRequiredMixin, View):
             messages.error(request, _("Cannot finish Daily Part: there are pending daily part carts."))
             return redirect("daily_part_list")
 
+        store = daily_part.store
+        if store:
+            store.own_money = (store.own_money or 0) + ((daily_part.net_profit * store.percent)/100)
+            store.money_business = (store.money_business or 0) + daily_part.money_invested + ((daily_part.net_profit * (100-store.percent))/100)
+
+            store.save(update_fields=["own_money", "money_business"])
+
         daily_part.status = "finalizado"
         daily_part.save(update_fields=["status"])
 

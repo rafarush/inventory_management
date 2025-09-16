@@ -1,4 +1,6 @@
 import uuid
+from decimal import Decimal
+
 from django.db import models
 from inventory_management.modules.base_model.base_model import BaseModel
 from inventory_management.modules.cart.models import Cart
@@ -31,6 +33,7 @@ class DailyPartCart(BaseModel):
     net_profit = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable= False)
     worker_payment = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     revenue = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable= False)
+    money_invested = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), editable=False)
 
     date = models.DateField(auto_now_add=True)
 
