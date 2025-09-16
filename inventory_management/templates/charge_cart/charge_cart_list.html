@@ -80,6 +80,7 @@
                     <th scope="col">{% trans "Income" %}</th>
                     <th scope="col">{% trans "Total Income" %}</th>
                     <th scope="col">{% trans "Returned Money" %}</th>
+                    <th scope="col">{% trans "Invested Money" %}</th>
                     <th scope="col">{% trans "Status" %}</th>
                     {% if daily_part_cart and daily_part_cart.status != "finalizado" %}
                         <th scope="col">{% trans "Actions" %}</th>
@@ -104,6 +105,7 @@
                         {% endif %}
                         <td>${{ charge.revenue_total }}</td>
                         <td>${{ charge.money_returned }}</td>
+                        <td>${{ charge.money_invested }}</td>
                         <td>{{ charge.get_status_display }}</td>
                         {% if charge.status != "finalizado" and daily_part_cart.status != "finalizado" and daily_part_cart %}
                             <td class="btn-group-sm d-flex flex-nowrap gap-1">

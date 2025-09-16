@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from inventory_management.modules.base_model.base_model import BaseModel
+from inventory_management.modules.store.models import Store
 
 
 class DailyPart(BaseModel):
@@ -16,12 +17,25 @@ class DailyPart(BaseModel):
     date = models.DateField(auto_now_add=True, unique=True, editable=False)
     money_return_total = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable= False)
     net_profit = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable= False)
+    money_invested = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable= False)
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default="trabajando",
         verbose_name="status"
     )
+    store = models.ForeignKey(
+        Store,
+        on_delete=models.CASCADE,
+        related_name="daily_parts",
+        editable=False,
+        null=True,
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.store_id:
+            self.store = Store.objects.first()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"DailyPart: {self.id} - Date: {self.date} - Status: {self.status}"

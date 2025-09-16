@@ -142,6 +142,7 @@ class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
         amount_v = instance.amount_sent - instance.amount_received
         instance.money_returned = instance.price_sent * amount_v
         instance.revenue_total = instance.revenue * amount_v
+        instance.money_invested = instance.money_returned - instance.revenue_total
         instance.status = "finalizado"
         instance.save()
 

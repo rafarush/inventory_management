@@ -19,6 +19,7 @@ class ChargeCart(BaseModel):
     revenue = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), editable=False)
     revenue_total = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), editable=False)
     money_returned = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), editable=False)
+    money_invested = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), editable=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pendiente")
     daily_part_cart = models.ForeignKey(DailyPartCart, on_delete=models.CASCADE, related_name="charge_carts", null=True, blank=True)
 
