@@ -33,26 +33,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <a class="btn btn-secondary btn-sm" href="{% url 'daily_part_list' %}" style="margin-bottom: 20px; margin-top: 20px">{% trans "Back"%}</a>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="ps-xl-3 mt-3 mt-xl-0">
-                                <h4 class="mb-3">{% trans "Date"%}: <span class="text-body me-2">{{ daily_part.date }}</span></h4>
-                                <h4 class="mb-4">{% trans "Returned Money Total" %}: <span class="text-body me-2">${{ daily_part.money_return_total }} CUP</span></h4>
-                                <h4 class="mb-4">{% trans "Net Profit" %}: <span class="text-body me-2">${{ daily_part.net_profit }} CUP</span></h4>
-                                <h4 class="mb-4">{% trans "Status"%}: <span class="text-body me-2">{{ daily_part.get_status_display }}</span></h4>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end row -->
-                </div>
-            </div> <!-- end card-->
-        </div> <!-- end col-->
+    <div class="row row-cols-5">
+    <div class="col">
+        <div class="card text-center shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-muted mb-1">{% trans "Date" %}</h6>
+                <h4 class="fw-bold">{{ daily_part.date }}</h4>
+            </div>
+        </div>
     </div>
-    <!-- end row-->
+    <div class="col">
+        <div class="card text-center shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-muted mb-1">{% trans "Returned Money Total" %}</h6>
+                <h4 class="fw-bold">${{ daily_part.money_return_total }} CUP</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-muted mb-1">{% trans "Net Profit" %}</h6>
+                <h4 class="fw-bold text-success">${{ daily_part.net_profit }} CUP</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-muted mb-1">{% trans "Status" %}</h6>
+                <h4 class="fw-bold">{{ daily_part.get_status_display }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="text-muted mb-1">{% trans "Store" %}</h6>
+                <h4 class="fw-bold">{{ daily_part.store }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
     <div class="row"><h1>{% trans "All daily part carts of the day" %}:</h1></div>
 
@@ -117,6 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <th scope="col">{% trans "Worker Payment" %}</th>
                 <th scope="col">{% trans "Revenue" %}</th>
                 <th scope="col">{% trans "Date" %}</th>
+                <th scope="col">{% trans "Invested Money" %}</th>
                 <th scope="col">{% trans "Status" %}</th>
                 <th scope="col">{% trans "Actions" %}</th>
             </tr>
@@ -131,6 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>${{ part.worker_payment }}</td>
                     <td>${{ part.revenue }}</td>
                     <td>{{ part.date }}</td>
+                    <td>{{ part.money_invested }}</td>
                     <td>{{ part.get_status_display }}</td>
                     <td>
                         <div class="btn-group d-flex" role="group" aria-label="acciones">

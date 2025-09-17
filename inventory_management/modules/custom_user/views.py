@@ -17,15 +17,12 @@ class CustomUserList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = 'custom_user/custom_user_list.html'
     permission_required = 'inventory_management.view_customuser'
 
-
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
-    def get_queryset(self):
-        if self.request.user.groups.filter(name='Administrators').exists():
-            return CustomUser.objects.all()
-        elif self.request.user.groups.filter(name='Agents').exists():
-            return CustomUser.objects.filter(groups__name='Clients')
+
 
 
 class CustomUserClientsList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -35,10 +32,13 @@ class CustomUserClientsList(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     permission_required = 'inventory_management.view_customuser'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
     def get_queryset(self):
-        if self.request.user.groups.filter(name='Administrators').exists() or self.request.user.groups.filter(name='Agents').exists():
+        if self.request.user.groups.filter(name='Administrators').exists() or self.request.user.groups.filter(
+                name='Agents').exists():
             return CustomUser.objects.filter(groups__name='Clients')
 
 
@@ -59,7 +59,9 @@ class CustomUserCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return form
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class CustomUserDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -70,7 +72,9 @@ class CustomUserDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = 'inventory_management.delete_customuser'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class CustomUserDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -80,7 +84,9 @@ class CustomUserDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     permission_required = 'inventory_management.view_customuser'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class CustomUserUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -91,7 +97,9 @@ class CustomUserUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'inventory_management.change_customuser'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class CustomUserDetailsJSON(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -138,9 +146,10 @@ class CustomUserFormView(LoginRequiredMixin, PermissionRequiredMixin, View):
             # Verificar duplicados
             email = form.cleaned_data['email']
             id_number = form.cleaned_data['id_number']
-            if CustomUser.objects.filter(email=email).exists() or CustomUser.objects.filter(id_number=id_number).exists():
+            if CustomUser.objects.filter(email=email).exists() or CustomUser.objects.filter(
+                    id_number=id_number).exists():
                 return JsonResponse({'success': False, 'errors': {'email': 'Email or ID Number already exists.'}})
-              
+
             if request.user.groups.filter(name='Agents').exists():
                 form.save()
                 user = CustomUser.objects.get(id_number=form.cleaned_data['id_number'])
@@ -153,7 +162,7 @@ class CustomUserFormView(LoginRequiredMixin, PermissionRequiredMixin, View):
                     return JsonResponse({'success': False, 'errors': {'groups': 'This group does not exist.'}})
             elif request.user.groups.filter(name='Administrators').exists():
                 form.save()
-                
+
             return JsonResponse({'success': True})
 
         # Devolver errores si el formulario no es válido

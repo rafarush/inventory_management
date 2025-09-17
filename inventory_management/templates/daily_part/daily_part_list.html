@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <th scope="col">{% trans "Date" %}</th>
                 <th scope="col">{% trans "Returned Money Total" %}</th>
                 <th scope="col">{% trans "Net Profit" %}</th>
+                <th scope="col">{% trans "Invested Money" %}</th>
                 <th scope="col">{% trans "Status" %}</th>
                 <th scope="col">{% trans "Actions" %}</th>
             </tr>
@@ -70,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>{{ part.date }}</td>
                     <td>${{ part.money_return_total }}</td>
                     <td>${{ part.net_profit }}</td>
+                    <td>${{ part.money_invested }}</td>
                     <td>{{ part.get_status_display }}</td>
                     <td>
                         <div class="btn-group d-flex" role="group" aria-label="acciones">

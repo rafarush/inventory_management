@@ -39,10 +39,13 @@
     </div>
   </div>
 
-  <div class="mt-4 text-end">
-    <a href="{% url 'store_update' %}" class="btn btn-primary btn-lg">
-      {% trans "Modify" %}
-    </a>
-  </div>
+    {% if perms.inventory_management.change_store %}
+        <div class="mt-4 text-end">
+            <a href="{% url 'store_update' %}" class="btn btn-primary btn-lg">
+              {% trans "Modify" %}
+            </a>
+        </div>
+    {% endif %}
+
 </div>
 {% endblock %}

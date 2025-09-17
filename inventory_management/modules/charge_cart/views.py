@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, DetailView, UpdateView
 from django.db.models import Case, When, Value, IntegerField
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 
 from inventory_management.modules.charge_cart.models import ChargeCart
 from inventory_management.modules.charge_cart.forms import (
@@ -19,7 +19,7 @@ class ChargeCartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = ChargeCart
     context_object_name = 'charge_cart_list'
     template_name = 'charge_cart/charge_cart_list.html'
-    permission_required = 'charge_cart.view_chargecart'
+    permission_required = 'inventory_management.view_chargecart'
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -60,7 +60,9 @@ class ChargeCartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return context
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 # 🔹 CREAR CHARGECART
@@ -68,10 +70,12 @@ class ChargeCartCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
     model = ChargeCart
     form_class = ChargeCartAdminForm
     template_name = 'charge_cart/charge_cart_form.html'
-    permission_required = 'charge_cart.add_chargecart'
+    permission_required = 'inventory_management.add_chargecart'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
     def form_valid(self, form):
         # asignar automáticamente el daily_part_cart_id desde la URL si existe
@@ -92,6 +96,7 @@ class ChargeCartDetailView(LoginRequiredMixin, DetailView):
     model = ChargeCart
     context_object_name = 'charge_cart'
     template_name = 'charge_cart/charge_cart_detail.html'
+    permission_required = 'inventory_management.view_chargecart'
 
 
 # 🔹 ELIMINAR
@@ -100,10 +105,12 @@ class ChargeCartDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteVi
     template_name = 'charge_cart/charge_cart_confirm_delete.html'
     success_url = reverse_lazy('charge_cart_list')
     context_object_name = 'charge_cart'
-    permission_required = 'charge_cart.delete_chargecart'
+    permission_required = 'inventory_management.delete_chargecart'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 # 🔹 ACTUALIZAR
@@ -112,10 +119,12 @@ class ChargeCartUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     form_class = ChargeCartUpdateForm
     template_name = 'charge_cart/charge_cart_form.html'
     success_url = reverse_lazy('charge_cart_list')
-    permission_required = 'charge_cart.change_chargecart'
+    permission_required = 'inventory_management.change_chargecart'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 # 🔹 FINALIZAR
@@ -123,10 +132,12 @@ class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     model = ChargeCart
     form_class = ChargeCartFinishForm
     template_name = 'charge_cart/charge_cart_form.html'
-    permission_required = 'charge_cart.change_chargecart'
+    permission_required = 'inventory_management.change_chargecart'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
     def form_valid(self, form):
         instance = form.save(commit=False)
@@ -142,6 +153,7 @@ class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
         amount_v = instance.amount_sent - instance.amount_received
         instance.money_returned = instance.price_sent * amount_v
         instance.revenue_total = instance.revenue * amount_v
+        instance.money_invested = instance.money_returned - instance.revenue_total
         instance.status = "finalizado"
         instance.save()
 

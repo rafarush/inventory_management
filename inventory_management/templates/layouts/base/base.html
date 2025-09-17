@@ -108,41 +108,94 @@
 
                 <div class="scrollbar">
                     <ul class="menu">
-                        <li class="menu-title">{% trans "Sections" %}</li>
-                        <li class="menu-item">
-                            <a href="{% url 'product_list' %}" class="menu-link">
-                                <span class="menu-icon"><i class="bi bi-basket"></i></span>
-                                <span class="menu-text">{% trans "Products" %} </span>
-                            </a>
+                        <li class="menu-title">{% trans "Business Management" %}</li>
+                        {% if perms.inventory_management.view_product %}
+                            <li class="menu-item">
+                                <a href="{% url 'product_list' %}" class="menu-link">
+                                    <span class="menu-icon"><i class="bi bi-basket"></i></span>
+                                    <span class="menu-text">{% trans "Products" %} </span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if perms.inventory_management.view_worker %}
+                            <li class="menu-item">
                             <a href="{% url 'worker_list' %}" class="menu-link">
                                 <span class="menu-icon"><i data-feather="users"></i></span>
                                 <span class="menu-text"> {% trans "Workers" %} </span>
                             </a>
-                            <a href="{% url 'cart_list' %}" class="menu-link">
-                                <span class="menu-icon"><i data-feather="shopping-cart"></i></span>
-                                <span class="menu-text"> {% trans "Carts" %} </span>
-                            </a>
-                            <a href="{% url 'charge_cart_list' %}" class="menu-link">
-                                <span class="menu-icon"><i data-feather="package"></i></span>
-                                <span class="menu-text">{% trans "Cart Loads" %} </span>
-                            </a>
-                            <a href="{% url 'daily_part_cart_list' %}" class="menu-link">
-                                <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard.svg' %}" alt="Clipboard icon"></span>
-                                <span class="menu-text">{% trans "Daily Part Cart" %} </span>
-                            </a>
-                            <a href="{% url 'daily_part_list' %}" class="menu-link">
-                                <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard2-check.svg' %}" alt="Clipboard icon"></span>
-                                <span class="menu-text">{% trans "Daily Part" %} </span>
-                            </a>
-                            <a href="{% url 'wastage_record_list' %}" class="menu-link">
-                                <span class="menu-icon"><i class="bi bi-bag-x"></i></span>
-                                <span class="menu-text"> {% trans "Wastage Records" %} </span>
-                            </a>
-                            <a href="{% url 'store_detail' %}" class="menu-link">
-                                <span class="menu-icon"><i data-feather="archive"></i></span>
-                                <span class="menu-text"> {% trans "Store" %} </span>
-                            </a>
                         </li>
+                        {% endif %}
+
+                        {% if perms.inventory_management.view_cart %}
+                            <li class="menu-item">
+                                <a href="{% url 'cart_list' %}" class="menu-link">
+                                    <span class="menu-icon"><i data-feather="shopping-cart"></i></span>
+                                    <span class="menu-text"> {% trans "Carts" %} </span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if perms.inventory_management.view_chargecart %}
+                            <li class="menu-item">
+                                <a href="{% url 'charge_cart_list' %}" class="menu-link">
+                                    <span class="menu-icon"><i data-feather="package"></i></span>
+                                    <span class="menu-text">{% trans "Cart Loads" %} </span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if perms.inventory_management.products.view_dailypartcart %}
+                            <li class="menu-item">
+                                <a href="{% url 'daily_part_cart_list' %}" class="menu-link">
+                                    <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard.svg' %}" alt="Clipboard icon"></span>
+                                    <span class="menu-text">{% trans "Daily Part Cart" %} </span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if perms.inventory_management.view_dailypart %}
+                            <li class="menu-item">
+                                <a href="{% url 'daily_part_list' %}" class="menu-link">
+                                    <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard2-check.svg' %}" alt="Clipboard icon"></span>
+                                    <span class="menu-text">{% trans "Daily Part" %} </span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if perms.inventory_management.view_wastagerecord %}
+                        	<li class="menu-item">
+                                <a href="{% url 'wastage_record_list' %}" class="menu-link">
+                                    <span class="menu-icon"><i class="bi bi-bag-x"></i></span>
+                                    <span class="menu-text"> {% trans "Wastage Records" %} </span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if perms.inventory_management.view_store %}
+                        	<li class="menu-item">
+                                <a href="{% url 'store_detail' %}" class="menu-link">
+                                    <span class="menu-icon"><i data-feather="archive"></i></span>
+                                    <span class="menu-text"> {% trans "Store" %} </span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                    </ul>
+                    {% if perms.inventory_management.view_customuser %}
+                        <ul class="menu">
+                            <li class="menu-title">{% trans "User Control" %}</li>
+                            <li class="menu-item">
+                                <a href="{% url 'custom_user_list' %}" class="menu-link">
+                                    <span class="menu-icon"><i class="mdi mdi-account-multiple"></i></span>
+                                    <span class="menu-text"> Users </span>
+                                </a>
+                            </li>
+                        </ul>
+                    {% endif %}
+
+                    <ul class="menu">
+                        <li class="menu-title">{% trans "Reports" %}</li>
                     </ul>
                     <div class="clearfix"></div>
                 </div>
