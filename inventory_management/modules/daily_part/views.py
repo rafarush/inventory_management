@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.views import View
 from django.views.generic import ListView, CreateView, DetailView
 from django.http import JsonResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib import messages
 from inventory_management.modules.daily_part.forms import DailyPartForm
 from inventory_management.modules.daily_part.models import DailyPart
@@ -20,7 +20,9 @@ class DailyPartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'inventory_management.view_dailypart'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class DailyPartCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -45,7 +47,9 @@ class DailyPartCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
         return HttpResponseRedirect(self.get_success_url())
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class DailyPartDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -61,7 +65,9 @@ class DailyPartDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailVie
         return context
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 # class DailyPartUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):

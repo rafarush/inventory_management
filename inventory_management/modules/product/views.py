@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, DetailView, UpdateView
 from inventory_management.models import Product
@@ -19,7 +19,9 @@ class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return context
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class ProductCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -30,7 +32,9 @@ class ProductCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
     permission_required = 'inventory_management.add_product'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class ProductDetailView(LoginRequiredMixin, DetailView):
@@ -47,7 +51,9 @@ class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
     context_object_name = 'product'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -58,7 +64,9 @@ class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
     permission_required = 'inventory_management.change_product'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.groups.filter(name='Administrators').exists():

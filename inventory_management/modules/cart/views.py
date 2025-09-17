@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, DetailView, UpdateView
 from inventory_management.models import Cart
@@ -18,7 +19,9 @@ class CartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return context
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class CartCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -29,7 +32,9 @@ class CartCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'inventory_management.add_cart'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class CartDetailView(LoginRequiredMixin, DetailView):
@@ -45,7 +50,9 @@ class CartDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = 'inventory_management.delete_cart'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class CartUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -56,4 +63,6 @@ class CartUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'inventory_management.change_cart'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()

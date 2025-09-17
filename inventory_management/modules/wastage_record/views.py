@@ -2,6 +2,7 @@ import math
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, DetailView, UpdateView
 from django.db.models import Case, When, Value, IntegerField
@@ -17,7 +18,9 @@ class WastageRecordListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     permission_required = 'wastage_record.view_wastagerecords'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -53,7 +56,9 @@ class WastageRecordCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
         return super().form_valid(form)
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class WastageRecordDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -76,7 +81,9 @@ class WastageRecordDeleteView(LoginRequiredMixin, PermissionRequiredMixin, Delet
         return super().post(request, *args, **kwargs)
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 class WastageRecordUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -110,4 +117,6 @@ class WastageRecordUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
         return super().form_valid(form)
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
