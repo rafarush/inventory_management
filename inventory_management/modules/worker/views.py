@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Worker
@@ -20,7 +21,9 @@ class WorkerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return context
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 # Detail view
@@ -40,7 +43,9 @@ class WorkerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'inventory_management.create_worker'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 # Update worker
@@ -52,7 +57,9 @@ class WorkerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'inventory_management.change_worker'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
 
 # Delete worker
@@ -63,4 +70,6 @@ class WorkerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = 'inventory_management.delete_worker'
 
     def handle_no_permission(self):
-        raise PermissionDenied("You do not have permission to perform this action.")
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
