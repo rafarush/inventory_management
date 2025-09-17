@@ -22,8 +22,7 @@ class CustomLoginView(LoginView):
 
 class CustomLogoutView(LoginRequiredMixin, LogoutView):
     template_name = 'auth/logout.html'
-    success_url = reverse_lazy('auth/login/')
-    next_page = reverse_lazy('index')
+    success_url = reverse_lazy('login')
 
 
 class SignUpView(CreateView):
