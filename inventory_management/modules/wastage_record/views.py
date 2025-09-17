@@ -15,7 +15,7 @@ class WastageRecordListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     model = WastageRecord
     context_object_name = 'records'
     template_name = 'wastage_records/wastage_records_list.html'
-    permission_required = 'wastage_record.view_wastagerecords'
+    permission_required = 'inventory_management.view_wastagerecord'
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
@@ -38,7 +38,7 @@ class WastageRecordCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
     form_class = WastageRecordForm
     template_name = 'wastage_records/wastage_record_form.html'
     success_url = reverse_lazy('wastage_record_list')
-    permission_required = 'wastage_record.add_wastagerecord'
+    permission_required = 'inventory_management.add_wastagerecord'
 
     def form_valid(self, form):
         # Guardamos la instancia sin hacer commit para poder acceder a ella
@@ -66,7 +66,7 @@ class WastageRecordDeleteView(LoginRequiredMixin, PermissionRequiredMixin, Delet
     template_name = 'wastage_records/wastage_record_confirm_delete.html'
     success_url = reverse_lazy('wastage_record_list')
     context_object_name = 'wastage_record'
-    permission_required = 'wastage_record.delete_wastagerecord'
+    permission_required = 'inventory_management.delete_wastagerecord'
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -91,7 +91,7 @@ class WastageRecordUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
     form_class = WastageRecordForm
     template_name = 'wastage_records/wastage_record_form.html'
     success_url = reverse_lazy('wastage_record_list')
-    permission_required = 'wastage_record.change_wastagerecord'
+    permission_required = 'inventory_management.change_wastagerecord'
 
     def form_valid(self, form):
         old_object = self.get_object()

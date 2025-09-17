@@ -1,21 +1,10 @@
+{% extends "layouts/base/base.html" %}
 {% load static %}
 {% load i18n %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Access Denied</title>
-    <link rel="stylesheet " href="{% static 'bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'css/btns-styles.css' %}">
+{% block title %}
+	{% trans "Access Denied" %}
+{% endblock %}
 
-</head>
-<body>
-
-    <div class="main-div">
-        <h1 class="alert-danger" style="color: red">{% trans "Access Denied" %}</h1>
-    </div>
-
-
-</body>
-</html>
+{% block content %}
+    <h1>{% trans "Access Denied" %}</h1>
+{% endblock %}

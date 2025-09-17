@@ -23,6 +23,8 @@ class CustomUserList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return super().handle_no_permission()
 
 
+
+
 class CustomUserClientsList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = CustomUser
     context_object_name = 'users'

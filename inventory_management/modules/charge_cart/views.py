@@ -19,7 +19,7 @@ class ChargeCartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = ChargeCart
     context_object_name = 'charge_cart_list'
     template_name = 'charge_cart/charge_cart_list.html'
-    permission_required = 'charge_cart.view_chargecart'
+    permission_required = 'inventory_management.view_chargecart'
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -70,7 +70,7 @@ class ChargeCartCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
     model = ChargeCart
     form_class = ChargeCartAdminForm
     template_name = 'charge_cart/charge_cart_form.html'
-    permission_required = 'charge_cart.add_chargecart'
+    permission_required = 'inventory_management.add_chargecart'
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
@@ -96,6 +96,7 @@ class ChargeCartDetailView(LoginRequiredMixin, DetailView):
     model = ChargeCart
     context_object_name = 'charge_cart'
     template_name = 'charge_cart/charge_cart_detail.html'
+    permission_required = 'inventory_management.view_chargecart'
 
 
 # 🔹 ELIMINAR
@@ -104,7 +105,7 @@ class ChargeCartDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteVi
     template_name = 'charge_cart/charge_cart_confirm_delete.html'
     success_url = reverse_lazy('charge_cart_list')
     context_object_name = 'charge_cart'
-    permission_required = 'charge_cart.delete_chargecart'
+    permission_required = 'inventory_management.delete_chargecart'
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
@@ -118,7 +119,7 @@ class ChargeCartUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     form_class = ChargeCartUpdateForm
     template_name = 'charge_cart/charge_cart_form.html'
     success_url = reverse_lazy('charge_cart_list')
-    permission_required = 'charge_cart.change_chargecart'
+    permission_required = 'inventory_management.change_chargecart'
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
@@ -131,7 +132,7 @@ class ChargeCartFinishView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     model = ChargeCart
     form_class = ChargeCartFinishForm
     template_name = 'charge_cart/charge_cart_form.html'
-    permission_required = 'charge_cart.change_chargecart'
+    permission_required = 'inventory_management.change_chargecart'
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated:

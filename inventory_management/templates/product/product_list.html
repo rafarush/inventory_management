@@ -14,7 +14,7 @@
 
     {% if perms.inventory_management.add_product %}
         <div style="margin-top: 20px;">
-            <button href="{% url 'product_create' %}" class="btn btn-success btn-sm float-end">{% trans "Create Product" %}</button>
+            <a href="{% url 'product_create' %}" class="btn btn-success btn-sm float-end">{% trans "Create Product" %}</a>
         </div>
     {% endif %}
 
