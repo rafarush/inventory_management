@@ -22,12 +22,6 @@ class CustomUserList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
             return render(self.request, 'access_denied.html', status=403)
         return super().handle_no_permission()
 
-    def get_queryset(self):
-        if self.request.user.groups.filter(name='Administrators').exists():
-            return CustomUser.objects.all()
-        elif self.request.user.groups.filter(name='Agents').exists():
-            return CustomUser.objects.filter(groups__name='Clients')
-
 
 class CustomUserClientsList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = CustomUser
