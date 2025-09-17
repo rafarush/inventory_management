@@ -5,5 +5,6 @@ from django.views.generic import TemplateView
 # Create your views here.
 class Home(LoginRequiredMixin, TemplateView):
     template_name = 'index.html'
+    redirect_field_name = 'next'
 
 

@@ -3,7 +3,7 @@ from inventory_management.views import Home
 
 urlpatterns = [
     path('', Home.as_view(), name='index'),
-    path('auth/', include('inventory_management.modules.auth.urls'), name='auth'),
+    path('auth/', include('inventory_management.modules.auth.urls')),
     path('products/', include('inventory_management.modules.product.urls')),
     path('cart/', include('inventory_management.modules.cart.urls')),
     path('charge_cart/', include('inventory_management.modules.charge_cart.urls')),
