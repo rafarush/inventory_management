@@ -144,7 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'inventory_management.CustomUser'
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = ''
-SESSION_COOKIE_AGE = 10
+SESSION_COOKIE_AGE = 600
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
