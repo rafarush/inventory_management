@@ -17,6 +17,11 @@ class CustomUserList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = 'custom_user/custom_user_list.html'
     permission_required = 'inventory_management.view_customuser'
 
+    def get_queryset(self):
+        # Retorna solo los usuarios que no están eliminados soft
+        qs = super().get_queryset()
+        return qs.filter(deleted=None)
+
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
             return render(self.request, 'access_denied.html', status=403)
