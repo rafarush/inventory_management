@@ -1,14 +1,18 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View
 from django.contrib.auth.models import Permission, Group
 from inventory_management.modules.custom_user.forms import CustomUserForm, CustomUserChangeForm
 from inventory_management.models import CustomUser
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
 
 
 class CustomUserList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -60,6 +64,32 @@ class CustomUserCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         elif user.groups.filter(name='Agents').exists():
             form.fields['groups'].queryset = Group.objects.filter(name='Clients')
         return form
+
+    # def form_valid(self, form):
+    #     print("llego a guardar el form")
+    #     user = form.save(commit=False)
+    #     user.is_confirmed = False
+    #     user.save()
+    #
+    #     token = default_token_generator.make_token(user)
+    #     uid = urlsafe_base64_encode(force_bytes(user.pk))
+    #     print("uid user antes")
+    #     print(uid)
+    #     print("token user antes")
+    #     print(token)
+    #     current_site = get_current_site(self.request)
+    #     mail_subject = 'Confirma tu correo'
+    #     context = {
+    #         'user': user,
+    #         'domain': current_site.domain,
+    #         'uid': uid,
+    #         'token': token,
+    #     }
+    #     print("antes del email")
+    #     user.send_email(mail_subject, 'emails/email_confirmation_template.html', context)
+    #     print("despues del email")
+
+        return super().form_valid(form)
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
@@ -156,7 +186,28 @@ class CustomUserFormView(LoginRequiredMixin, PermissionRequiredMixin, View):
             if CustomUser.objects.filter(email=email).exists():
                 return JsonResponse({'success': False, 'errors': {'email': 'Email already exists.'}})
 
-            form.save()
+            # form.save()
+            user = form.save(commit=False)
+            user.is_confirmed = False
+            user.save()
+
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            print("uid user antes")
+            print(uid)
+            print("token user antes")
+            print(token)
+            current_site = get_current_site(self.request)
+            mail_subject = 'Confirma tu correo'
+            context = {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': uid,
+                'token': token,
+            }
+            print("antes del email")
+            user.send_email(mail_subject, 'emails/email_confirmation_template.html', context)
+            print("despues del email")
 
             return JsonResponse({'success': True})
 
