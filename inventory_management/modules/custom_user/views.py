@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View
 from django.contrib.auth.models import Permission, Group
-from inventory_management.modules.custom_user.forms import CustomUserForm
+from inventory_management.modules.custom_user.forms import CustomUserForm, CustomUserChangeForm
 from inventory_management.models import CustomUser
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 
@@ -21,8 +21,6 @@ class CustomUserList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         if self.request.user.is_authenticated:
             return render(self.request, 'access_denied.html', status=403)
         return super().handle_no_permission()
-
-
 
 
 class CustomUserClientsList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -96,6 +94,21 @@ class CustomUserUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy('custom_user_list')
     permission_required = 'inventory_management.change_customuser'
 
+    def get(self, request, *args, **kwargs):
+        user = self.get_object()
+        form = CustomUserChangeForm(instance=user)
+        html = render_to_string('custom_user/partials/custom_user_form.html', {'form': form}, request=request)
+        return JsonResponse({'html': html})
+
+    def post(self, request, *args, **kwargs):
+        user = self.get_object()
+        form = CustomUserChangeForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+        errors = {field: error.get_json_data() for field, error in form.errors.items()}
+        return JsonResponse({'success': False, 'errors': errors})
+
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
             return render(self.request, 'access_denied.html', status=403)
@@ -110,7 +123,6 @@ class CustomUserDetailsJSON(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         data = {
             'id': client.id,
-            'id_number': client.id_number,
             'first_name': client.first_name,
             'last_name': client.last_name,
             'username': client.username,
@@ -127,15 +139,6 @@ class CustomUserFormView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         form = CustomUserForm()
-        user = request.user
-
-        # Filtrar grupos según el rol del usuario
-        if user.groups.filter(name='Administrators').exists():
-            form.fields['groups'].queryset = Group.objects.all()
-        elif user.groups.filter(name='Agents').exists():
-            del form.fields['groups']
-            # form.fields['groups'].queryset = Group.objects.filter(name='Clients')
-
         html = render_to_string('custom_user/partials/custom_user_form.html', {'form': form}, request=request)
         return JsonResponse({'html': html})
 
@@ -145,23 +148,10 @@ class CustomUserFormView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if form.is_valid():
             # Verificar duplicados
             email = form.cleaned_data['email']
-            id_number = form.cleaned_data['id_number']
-            if CustomUser.objects.filter(email=email).exists() or CustomUser.objects.filter(
-                    id_number=id_number).exists():
-                return JsonResponse({'success': False, 'errors': {'email': 'Email or ID Number already exists.'}})
+            if CustomUser.objects.filter(email=email).exists():
+                return JsonResponse({'success': False, 'errors': {'email': 'Email already exists.'}})
 
-            if request.user.groups.filter(name='Agents').exists():
-                form.save()
-                user = CustomUser.objects.get(id_number=form.cleaned_data['id_number'])
-                try:
-                    group = Group.objects.get(name='Clients')
-                    user.groups.add(group)
-                except CustomUser.DoesNotExist:
-                    return JsonResponse({'success': False, 'errors': {'User': 'This user does not exist.'}})
-                except Group.DoesNotExist:
-                    return JsonResponse({'success': False, 'errors': {'groups': 'This group does not exist.'}})
-            elif request.user.groups.filter(name='Administrators').exists():
-                form.save()
+            form.save()
 
             return JsonResponse({'success': True})
 

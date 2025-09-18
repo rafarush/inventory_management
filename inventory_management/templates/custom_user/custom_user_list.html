@@ -63,10 +63,14 @@
                     <td>{{ user.last_name }}</td>
                     <td>{{ user.groups.all.0.name }}</td>
                     <td>
-                        {% if perms.charge_cart.add_cart %}
+                        {% if perms.inventory_management.delete_customuser %}
                         	<a class="btn btn-danger btn-sm" href="{% url 'custom_user_delete' pk=user.id %}">{% trans "Delete" %}</a>
                         {% endif %}
-                        <a class="btn btn-outline-warning btn-sm" href="{% url 'custom_user_update' pk=user.id %}">{% trans "Modify" %}</a>
+                        {% if perms.inventory_management.delete_customuser %}
+                            <button class="btn btn-outline-warning btn-sm open-user-update-dialog" data-user-id="{{ user.id }}">
+                                {% trans "Modify" %}
+                            </button>
+                        {% endif %}
                     </td>
                 </tr>
             {% empty %}
@@ -80,63 +84,152 @@
 
 {% block scripts %}
 <script>
+    {#document.addEventListener('DOMContentLoaded', function() {#}
+    {#    const modalContent = document.getElementById('modal-form-content');#}
+    {#    const userFormDialog = document.getElementById('user-form-dialog');#}
+    {##}
+    {#    // Cargar el formulario al abrir el modal#}
+    {#    document.getElementById('open-user-dialog').addEventListener('click', function() {#}
+    {#        fetch("{% url 'custom_user_form' %}")#}
+    {#            .then(response => response.json())#}
+    {#            .then(data => {#}
+    {#                modalContent.innerHTML = data.html;#}
+    {#                const modal = new bootstrap.Modal(userFormDialog);#}
+    {#                modal.show();#}
+    {#            });#}
+    {#    });#}
+    {##}
+    {#    const clearErrors = (form) => {#}
+    {#        const errorMessages = form.querySelectorAll('.invalid-feedback');#}
+    {#        errorMessages.forEach(error => error.remove()); // Eliminar mensajes de error#}
+    {##}
+    {#        const invalidInputs = form.querySelectorAll('.is-invalid');#}
+    {#        invalidInputs.forEach(input => input.classList.remove('is-invalid')); // Remover clase 'is-invalid'#}
+    {#    };#}
+    {##}
+    {#    // Manejar el envío del formulario#}
+    {#    modalContent.addEventListener('submit', function(event) {#}
+    {#        event.preventDefault();#}
+    {#        const form = event.target;#}
+    {##}
+    {#        fetch("{% url 'custom_user_form' %}", {#}
+    {#            method: 'POST',#}
+    {#            body: new FormData(form),#}
+    {#            headers: {#}
+    {#                'X-Requested-With': 'XMLHttpRequest'#}
+    {#            }#}
+    {#        })#}
+    {#        .then(response => response.json())#}
+    {#        .then(data => {#}
+    {#            if (data.success) {#}
+    {#                location.reload(); // Recargar la página si se crea el usuario#}
+    {#            } else {#}
+    {##}
+    {#                clearErrors(form);#}
+    {#                // Mostrar errores en el formulario#}
+    {#                for (const [field, errors] of Object.entries(data.errors)) {#}
+    {#                    const input = form.querySelector(`[name="${field}"]`);#}
+    {#                    if (input) {#}
+    {#                        const errorDiv = document.createElement('div');#}
+    {#                        errorDiv.classList.add('invalid-feedback', 'd-block');#}
+    {#                        errorDiv.textContent = errors[0].message;#}
+    {#                        input.classList.add('is-invalid');#}
+    {#                        input.parentNode.appendChild(errorDiv);#}
+    {#                    }#}
+    {#                }#}
+    {#            }#}
+    {#        });#}
+    {#    });#}
+    {#  });  #}
+
     document.addEventListener('DOMContentLoaded', function() {
         const modalContent = document.getElementById('modal-form-content');
         const userFormDialog = document.getElementById('user-form-dialog');
 
-        // Cargar el formulario al abrir el modal
-        document.getElementById('open-user-dialog').addEventListener('click', function() {
-            fetch("{% url 'custom_user_form' %}")
-                .then(response => response.json())
+        // Función para abrir modal y cargar formulario vía fetch
+        function openUserForm(url) {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    return response.json();
+                })
                 .then(data => {
                     modalContent.innerHTML = data.html;
+
+                    // Establece el atributo 'action' al formulario para enviar al endpoint correcto
+                    const form = modalContent.querySelector('form');
+                    if (form) {
+                        form.action = url;
+                    }
+
                     const modal = new bootstrap.Modal(userFormDialog);
                     modal.show();
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
                 });
+        }
+
+        // Abrir modal crear usuario (como ya tienes)
+        document.getElementById('open-user-dialog').addEventListener('click', function() {
+            openUserForm("{% url 'custom_user_form' %}");
         });
 
+        // Abrir modal actualizar usuario
+        document.querySelectorAll('.open-user-update-dialog').forEach(button => {
+            button.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                openUserForm(`/users/update/${userId}/`); // Ajusta esta URL al endpoint de actualización
+            });
+        });
+
+        // Limpiar errores en formularios
         const clearErrors = (form) => {
             const errorMessages = form.querySelectorAll('.invalid-feedback');
-            errorMessages.forEach(error => error.remove()); // Eliminar mensajes de error
-
+            errorMessages.forEach(error => error.remove());
             const invalidInputs = form.querySelectorAll('.is-invalid');
-            invalidInputs.forEach(input => input.classList.remove('is-invalid')); // Remover clase 'is-invalid'
+            invalidInputs.forEach(input => input.classList.remove('is-invalid'));
         };
 
-        // Manejar el envío del formulario
+        // Manejar envío del formulario (creación o actualización)
         modalContent.addEventListener('submit', function(event) {
             event.preventDefault();
             const form = event.target;
-
-            fetch("{% url 'custom_user_form' %}", {
+            fetch(form.action, {
                 method: 'POST',
                 body: new FormData(form),
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
-                    location.reload(); // Recargar la página si se crea el usuario
+                    location.reload(); // Recargar página si éxito
                 } else {
-
                     clearErrors(form);
-                    // Mostrar errores en el formulario
                     for (const [field, errors] of Object.entries(data.errors)) {
                         const input = form.querySelector(`[name="${field}"]`);
                         if (input) {
                             const errorDiv = document.createElement('div');
                             errorDiv.classList.add('invalid-feedback', 'd-block');
-                            errorDiv.textContent = errors[0].message;
+                            errorDiv.textContent = errors[0].message || errors[0];
                             input.classList.add('is-invalid');
                             input.parentNode.appendChild(errorDiv);
                         }
                     }
                 }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
             });
         });
     });
+
+
 
 </script>
     {# Filtro #}
