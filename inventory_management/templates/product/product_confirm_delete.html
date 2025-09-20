@@ -7,32 +7,13 @@
 {% endblock %}
 
 {% block content %}
+    <h1>{% trans "Are you sure you want to delete" %}: {{ product.id }}?</h1>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-6">
-
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-
-                    <h3 class="mb-4 text-danger">
-                        {% trans "Are you sure you want to delete:" %} <br>
-                        <strong>{{ product.id }}</strong>?
-                    </h3>
-
-                    <form method="post" class="d-flex flex-wrap justify-content-center gap-2">
-                        {% csrf_token %}
-                        <input type="submit" class="btn btn-danger btn-sm" value="{% trans "Confirm Delete:" %}">
-                        <a href="{% url 'product_list' %}" class="btn btn-secondary btn-sm">
-                            {% trans "Cancel" %}
-                        </a>
-                    </form>
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-danger btn-sm" value="{% trans "Confirm Delete" %}">
+        <button type="button" class="btn btn-info btn-sm" onclick="window.location.href='{% url 'product_list' %}'">{% trans "Cancel" %}</button>
+    </form>
 
 {% endblock %}
+

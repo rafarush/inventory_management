@@ -2,10 +2,10 @@
 {% load i18n %}
 {% block content %}
 <div class="container mt-4">
-  <h2 class="mb-4">{% trans "Store Detail" %}</h2>
+  <h2 class="mb-4 text-center text-md-start">{% trans "Store Detail" %}</h2>
 
   <div class="row g-3">
-    <div class="col-md-3">
+    <div class="col-12 col-md-3">
       <div class="card text-center shadow-sm border-0">
         <div class="card-body">
           <h6 class="text-muted">{% trans "Name" %}</h6>
@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-12 col-md-3">
       <div class="card text-center shadow-sm border-0">
         <div class="card-body">
           <h6 class="text-muted">{% trans "Own Money" %}</h6>
@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-12 col-md-3">
       <div class="card text-center shadow-sm border-0">
         <div class="card-body">
           <h6 class="text-muted">{% trans "Business Money" %}</h6>
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-12 col-md-3">
       <div class="card text-center shadow-sm border-0">
         <div class="card-body">
           <h6 class="text-muted">{% trans "Percentage" %}</h6>
@@ -39,13 +39,13 @@
     </div>
   </div>
 
-    {% if perms.inventory_management.change_store %}
-        <div class="mt-4 text-end">
-            <a href="{% url 'store_update' %}" class="btn btn-primary btn-lg">
-              {% trans "Modify" %}
-            </a>
-        </div>
-    {% endif %}
+  {% if perms.inventory_management.change_store %}
+    <div class="mt-4 text-center text-md-end">
+      <a href="{% url 'store_update' %}" class="btn btn-primary btn-lg">
+        {% trans "Modify" %}
+      </a>
+    </div>
+  {% endif %}
 
 </div>
 {% endblock %}

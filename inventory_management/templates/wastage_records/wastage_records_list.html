@@ -16,7 +16,6 @@
         </div>
     {% endfor %}
 </div>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const alerts = document.querySelectorAll('.alert');
@@ -24,15 +23,31 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             alert.style.transition = "opacity 0.5s ease";
             alert.style.opacity = 0;
-            setTimeout(() => alert.remove(), 500); // elimina del DOM
-        }, 3000); // desaparece después de 3 segundos
+            setTimeout(() => alert.remove(), 500);
+        }, 3000);
     });
 });
 </script>
 {% endif %}
 
-    <div class="container-fluid mt-3 mb-3">
-    <form method="get" class="row g-2 align-items-center">
+<div class="container-fluid mt-3 mb-3">
+
+    <!-- Móviles: botón arriba + búsqueda -->
+    <div class="d-block d-md-none mb-3">
+        {% if perms.charge_cart.add_wastagerecord %}
+            <a href="{% url 'wastage_record_create' %}" class="btn btn-success btn-sm w-100 mb-2">
+                {% trans "Create Wastage Record" %}
+            </a>
+        {% endif %}
+        <input type="text"
+               name="search"
+               class="form-control"
+               placeholder="{% trans "Search wastage records..." %}"
+               value="{{ search_term }}">
+    </div>
+
+    <!-- Escritorio: búsqueda + botón a la derecha -->
+    <div class="row g-2 align-items-center d-none d-md-flex mb-2">
         <div class="col-md-6">
             <input type="text"
                    name="search"
@@ -41,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
                    value="{{ search_term }}">
         </div>
 
-        <div class="col-md-4  align-items-center">
+        <div class="col-md-4">
             <select class="form-select" name="order_by" onchange="this.form.submit()">
                 <option value="">{% trans "-- Order by --" %}</option>
                 <option value="-date" {% if current_order == '-date' %}selected{% endif %}>{% trans "Date" %}</option>
@@ -49,15 +64,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 <option value="quantity" {% if current_order == 'quantity' %}selected{% endif %}>{% trans "Quantity" %}</option>
             </select>
         </div>
-    </form>
-    {% if perms.charge_cart.add_wastagerecord %}
-            <a href="{% url 'wastage_record_create' %}"
-            class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
-                {% trans "Create Wastage Record" %}</a>
-    {% endif %}
+
+        <div class="col-md-2 text-end">
+            {% if perms.charge_cart.add_wastagerecord %}
+                <a href="{% url 'wastage_record_create' %}" class="btn btn-success btn-sm">
+                    {% trans "Create Wastage Record" %}
+                </a>
+            {% endif %}
+        </div>
+    </div>
 </div>
 
 {% if records %}
+<!-- Tabla para pantallas grandes -->
+<div class="d-none d-md-block table-responsive">
     <table class="table" id="wastage-record-table">
         <thead>
             <tr>
@@ -74,15 +94,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>{{ record.product }}</td>
                     <td>{{ record.quantity }}</td>
                     <td>
-                        <div class="btn-group d-flex" role="group" aria-label="acciones">
-                            <a class="btn btn-danger btn-sm me-1" href="{% url 'wastage_record_delete' pk=record.pk %}">{% trans "Delete" %}</a>
-                            <a class="btn btn-outline-warning btn-sm" href="{% url 'wastage_record_update' pk=record.pk %}">{% trans "Modify" %}</a>
+                        <div class="btn-group d-flex flex-wrap" role="group">
+                            <a class="btn btn-danger btn-sm me-1 mb-1" href="{% url 'wastage_record_delete' pk=record.pk %}">{% trans "Delete" %}</a>
+                            <a class="btn btn-outline-warning btn-sm mb-1" href="{% url 'wastage_record_update' pk=record.pk %}">{% trans "Modify" %}</a>
                         </div>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+</div>
+
+<!-- Tarjetas para móviles -->
+<div class="d-block d-md-none">
+    {% for record in records %}
+    <div class="card mb-2">
+        <div class="card-body">
+            <p><strong>{% trans "Date" %}:</strong> {{ record.date }}</p>
+            <p><strong>{% trans "Product" %}:</strong> {{ record.product }}</p>
+            <p><strong>{% trans "Quantity" %}:</strong> {{ record.quantity }}</p>
+            <div class="d-grid gap-2">
+                <a class="btn btn-danger btn-sm w-100" href="{% url 'wastage_record_delete' pk=record.pk %}">{% trans "Delete" %}</a>
+                <a class="btn btn-outline-warning btn-sm w-100" href="{% url 'wastage_record_update' pk=record.pk %}">{% trans "Modify" %}</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 {% else %}
     <h3>{% trans "There is no records to show" %}</h3>
 {% endif %}
@@ -91,29 +130,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
 {% block scripts %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('input[name="search"]');
+    const rows = document.querySelectorAll('#wastage-record-table tbody tr');
 
-        const searchInput = document.querySelector('input[name="search"]');
-        const rows = document.querySelectorAll('#wastage-record-table tbody tr');
-
-        if (searchInput) {
-            searchInput.addEventListener('input', function() {
-                const term = this.value.toLowerCase();
-                rows.forEach(row => {
-                    const date = row.dataset.date.toLowerCase();
-                    row.style.display = date.includes(term) ? '' : 'none';
-                });
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const term = this.value.toLowerCase();
+            rows.forEach(row => {
+                const date = row.dataset.date.toLowerCase();
+                row.style.display = date.includes(term) ? '' : 'none';
             });
-        }
+        });
+    }
 
-        feather.replace();
-    });
+    feather.replace();
 
-    {# tool tips trigger #}
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
-     })
-
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+});
 </script>
 {% endblock %}
