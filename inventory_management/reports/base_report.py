@@ -109,8 +109,8 @@ class BaseReportView(View):
 
         # --- Crear gráfico tipo función (línea continua) ---
         line = alt.Chart(df).mark_line(color='#1f77b4', strokeWidth=3).encode(
-            x=alt.X(x_col, sort=None, axis=alt.Axis(title=x_col)),
-            y=alt.Y(y_col, axis=alt.Axis(title=y_col)),
+            x=alt.X(x_col, sort=None, axis=alt.Axis(title=None)),  # 👈 sin título
+            y=alt.Y(y_col, axis=alt.Axis(title=None)),  # 👈 sin título
             tooltip=[x_col, y_col]
         )
 

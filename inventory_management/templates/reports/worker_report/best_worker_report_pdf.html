@@ -1,0 +1,125 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "Daily Profit Report" %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .filters {
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            table-layout: fixed; /* 👈 para que respete los anchos */
+        }
+        th, td {
+            border: 1px solid #555;
+            padding: 8px 12px;
+            text-align: center;
+            word-wrap: break-word; /* evita que se rompa el diseño si hay texto largo */
+        }
+        th {
+            background-color: #2c3e50;
+            color: #fff;
+        }
+
+        /* 👇 Ancho de columnas */
+        th:nth-child(1), td:nth-child(1) { width: 20%; }
+        th:nth-child(2), td:nth-child(2) { width: 20%; }
+        th:nth-child(3), td:nth-child(3) { width: 30%; }
+        th:nth-child(4), td:nth-child(4) { width: 30%; }
+
+        td.net-profit {
+            font-weight: bold;
+            color: #27ae60;
+        }
+        td.money-invested {
+            color: #2980b9;
+        }
+        td.money-revenue {
+            color: #e67e22;
+        }
+        .no-data {
+            text-align: center;
+            font-style: italic;
+            color: #888;
+        }
+        .chart {
+            text-align: center;
+            margin-top: 20px;
+        }
+        img {
+            max-width: 90%;
+            height: auto;
+        }
+        .export-info {
+            font-size: 10px;
+            text-align: right;
+            color: #555;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📊 {% trans "Daily Profit Report" %}</h1>
+
+<div class="filters">
+    {% if start_date or end_date %}
+        {% trans "Date range:" %}
+        {{ start_date|default:"--" }} - {{ end_date|default:"--" }}
+    {% endif %}
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>{% trans "Date" %}</th>
+            <th>{% trans "Net Profit" %}</th>
+            <th>{% trans "Money Invested" %}</th>
+            <th>{% trans "Total Return" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in df %}
+        <tr>
+            <td>{{ row.worker }}</td>
+            <td class="net-profit">{{ row.net_profit }}</td>
+            <td class="money-revenue">{{ row.revenue }}</td>
+            <td class="money-invested">{{ row.money_invested }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="no-data">{% trans "No data available for the selected range" %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if chart %}
+<div class="chart">
+    <img src="data:image/png;base64,{{ chart }}" 
+         alt="{% trans 'Daily Net Profit Chart' %}">
+</div>
+{% endif %}
+
+<div class="export-info">
+    {% trans "Automatically generated" %} {{ now|date:"d/m/Y H:i" }}
+</div>
+
+</body>
+</html>
