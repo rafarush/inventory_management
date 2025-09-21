@@ -1,57 +1,20 @@
 {% extends "layouts/base/base.html" %}
 {% load i18n %}
-
 {% block title %}
-    {% trans "Product Form" %}
+	{% trans "Product Form" %}
 {% endblock %}
 
+
 {% block content %}
-<div class="container-fluid">
 
-    <!-- Botón volver -->
-    <div class="row mt-3 mb-3">
-        <div class="col-12">
-            <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}">
-                {% trans "Back" %}
-            </a>
-        </div>
+    <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}" style="margin-top: 20px; margin-bottom: 20px">{% trans "Back" %}</a>
+    <div>
+        <form action="" class="form-control" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class="btn btn-success btn-sm" value="{% trans "Submit" %}">
+        </form>
     </div>
 
-    <!-- Formulario -->
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h4 class="card-title mb-4">{% trans "Product Form" %}</h4>
 
-                    <form action="" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="row g-3">
-                            {% for field in form %}
-                                <div class="col-12">
-                                    <label for="{{ field.id_for_label }}" class="form-label">
-                                        {{ field.label }}
-                                    </label>
-                                    {{ field }}
-                                    {% if field.errors %}
-                                        <div class="text-danger small">
-                                            {{ field.errors }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-
-                        <div class="mt-4 text-end">
-                            <button type="submit" class="btn btn-success btn-sm">
-                                {% trans "Submit" %}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
 {% endblock %}
