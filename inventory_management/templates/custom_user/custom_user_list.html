@@ -28,8 +28,19 @@
     <button id="open-user-dialog" class="btn btn-success btn-sm float-end" style="margin-top: 20px">{% trans "Create" %}</button>
 </div>
 
-    <!--New Client Modal-->
+<!--Toast-->
+<div id="toastTemplate" style="display:none;">
+  <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        Operación realizada satisfactoriamente.
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
 
+    <!--New Client Modal-->
 {% include 'layouts/partials/new_client_modal.html' %}
 <!--Filter-->
 <div class="container-fluid">
@@ -66,9 +77,12 @@
                         {% if perms.inventory_management.delete_customuser %}
                         	<a class="btn btn-danger btn-sm" href="{% url 'custom_user_delete' pk=user.id %}">{% trans "Delete" %}</a>
                         {% endif %}
-                        {% if perms.inventory_management.delete_customuser %}
+                        {% if perms.inventory_management.change_customuser %}
                             <button class="btn btn-outline-warning btn-sm open-user-update-dialog" data-user-id="{{ user.id }}">
                                 {% trans "Modify" %}
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm open-user-set-pass-dialog" data-user-id="{{ user.id }}">
+                                {% trans "Set Password" %}
                             </button>
                         {% endif %}
                     </td>
@@ -80,67 +94,13 @@
     </table>
 </div>
 
+    <!--Bootstrap 5 JS-->
+    <script src="{% static 'bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+
 {% endblock %}
 
 {% block scripts %}
 <script>
-    {#document.addEventListener('DOMContentLoaded', function() {#}
-    {#    const modalContent = document.getElementById('modal-form-content');#}
-    {#    const userFormDialog = document.getElementById('user-form-dialog');#}
-    {##}
-    {#    // Cargar el formulario al abrir el modal#}
-    {#    document.getElementById('open-user-dialog').addEventListener('click', function() {#}
-    {#        fetch("{% url 'custom_user_form' %}")#}
-    {#            .then(response => response.json())#}
-    {#            .then(data => {#}
-    {#                modalContent.innerHTML = data.html;#}
-    {#                const modal = new bootstrap.Modal(userFormDialog);#}
-    {#                modal.show();#}
-    {#            });#}
-    {#    });#}
-    {##}
-    {#    const clearErrors = (form) => {#}
-    {#        const errorMessages = form.querySelectorAll('.invalid-feedback');#}
-    {#        errorMessages.forEach(error => error.remove()); // Eliminar mensajes de error#}
-    {##}
-    {#        const invalidInputs = form.querySelectorAll('.is-invalid');#}
-    {#        invalidInputs.forEach(input => input.classList.remove('is-invalid')); // Remover clase 'is-invalid'#}
-    {#    };#}
-    {##}
-    {#    // Manejar el envío del formulario#}
-    {#    modalContent.addEventListener('submit', function(event) {#}
-    {#        event.preventDefault();#}
-    {#        const form = event.target;#}
-    {##}
-    {#        fetch("{% url 'custom_user_form' %}", {#}
-    {#            method: 'POST',#}
-    {#            body: new FormData(form),#}
-    {#            headers: {#}
-    {#                'X-Requested-With': 'XMLHttpRequest'#}
-    {#            }#}
-    {#        })#}
-    {#        .then(response => response.json())#}
-    {#        .then(data => {#}
-    {#            if (data.success) {#}
-    {#                location.reload(); // Recargar la página si se crea el usuario#}
-    {#            } else {#}
-    {##}
-    {#                clearErrors(form);#}
-    {#                // Mostrar errores en el formulario#}
-    {#                for (const [field, errors] of Object.entries(data.errors)) {#}
-    {#                    const input = form.querySelector(`[name="${field}"]`);#}
-    {#                    if (input) {#}
-    {#                        const errorDiv = document.createElement('div');#}
-    {#                        errorDiv.classList.add('invalid-feedback', 'd-block');#}
-    {#                        errorDiv.textContent = errors[0].message;#}
-    {#                        input.classList.add('is-invalid');#}
-    {#                        input.parentNode.appendChild(errorDiv);#}
-    {#                    }#}
-    {#                }#}
-    {#            }#}
-    {#        });#}
-    {#    });#}
-    {#  });  #}
 
     document.addEventListener('DOMContentLoaded', function() {
         const modalContent = document.getElementById('modal-form-content');
@@ -179,7 +139,15 @@
         document.querySelectorAll('.open-user-update-dialog').forEach(button => {
             button.addEventListener('click', function() {
                 const userId = this.getAttribute('data-user-id');
-                openUserForm(`/users/update/${userId}/`); // Ajusta esta URL al endpoint de actualización
+                openUserForm(`/users/update/${userId}/`);
+            });
+        });
+
+        // Abrir modal para cambiar contrasenna usuario
+        document.querySelectorAll('.open-user-set-pass-dialog').forEach(button => {
+            button.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                openUserForm(`/users/set_password/${userId}`);
             });
         });
 
@@ -208,7 +176,8 @@
             })
             .then(data => {
                 if (data.success) {
-                    location.reload(); // Recargar página si éxito
+                    sessionStorage.setItem('showSuccessToast', 'true');
+                    location.reload();
                 } else {
                     clearErrors(form);
                     for (const [field, errors] of Object.entries(data.errors)) {
@@ -229,6 +198,26 @@
         });
     });
 
+    //Manejo de toast
+    window.addEventListener('DOMContentLoaded', () => {
+        if (sessionStorage.getItem('showSuccessToast') === 'true') {
+            sessionStorage.removeItem('showSuccessToast');
+            showSuccessToast();
+        }
+    });
+
+    function showSuccessToast() {
+      const template = document.querySelector('#toastTemplate .toast');
+      const toastClone = template.cloneNode(true);
+      document.body.appendChild(toastClone);
+
+      const bsToast = new bootstrap.Toast(toastClone, { delay: 3000 });
+      bsToast.show();
+
+      toastClone.addEventListener('hidden.bs.toast', () => {
+        toastClone.remove();
+      });
+    }
 
 
 </script>

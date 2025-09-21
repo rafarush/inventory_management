@@ -1,3 +1,12 @@
-<p>Hola {{ user.username }},</p>
-<p>Gracias por registrarte. Por favor confirma tu correo haciendo clic en el siguiente enlace:</p>
-<p><a href="http://{{ domain }}{% url 'confirm_email' uidb64=uid token=token %}">Confirmar correo</a></p>
+{% load i18n %}
+<p>{% trans 'Hello' %} {{ user.get_full_name }},</p>
+<p>{% trans 'Your account have been created successfully.' %}</p>
+<p>{% trans 'Initial Credentials' %}:</p>
+<ul>
+    <li>
+        {% trans 'Username' %}: {{ user.username }}
+    </li>
+    <li>
+        {% trans 'Password' %}: {{ password }}
+    </li>
+</ul>

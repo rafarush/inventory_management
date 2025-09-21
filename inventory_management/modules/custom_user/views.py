@@ -8,11 +8,13 @@ from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View
 from django.contrib.auth.models import Permission, Group
-from inventory_management.modules.custom_user.forms import CustomUserForm, CustomUserChangeForm
+from inventory_management.modules.custom_user.forms import CustomUserForm, CustomUserChangeForm, \
+    CustomUserSetPasswordForm
 from inventory_management.models import CustomUser
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
+from django.utils.translation import gettext_lazy as _
 
 
 class CustomUserList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -64,32 +66,6 @@ class CustomUserCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         elif user.groups.filter(name='Agents').exists():
             form.fields['groups'].queryset = Group.objects.filter(name='Clients')
         return form
-
-    # def form_valid(self, form):
-    #     print("llego a guardar el form")
-    #     user = form.save(commit=False)
-    #     user.is_confirmed = False
-    #     user.save()
-    #
-    #     token = default_token_generator.make_token(user)
-    #     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    #     print("uid user antes")
-    #     print(uid)
-    #     print("token user antes")
-    #     print(token)
-    #     current_site = get_current_site(self.request)
-    #     mail_subject = 'Confirma tu correo'
-    #     context = {
-    #         'user': user,
-    #         'domain': current_site.domain,
-    #         'uid': uid,
-    #         'token': token,
-    #     }
-    #     print("antes del email")
-    #     user.send_email(mail_subject, 'emails/email_confirmation_template.html', context)
-    #     print("despues del email")
-
-        return super().form_valid(form)
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
@@ -168,6 +144,11 @@ class CustomUserDetailsJSON(LoginRequiredMixin, PermissionRequiredMixin, View):
         }
         return JsonResponse(data)
 
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
+
 
 class CustomUserFormView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'inventory_management.add_customuser'
@@ -183,34 +164,76 @@ class CustomUserFormView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if form.is_valid():
             # Verificar duplicados
             email = form.cleaned_data['email']
-            if CustomUser.objects.filter(email=email).exists():
-                return JsonResponse({'success': False, 'errors': {'email': 'Email already exists.'}})
+            if CustomUser.objects.filter(email=email, deleted__isnull=True).exists():
+                return JsonResponse({'success': False, 'errors': {_('email'): _('Email already exists.')}})
 
-            # form.save()
             user = form.save(commit=False)
             user.is_confirmed = False
             user.save()
+            raw_password = form.cleaned_data['password1']
 
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            print("uid user antes")
-            print(uid)
-            print("token user antes")
-            print(token)
+
             current_site = get_current_site(self.request)
-            mail_subject = 'Confirma tu correo'
+            mail_subject = _('Account Created')
             context = {
                 'user': user,
                 'domain': current_site.domain,
                 'uid': uid,
                 'token': token,
+                'password': raw_password,
             }
-            print("antes del email")
+
             user.send_email(mail_subject, 'emails/email_confirmation_template.html', context)
-            print("despues del email")
 
             return JsonResponse({'success': True})
 
         # Devolver errores si el formulario no es válido
         errors = {field: error.get_json_data() for field, error in form.errors.items()}
         return JsonResponse({'success': False, 'errors': errors})
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
+
+
+class CustomUserSetPasswordView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'inventory_management.change_customuser'
+
+    def get(self, request, *args, **kwargs):
+        form = CustomUserSetPasswordForm()
+        html = render_to_string('custom_user/partials/custom_user_form.html', {'form': form}, request=request)
+        return JsonResponse({'html': html})
+
+    def post(self, request, *args, **kwargs):
+        form = CustomUserSetPasswordForm(request.POST)
+        if form.is_valid():
+            # Obtener el usuario a modificar; por ejemplo, por pk en kwargs
+            user_id = kwargs.get('pk')
+            user = get_object_or_404(CustomUser, pk=user_id, deleted__isnull=True)
+
+            # Establecer la nueva contraseña correctamente
+            new_password = form.cleaned_data['password1']
+            user.set_password(new_password)
+            user.save()
+
+            current_site = get_current_site(request)
+            mail_subject = _('Password Changed')
+            context = {
+                'user': user,
+                'domain': current_site.domain,
+                'new_pass': new_password,
+            }
+
+            user.send_email(mail_subject, 'emails/email_password_changed_template.html', context)
+            return JsonResponse({'success': True})
+
+        errors = {field: error.get_json_data() for field, error in form.errors.items()}
+        return JsonResponse({'success': False, 'errors': errors})
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
