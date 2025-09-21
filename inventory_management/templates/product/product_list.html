@@ -3,235 +3,108 @@
 {% load i18n %}
 
 {% block title %}
-    {% trans "Stock(Product list)" %}
+    {% trans "Stock (Product list)" %}
 {% endblock %}
 
-
 {% block content %}
-
-
 <div class="container-fluid">
 
-    {% if perms.inventory_management.add_product %}
-        <div style="margin-top: 20px;">
-            <a href="{% url 'product_create' %}" class="btn btn-success btn-sm float-end">{% trans "Create Product" %}</a>
+    <!-- Cabecera con botón -->
+    <div class="row mt-3 align-items-center">
+        <div class="col-12 col-md-6">
+            <h3>{% trans "Products" %}</h3>
         </div>
-    {% endif %}
+        {% if perms.inventory_management.add_product %}
+        <div class="col-12 col-md-6 text-md-end text-center mt-2 mt-md-0">
+            <a href="{% url 'product_create' %}" class="btn btn-success btn-sm">
+                {% trans "Create Product" %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
 
-    <!-- Product Form Dialog -->
-    <div id="product-form-dialog" class="modal-dialog-centered" style="display:none;">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center justify-content-between">
-                <h4 class="modal-title">{% trans "Create Product" %}</h4>
-                <button type="button" class="btn-close" id="close-product-dialog" aria-label="Close">
-                    <i data-feather="x"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="productForm" action="{% url 'product_create' %}" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="container">
-                        <div class="row">
-                            {% for field in form %}
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        {{ field.label_tag }}
-                                        {{ field }}
-                                        {% if field.help_text %}
-                                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                                        {% endif %}
-                                        {% for error in field.errors %}
-                                            <div class="invalid-feedback">{{ error }}</div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                {% if forloop.counter|divisibleby:3 and not forloop.last %}
-                                    </div><div class="row">
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <input type="submit" class="btn btn-success btn-sm" value="{% trans "Submit" %}">
-                    </div>
-                </form>
-            </div>
+    <!-- Filtro -->
+    <div class="row mt-4">
+        <div class="col-12 col-md-6">
+            <input type="text" id="productSearch" class="form-control"
+                   placeholder="{% trans "Search products..." %}">
         </div>
     </div>
 
-    <!-- Update Price Dialog -->
-{#    <div id="update-price-dialog" class="modal-dialog-centered" style="display:none;">#}
-{#        <div class="modal-content">#}
-{#            <div class="modal-header d-flex align-items-center justify-content-between">#}
-{#                <h4 class="modal-title">Update Price</h4>#}
-{#                <button type="button" class="btn-close" id="close-update-price-dialog" aria-label="Close">#}
-{#                    <i data-feather="x"></i>#}
-{#                </button>#}
-{#            </div>#}
-{#            <div class="modal-body">#}
-{#                <form id="updatePriceForm" action="" method="POST">#}
-{#                    {% csrf_token %}#}
-{#                    <div class="container">#}
-{#                        <div class="row">#}
-{#                            <div class="col-md-12">#}
-{#                                <div class="mb-3">#}
-{#                                    <label for="id_price" class="form-label">New Price</label>#}
-{#                                    <input type="number" name="price" id="id_price" class="form-control" step="0.01" required>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="d-flex justify-content-end">#}
-{#                        <input type="submit" class="btn btn-success btn-sm" value="Update">#}
-{#                    </div>#}
-{#                </form>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-
-    <!--Filter-->
-    <div class="container-fluid">
-        <h4>{% trans "Filter products by name:" %}</h4>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <input type="text" id="productSearch" class="form-control" placeholder="{% trans "Search products..." %}">
-            </div>
-        </div>
-    </div>
-    
-
-    <div id="list" class="row" style="margin-top: 20px">
+    <!-- Lista de productos -->
+    <div id="list" class="row mt-4">
         {% for product in products %}
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" data-product-name="{{ product.id }}">
-                <div class="card product-box">
-                    <div class="card-body">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
 
                         {% if not is_client %}
-
-                        	<div class="product-action">
-
-                            {% if  perms.inventory_management.delete_product %}
-                                <a href="{% url 'product_delete' pk=product.pk %}" class="btn btn-danger btn-xs waves-effect waves-light"><i class="mdi mdi-close"></i></a>
-
-                            {% endif %}
-                            {% if perms.inventory_management.change_product %}
-                            	<a href="{% url 'product_update' pk=product.pk %}" class="btn btn-success btn-xs waves-effect waves-light"><i class="mdi mdi-pencil"></i></a>
-                            {% endif %}
-
-                        </div>
-
+                            <div class="d-flex justify-content-end mb-2">
+                                {% if perms.inventory_management.delete_product %}
+                                    <a href="{% url 'product_delete' pk=product.pk %}" class="btn btn-danger btn-xs me-1">
+                                        <i class="mdi mdi-close"></i>
+                                    </a>
+                                {% endif %}
+                                {% if perms.inventory_management.change_product %}
+                                    <a href="{% url 'product_update' pk=product.pk %}" class="btn btn-success btn-xs">
+                                        <i class="mdi mdi-pencil"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
                         {% endif %}
 
-                        <div class="product-info">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h5 class="font-16 mt-0 sp-line-1"><a href="{% url 'product_detail' pk=product.pk %}" class="text-dark">{{ product.id }}</a> </h5>
-                                    <div class="text-warning mb-2 font-13"></div>
-                                    <h5 class="m-0"> <span class="text-muted">{% trans "Unit:" %} {{ product.unit }}</span></h5>
-                                    <h5 class="m-0"> <span class="text-muted">{% trans "Amount:" %} {{ product.amount }}</span></h5>
-                                </div>
-                                
-                                <div class="col-auto">
-                                    <div class="product-price-tag">
-                                        ${{ product.price }}
-                                    </div>
-                                </div>
-                            </div> <!-- end row -->
-                        </div> <!-- end product info-->
-                    </div>  <!-- end card body-->
-                </div> <!-- end card-->
-            </div> <!-- end col-->
+                        <h5 class="card-title">
+                            <a href="{% url 'product_detail' pk=product.pk %}" class="text-dark">
+                                {{ product.id }}
+                            </a>
+                        </h5>
+                        <p class="mb-1 text-muted">{% trans "Unit:" %} {{ product.unit }}</p>
+                        <p class="mb-1 text-muted">{% trans "Amount:" %} {{ product.amount }}</p>
+                        <div class="mt-auto text-end fw-bold text-primary">
+                            ${{ product.price }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center mt-4">
+                <p class="text-muted">{% trans "No products found." %}</p>
+            </div>
         {% endfor %}
-    </div> <!-- end row -->
-</div> <!-- end container-fluid -->
+    </div>
 
-<div id="table" class="text-center rounded-3 p-1 shadow-lg text-white custom-border" style="display: none; margin-top: 20px">
-    {% include 'product/partials/product_as_table.html' %}
+    <!-- Tabla alternativa -->
+    <div id="table" class="table-responsive mt-4" style="display: none;">
+        {% include 'product/partials/product_as_table.html' %}
+    </div>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
-
-<!-- Change the type of display of the products-->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Existing script for changing view
-        document.getElementById('change-view-btn').addEventListener('click', function() {
-            let list = document.getElementById('list');
-            let table = document.getElementById('table');
-
-            if (list.style.display === 'none') {
-                list.style.display = 'block';
-                table.style.display = 'none';
-            } else {
-                list.style.display = 'none';
-                table.style.display = 'table';
-            }
-        });
-
-        // New script for modal dialog
-        const openProductDialogButton = document.getElementById('open-product-dialog');
-        const closeProductDialogButton = document.getElementById('close-product-dialog');
-        const productFormDialog = document.getElementById('product-form-dialog');
-
-        if (openProductDialogButton && closeProductDialogButton && productFormDialog) {
-            openProductDialogButton.addEventListener('click', function() {
-                productFormDialog.style.display = 'block';
-            });
-
-            closeProductDialogButton.addEventListener('click', function() {
-                productFormDialog.style.display = 'none';
+        // Cambiar vista entre lista y tabla
+        const changeViewBtn = document.getElementById('change-view-btn');
+        if (changeViewBtn) {
+            changeViewBtn.addEventListener('click', function() {
+                let list = document.getElementById('list');
+                let table = document.getElementById('table');
+                list.style.display = (list.style.display === 'none') ? 'flex' : 'none';
+                table.style.display = (table.style.display === 'none') ? 'block' : 'none';
             });
         }
 
-        feather.replace();// Replace Feather icons
-    });
-</script>
+        // Filtro
+        const productSearch = document.getElementById('productSearch');
+        const productCards = document.querySelectorAll('#list .col-12');
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const updatePriceDialog = document.getElementById('update-price-dialog');
-        const closeUpdatePriceDialogButton = document.getElementById('close-update-price-dialog');
-        const updatePriceForm = document.getElementById('updatePriceForm');
-        const openUpdatePriceButtons = document.querySelectorAll('.open-update-price-dialog');
-
-        // Abrir el modal y configurar la acción del formulario
-        openUpdatePriceButtons.forEach(button => {
-            button.addEventListener('click', function (event) {
-                event.preventDefault();
-                const url = this.getAttribute('data-url');
-                updatePriceForm.setAttribute('action', url);
-                updatePriceDialog.style.display = 'block';
+        productSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            productCards.forEach(card => {
+                const productName = card.dataset.productName.toLowerCase();
+                card.style.display = productName.includes(searchTerm) ? '' : 'none';
             });
         });
-
-        // Cerrar el modal
-        closeUpdatePriceDialogButton.addEventListener('click', function () {
-            updatePriceDialog.style.display = 'none';
-        });
     });
 </script>
-    {# Filtro #}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const productSearch = document.getElementById('productSearch');
-    const productCards = document.querySelectorAll('#list .col-12');
-
-    productSearch.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-
-        productCards.forEach(card => {
-            const productName = card.dataset.productName.toLowerCase();
-            if (productName.includes(searchTerm)) {
-                card.style.display = '';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    });
-});
-</script>
-
 {% endblock %}
-
