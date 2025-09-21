@@ -76,8 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <tbody>
                 {% for row in df %}
                     <tr>
-                        <td>{{ row.product_id }}</td>
-                        <td>{{ row.product_name }}</td>
+                        <td>{{ row.product }}</td>
+                        <td>{{ row.name }}</td>
                         <td>{{ row.sold }}</td>
                     </tr>
                 {% endfor %}

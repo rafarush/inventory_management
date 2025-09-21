@@ -11,6 +11,7 @@ import altair as alt
 import pandas as pd
 import io
 import base64
+from django.utils.translation import gettext as _
 
 
 
@@ -59,32 +60,27 @@ class BaseReportView(View):
         chart_base64 = base64.b64encode(buf.read()).decode('utf-8')
 
         return chart_base64
-    def generate_excel(self, df, filename='report.xlsx'):
-        """
-        Genera un archivo Excel y lo devuelve como respuesta HTTP.
-        """
+
+    def generate_excel(self, df, filename=None):
         output = io.BytesIO()
-        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
             df.to_excel(writer, index=False)
+
+        # Si no se pasa filename, usamos traducción
+        if not filename:
+            filename = _("report") + ".xlsx"
 
         response = HttpResponse(
             output.getvalue(),
-            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        response["Content-Disposition"] = f'attachment; filename="{filename}"'
         return response
 
     def generate_pdf(self, template_name, context, filename='report.pdf', pdf_template_suffix='_pdf'):
-        """
-        Genera un PDF a partir de un template HTML con xhtml2pdf.
-        Si existe un template específico para PDF, lo usa:
-            ejemplo: top_products_report.html -> top_products_report_pdf.html
-        """
-        # Construir nombre del template PDF
         parts = template_name.rsplit('.', 1)  # separar extensión
         pdf_template_name = f"{parts[0]}{pdf_template_suffix}.{parts[1]}"
 
-        # Intentar renderizar template PDF, si no existe, usar el original
         try:
             html_string = render_to_string(pdf_template_name, context)
         except Exception:
@@ -100,5 +96,5 @@ class BaseReportView(View):
         )
 
         if pisa_status.err:
-            return HttpResponse("Error al generar PDF", status=500)
+            return HttpResponse(_("Error generating PDF"), status=500)
         return response

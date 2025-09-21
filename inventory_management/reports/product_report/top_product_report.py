@@ -4,6 +4,7 @@ from django.shortcuts import render
 from inventory_management.modules.charge_cart.models import ChargeCart
 from inventory_management.reports.base_report import BaseReportView
 import pandas as pd
+from django.utils.translation import gettext as _
 
 
 class TopProductsReportView(BaseReportView):
@@ -23,31 +24,28 @@ class TopProductsReportView(BaseReportView):
         for cc in charge_carts:
             sold = (cc.amount_sent or 0) - (cc.amount_received or 0)
             data.append({
-                'product_id': cc.product.id,
-                'product_name': getattr(cc.product, 'name', str(cc.product.id)),
+                'product': cc.product.id,
+                'name': getattr(cc.product, 'name', str(cc.product.id)),
                 'sold': sold
             })
 
         df = pd.DataFrame(data)
 
-        # --- 3. Validar DataFrame ---
         if df.empty:
-            df = pd.DataFrame(columns=['product_id', 'product_name', 'sold'])
+            df = pd.DataFrame(columns=['product', 'name', 'sold'])
         else:
             df['sold'] = pd.to_numeric(df['sold'], errors='coerce').fillna(0)
 
-        # --- 4. Agrupar por producto ---
-        df_grouped = df.groupby(['product_id', 'product_name'], as_index=False)['sold'].sum()
+        df_grouped = df.groupby(['product', 'name'], as_index=False)['sold'].sum()
         df_grouped = df_grouped.sort_values(by='sold', ascending=False)
 
-        # --- 5. Generar gráfico ---
         chart = None
         if not df_grouped.empty:
             chart = self.generate_chart(
                 df_grouped,
-                x_col='product_name',
+                x_col='name',
                 y_col='sold',
-                title='Productos más vendidos'
+                title=_("Best-selling products")
             )
 
         context = {
