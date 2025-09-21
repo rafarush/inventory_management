@@ -98,3 +98,38 @@ class BaseReportView(View):
         if pisa_status.err:
             return HttpResponse(_("Error generating PDF"), status=500)
         return response
+
+    def generate_function_chart(self, df, x_col, y_col, title=''):
+        """
+        Genera un gráfico de línea (tipo función) con Altair y devuelve base64 para PDF/HTML.
+        """
+        # Asegurar que las fechas o x sean strings o datetime
+        if pd.api.types.is_datetime64_any_dtype(df[x_col]):
+            df[x_col] = df[x_col].astype(str)
+
+        # --- Crear gráfico tipo función (línea continua) ---
+        line = alt.Chart(df).mark_line(color='#1f77b4', strokeWidth=3).encode(
+            x=alt.X(x_col, sort=None, axis=alt.Axis(title=x_col)),
+            y=alt.Y(y_col, axis=alt.Axis(title=y_col)),
+            tooltip=[x_col, y_col]
+        )
+
+        points = alt.Chart(df).mark_circle(size=60, color='orange').encode(
+            x=x_col,
+            y=y_col,
+            tooltip=[x_col, y_col]
+        )
+
+        chart = (line + points).properties(
+            title=title or f"{y_col} over {x_col}",
+            width=600,
+            height=400
+        ).interactive()
+
+        # --- Exportar a PNG (base64) ---
+        buf = io.BytesIO()
+        chart.save(buf, format='png')
+        buf.seek(0)
+        chart_base64 = base64.b64encode(buf.read()).decode('utf-8')
+
+        return chart_base64
