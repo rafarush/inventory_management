@@ -17,7 +17,8 @@ class TopProductsReportView(BaseReportView):
 
         charge_carts = ChargeCart.objects.all()
         if start_date and end_date:
-            charge_carts = charge_carts.filter(created_at__date__range=[start_date, end_date])
+            # 🔹 Se usa el campo date de DailyPartCart
+            charge_carts = charge_carts.filter(daily_part_cart__date__range=[start_date, end_date])
 
         # --- 2. Calcular cantidad vendida ---
         data = []
@@ -29,16 +30,18 @@ class TopProductsReportView(BaseReportView):
                 'sold': sold
             })
 
+        # --- 3. Crear DataFrame ---
         df = pd.DataFrame(data)
-
         if df.empty:
             df = pd.DataFrame(columns=['product', 'name', 'sold'])
         else:
             df['sold'] = pd.to_numeric(df['sold'], errors='coerce').fillna(0)
 
+        # --- 4. Agrupar por producto ---
         df_grouped = df.groupby(['product', 'name'], as_index=False)['sold'].sum()
         df_grouped = df_grouped.sort_values(by='sold', ascending=False)
 
+        # --- 5. Generar gráfico ---
         chart = None
         if not df_grouped.empty:
             chart = self.generate_chart(
@@ -48,23 +51,23 @@ class TopProductsReportView(BaseReportView):
                 title=_("Best-selling products")
             )
 
+        # --- 6. Contexto ---
         context = {
             'df': df_grouped.to_dict('records'),
             'chart': chart,
         }
 
-        # --- 6. Exportar Excel ---
+        # --- 7. Exportar Excel ---
         if request.GET.get('format') == 'excel':
             return self.generate_excel(df_grouped, filename='top_products.xlsx')
 
-        # --- 7. Exportar PDF ---
+        # --- 8. Exportar PDF ---
         if request.GET.get('format') == 'pdf':
-            # Aquí llamas manualmente al template específico para PDF
             return self.generate_pdf(
                 template_name='reports/product_report/top_products_report_pdf.html',
                 context=context,
                 filename='top_products.pdf'
             )
 
-        # --- 8. Render HTML ---
+        # --- 9. Render HTML ---
         return render(request, self.template_name, context)
