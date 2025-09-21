@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View, TemplateView
 from django.contrib.auth.models import Permission, Group
 from inventory_management.modules.custom_user.forms import CustomUserForm, CustomUserChangeForm, \
     CustomUserSetPasswordForm
@@ -222,7 +222,7 @@ class CustomUserSetPasswordView(LoginRequiredMixin, PermissionRequiredMixin, Vie
             current_site = get_current_site(request)
             mail_subject = _('Password Changed')
             context = {
-                'user': user,
+                'target_user': user,
                 'domain': current_site.domain,
                 'new_pass': new_password,
             }
@@ -237,3 +237,13 @@ class CustomUserSetPasswordView(LoginRequiredMixin, PermissionRequiredMixin, Vie
         if self.request.user.is_authenticated:
             return render(self.request, 'access_denied.html', status=403)
         return super().handle_no_permission()
+
+
+class CustomUserPasswordChangeView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    permission_required = 'inventory_management.change_customuser'
+    template_name = 'auth/set_password_client.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CustomUserSetPasswordForm()
+        return context
