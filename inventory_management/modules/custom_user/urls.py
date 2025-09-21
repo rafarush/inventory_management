@@ -1,7 +1,7 @@
 from django.urls import path
 from inventory_management.modules.custom_user.views import (
     CustomUserList, CustomUserCreate, CustomUserDelete, CustomUserDetail,
-    CustomUserUpdate, CustomUserClientsList, CustomUserDetailsJSON, CustomUserFormView
+    CustomUserUpdate, CustomUserClientsList, CustomUserDetailsJSON, CustomUserFormView, CustomUserSetPasswordView
 )
 
 urlpatterns = [
@@ -13,4 +13,5 @@ urlpatterns = [
     path('clients/', CustomUserClientsList.as_view(), name='custom_user_get_clients'),
     path('client/<uuid:pk>/', CustomUserDetailsJSON.as_view(), name='custom_user_get_json'),
     path('form/', CustomUserFormView.as_view(), name='custom_user_form'),  # Nueva ruta
+    path('set_password/<uuid:pk>', CustomUserSetPasswordView.as_view(), name='custom_user_set_password'),
 ]

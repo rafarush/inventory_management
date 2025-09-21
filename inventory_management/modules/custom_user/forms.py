@@ -12,23 +12,15 @@ class CustomUserForm(UserCreationForm):
         fields = ['username', 'first_name', 'last_name', 'phone_number1', 'phone_number2',
                   'email', 'groups']
 
-    # def clean_id_number(self):
-    #     id = self.cleaned_data['id_number']
-    #     if not id and len(id) != 11:
-    #         raise ValidationError(f'Invalid ID Number, the ID Number must have 11 characters: {id}')
-    #
-    #     if not id.isdigit():
-    #         raise ValidationError(f'Invalid ID Number, the ID Number must have only numbers: {id}')
-    #
-    #     try:
-    #         date = datetime.strptime(id[:6], "%y%m%d")
-    #         return id
-    #     except ValueError:
-    #         raise ValidationError(f'Invalid ID Number, invalid date of birth in the ID Number: {id}')
+
+class CustomUserSetPasswordForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ['password1', 'password2']
 
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ['username', 'first_name', 'last_name', 'phone_number1', 'phone_number2', 'groups']
-        exclude = ['password']
+        exclude = ['password1', 'password2']
