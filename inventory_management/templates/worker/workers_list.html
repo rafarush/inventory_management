@@ -17,7 +17,7 @@
     {% endif %}
 
     <!-- Worker Form Dialog -->
-    <div id="worker-form-dialog" class="modal-dialog modal-dialog-centered" style="display:none; max-width: 95%;">
+    <div id="worker-form-dialog" class="modal-dialog-centered" style="display:none;">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center justify-content-between">
                 <h4 class="modal-title">{% trans "Create Worker" %}</h4>
@@ -28,10 +28,10 @@
             <div class="modal-body">
                 <form id="workerForm" action="{% url 'worker_create' %}" method="POST">
                     {% csrf_token %}
-                    <div class="container-fluid">
+                    <div class="container">
                         <div class="row">
                             {% for field in form %}
-                                <div class="col-12 col-md-4">
+                                <div class="col-md-4">
                                     <div class="mb-3">
                                         {{ field.label_tag }}
                                         {{ field }}
@@ -58,46 +58,44 @@
     </div>
 
     <!-- Filter -->
-    <div class="container-fluid mt-4">
+    <div class="container-fluid">
         <h4>{% trans "Filter workers by id or name:" %}</h4>
         <div class="row mb-3">
-            <div class="col-12 col-md-6">
+            <div class="col-md-6">
                 <input type="text" id="workerSearch" class="form-control" placeholder="{% trans "Search workers..." %}">
             </div>
         </div>
     </div>
 
     {% if workers %}
-        <div class="table-responsive">
-            <table class="table" id="worker-table">
-                <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">{% trans "Name" %}</th>
-                        <th scope="col">{% trans "Salary" %}</th>
-                        <th scope="col">{% trans "Phone" %}</th>
-                        <th scope="col">{% trans "Status" %}</th>
-                        <th scope="col">{% trans "Actions" %}</th>
+        <table class="table" id="worker-table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">{% trans "Name" %}</th>
+                    <th scope="col">{% trans "Salary" %}</th>
+                    <th scope="col">{% trans "Phone" %}</th>
+                    <th scope="col">{% trans "Status" %}</th>
+                    <th scope="col">{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for worker in workers %}
+                    <tr data-worker-id="{{ worker.id }}" data-worker-name="{{ worker.name }}">
+                        <td>{{ worker.id }}</td>
+                        <td>{{ worker.name }}</td>
+                        <td>${{ worker.salary }}</td>
+                        <td>{{ worker.phone }}</td>
+                        <td>{{ worker.get_status_display }}</td>
+                        <td>
+                            <a class="btn btn-outline-info btn-sm" href="{% url 'worker_detail' pk=worker.pk %}">{% trans "Details" %}</a>
+                            <a class="btn btn-outline-warning btn-sm" href="{% url 'worker_update' pk=worker.pk %}">{% trans "Modify" %}</a>
+                            <a class="btn btn-danger btn-sm" href="{% url 'worker_delete' pk=worker.pk %}">{% trans "Delete" %}</a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for worker in workers %}
-                        <tr data-worker-id="{{ worker.id }}" data-worker-name="{{ worker.name }}">
-                            <td>{{ worker.id }}</td>
-                            <td>{{ worker.name }}</td>
-                            <td>${{ worker.salary }}</td>
-                            <td>{{ worker.phone }}</td>
-                            <td>{{ worker.get_status_display }}</td>
-                            <td>
-                                <a class="btn btn-outline-info btn-sm" href="{% url 'worker_detail' pk=worker.pk %}">{% trans "Details" %}</a>
-                                <a class="btn btn-outline-warning btn-sm" href="{% url 'worker_update' pk=worker.pk %}">{% trans "Modify" %}</a>
-                                <a class="btn btn-danger btn-sm" href="{% url 'worker_delete' pk=worker.pk %}">{% trans "Delete" %}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                {% endfor %}
+            </tbody>
+        </table>
     {% else %}
         <h3>{% trans "No workers to display" %}</h3>
     {% endif %}
@@ -106,8 +104,25 @@
 {% endblock %}
 
 {% block scripts %}
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Change view
+        const changeBtn = document.getElementById('change-view-btn');
+        if (changeBtn) {
+            changeBtn.addEventListener('click', function() {
+                let list = document.getElementById('list');
+                let table = document.getElementById('table');
+                if (list.style.display === 'none') {
+                    list.style.display = 'block';
+                    table.style.display = 'none';
+                } else {
+                    list.style.display = 'none';
+                    table.style.display = 'table';
+                }
+            });
+        }
+
         // Worker modal dialog
         const openDialogBtn = document.getElementById('open-worker-dialog');
         const closeDialogBtn = document.getElementById('close-worker-dialog');
@@ -122,7 +137,11 @@
             });
         }
 
-        //Filter workers
+        feather.replace(); // Feather icons
+    });
+
+    //Filter workers
+    document.addEventListener('DOMContentLoaded', function() {
         const workerSearch = document.getElementById('workerSearch');
         const workerRow = document.querySelectorAll('#worker-table tbody tr');
 
@@ -139,8 +158,7 @@
                 }
             });
         });
-
-        feather.replace(); // Feather icons
     });
 </script>
+
 {% endblock %}
