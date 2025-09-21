@@ -59,35 +59,6 @@
         </div>
     </div>
 
-    <!-- Update Price Dialog -->
-{#    <div id="update-price-dialog" class="modal-dialog-centered" style="display:none;">#}
-{#        <div class="modal-content">#}
-{#            <div class="modal-header d-flex align-items-center justify-content-between">#}
-{#                <h4 class="modal-title">Update Price</h4>#}
-{#                <button type="button" class="btn-close" id="close-update-price-dialog" aria-label="Close">#}
-{#                    <i data-feather="x"></i>#}
-{#                </button>#}
-{#            </div>#}
-{#            <div class="modal-body">#}
-{#                <form id="updatePriceForm" action="" method="POST">#}
-{#                    {% csrf_token %}#}
-{#                    <div class="container">#}
-{#                        <div class="row">#}
-{#                            <div class="col-md-12">#}
-{#                                <div class="mb-3">#}
-{#                                    <label for="id_price" class="form-label">New Price</label>#}
-{#                                    <input type="number" name="price" id="id_price" class="form-control" step="0.01" required>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="d-flex justify-content-end">#}
-{#                        <input type="submit" class="btn btn-success btn-sm" value="Update">#}
-{#                    </div>#}
-{#                </form>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
 
     <!--Filter-->
     <div class="container-fluid">
@@ -141,6 +112,8 @@
                     </div>  <!-- end card body-->
                 </div> <!-- end card-->
             </div> <!-- end col-->
+            {% empty %}
+                <h3>{% trans "There is no records to show" %}</h3>
         {% endfor %}
     </div> <!-- end row -->
 </div> <!-- end container-fluid -->

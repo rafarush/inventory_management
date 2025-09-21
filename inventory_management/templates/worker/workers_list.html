@@ -88,9 +88,17 @@
                         <td>{{ worker.phone }}</td>
                         <td>{{ worker.get_status_display }}</td>
                         <td>
-                            <a class="btn btn-outline-info btn-sm" href="{% url 'worker_detail' pk=worker.pk %}">{% trans "Details" %}</a>
-                            <a class="btn btn-outline-warning btn-sm" href="{% url 'worker_update' pk=worker.pk %}">{% trans "Modify" %}</a>
-                            <a class="btn btn-danger btn-sm" href="{% url 'worker_delete' pk=worker.pk %}">{% trans "Delete" %}</a>
+                            {% if perms.inventory_management.view_worker %}
+                                <a class="btn btn-outline-info btn-sm" href="{% url 'worker_detail' pk=worker.pk %}">{% trans "Details" %}</a>
+                            {% endif %}
+                            {% if perms.inventory_management.change_worker %}
+                                <a class="btn btn-outline-warning btn-sm" href="{% url 'worker_update' pk=worker.pk %}">{% trans "Modify" %}</a>
+                            {% endif %}
+                            {% if perms.inventory_management.delete_worker %}
+                                <a class="btn btn-danger btn-sm" href="{% url 'worker_delete' pk=worker.pk %}">{% trans "Delete" %}</a>
+                            {% endif %}
+
+
                         </td>
                     </tr>
                 {% endfor %}

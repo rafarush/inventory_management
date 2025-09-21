@@ -75,14 +75,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>{{ part.get_status_display }}</td>
                     <td>
                         <div class="btn-group d-flex" role="group" aria-label="acciones">
-                            <a class="btn btn-outline-info btn-sm me-1" href="{% url 'daily_part_detail' pk=part.pk %}">{% trans "Details" %}</a>
-
-                            {% if part.status == "trabajando" %}
-                                <form method="post" action="{% url 'daily_part_finish' part.id %}" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-success btn-sm">{% trans "Finish Daily Part" %}</button>
-                                </form>
+                            {% if perms.inventory_management.view_dailypart %}
+                                <a class="btn btn-outline-info btn-sm me-1" href="{% url 'daily_part_detail' pk=part.pk %}">{% trans "Details" %}</a>
                             {% endif %}
+
+                            {% if perms.inventory_management.change_dailypart %}
+                            	{% if part.status == "trabajando" %}
+                                    <form method="post" action="{% url 'daily_part_finish' part.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-success btn-sm">{% trans "Finish Daily Part" %}</button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+
                         </div>
                     </td>
 

@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </select>
         </div>
     </form>
-    {% if perms.charge_cart.add_wastagerecord %}
+    {% if perms.inventory_management.add_wastagerecord %}
             <a href="{% url 'wastage_record_create' %}"
             class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
                 {% trans "Create Wastage Record" %}</a>
@@ -75,8 +75,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>{{ record.quantity }}</td>
                     <td>
                         <div class="btn-group d-flex" role="group" aria-label="acciones">
-                            <a class="btn btn-danger btn-sm me-1" href="{% url 'wastage_record_delete' pk=record.pk %}">{% trans "Delete" %}</a>
-                            <a class="btn btn-outline-warning btn-sm" href="{% url 'wastage_record_update' pk=record.pk %}">{% trans "Modify" %}</a>
+                            {% if perms.inventory_management.delete_wastagerecord  %}
+                            	<a class="btn btn-danger btn-sm me-1" href="{% url 'wastage_record_delete' pk=record.pk %}">{% trans "Delete" %}</a>
+                            {% endif %}
+                            {% if perms.inventory_management.change_wastagerecord %}
+                                <a class="btn btn-outline-warning btn-sm" href="{% url 'wastage_record_update' pk=record.pk %}">{% trans "Modify" %}</a>
+                            {% endif %}
+
+
                         </div>
                     </td>
                 </tr>

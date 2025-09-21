@@ -16,7 +16,7 @@
         <a class="btn btn-secondary btn-sm mb-3" href="{% url 'daily_part_cart_detail' daily_part_cart.id %}">Volver al Parte Diario</a>
     {% endif %}
 
-    {% if perms.charge_cart.add_chargecart %}
+    {% if perms.inventory_management.add_chargecart %}
         {% if daily_part_cart and daily_part_cart.status != "finalizado" %}
             <a href="{% url 'charge_cart_create_by_daily' daily_part_cart.id %}" 
             class="btn btn-success btn-sm float-end" style="margin-top: 20px;">
@@ -109,9 +109,18 @@
                         <td>{{ charge.get_status_display }}</td>
                         {% if charge.status != "finalizado" and daily_part_cart.status != "finalizado" and daily_part_cart %}
                             <td class="btn-group-sm d-flex flex-nowrap gap-1">
-                                <a class="btn btn-danger btn-sm flex-fill" href="{% url 'charge_cart_delete' pk=charge.pk %}">{% trans "Delete" %}</a>
-                                <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'charge_cart_update' pk=charge.pk %}">{% trans "Modify" %}</a>
-                                <a class="btn btn-outline-success btn-sm flex-fill" href="{% url 'charge_cart_finish' pk=charge.pk %}">{% trans "Finish" %}</a>
+                                {% if perms.inventory_management.delete_chargecart %}
+                                	<a class="btn btn-danger btn-sm flex-fill" href="{% url 'charge_cart_delete' pk=charge.pk %}">{% trans "Delete" %}</a>
+                                {% endif %}
+                                {% if perms.inventory_management.change_chargecart %}
+                                    <a class="btn btn-outline-warning btn-sm flex-fill" href="{% url 'charge_cart_update' pk=charge.pk %}">{% trans "Modify" %}</a>
+                                {% endif %}
+                                {% if perms.inventory_management.change_chargecart %}
+                                    <a class="btn btn-outline-success btn-sm flex-fill" href="{% url 'charge_cart_finish' pk=charge.pk %}">{% trans "Finish" %}</a>
+                                {% endif %}
+
+
+
                             </td>
 
                         {% else %}
