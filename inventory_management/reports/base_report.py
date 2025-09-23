@@ -1,9 +1,6 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views import View
 from django.http import HttpResponse
-import matplotlib.pyplot as plt
-import io
-import base64
-import pandas as pd
 from xhtml2pdf import pisa
 from django.template.loader import render_to_string
 import plotly.express as px
@@ -12,10 +9,10 @@ import pandas as pd
 import io
 import base64
 from django.utils.translation import gettext as _
+from django.shortcuts import render
 
 
-
-class BaseReportView(View):
+class BaseReportView(LoginRequiredMixin, PermissionRequiredMixin, View):
     """
     Clase base para reportes.
     Contiene métodos reutilizables para:
@@ -24,9 +21,11 @@ class BaseReportView(View):
     - Generar gráficos
     """
 
-    import plotly.express as px
-    import io
-    import base64
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
+
 
     def generate_chart(self, df, x_col, y_col, rolling_window=3, title=''):
         """
