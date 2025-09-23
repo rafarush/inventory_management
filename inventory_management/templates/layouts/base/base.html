@@ -130,6 +130,24 @@
 
                     <ul class="menu">
                         <li class="menu-title">{% trans "Reports" %}</li>
+                        <li class="menu-item">
+                            <a href="{% url 'reports:top_products' %}" class="menu-link">
+                                <span class="menu-icon"><i data-feather="pie-chart"></i></span>
+                                <span class="menu-text">{% trans "Best-Selling Products" %}</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="{% url 'reports:sales_report' %}" class="menu-link">
+                                <span class="menu-icon"><i data-feather="bar-chart-2"></i></span>
+                                <span class="menu-text">{% trans "Sales" %}</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="{% url 'reports:worker_report' %}" class="menu-link">
+                                <span class="menu-icon"><i data-feather="bar-chart"></i></span>
+                                <span class="menu-text">{% trans "Worker" %}</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
