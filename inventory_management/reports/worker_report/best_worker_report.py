@@ -4,17 +4,23 @@ from django.utils.translation import gettext as _
 from django.http import HttpResponse
 import pandas as pd
 from datetime import datetime, timedelta
-
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from inventory_management.modules.daily_part_cart.models import DailyPartCart
 from inventory_management.reports.base_report import BaseReportView
 
 
-class BestWorkerReportView(BaseReportView):
+class BestWorkerReportView(BaseReportView, LoginRequiredMixin, PermissionRequiredMixin):
     """
     Reporte de trabajadores que más han generado ganancias.
     Permite visualizar en HTML, exportar a Excel o PDF, y muestra gráficos.
     """
     template_name = "reports/worker_report/best_worker_report.html"
+    permission_required = 'inventory_management.view_worker'
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
     def get(self, request, *args, **kwargs):
         # --- 1. Rango de fechas ---
