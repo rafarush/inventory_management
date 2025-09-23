@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -33,6 +34,13 @@ class WorkerDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     context_object_name = 'worker'
     permission_required = 'inventory_management.view_worker'
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return render(request, "worker/worker_detail.html", context)
+        return super().get(request, *args, **kwargs)
+
 
 # Create worker
 class WorkerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -40,13 +48,23 @@ class WorkerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = WorkerAdminForm
     template_name = 'worker/worker_form.html'
     success_url = reverse_lazy('worker_list')
-    permission_required = 'inventory_management.create_worker'
+    permission_required = 'inventory_management.add_worker'
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
             return render(self.request, 'access_denied.html', status=403)
         return super().handle_no_permission()
 
+    def form_invalid(self, form):
+        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"errors": form.errors}, status=400)
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"success": True})
+        return super().form_valid(form)
 
 # Update worker
 class WorkerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -60,6 +78,17 @@ class WorkerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         if self.request.user.is_authenticated:
             return render(self.request, 'access_denied.html', status=403)
         return super().handle_no_permission()
+
+    def form_invalid(self, form):
+        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"errors": form.errors}, status=400)
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"success": True})
+        return super().form_valid(form)
 
 
 # Delete worker

@@ -1,18 +1,17 @@
-{% extends "layouts/base/base.html" %}
 {% load i18n %}
-{% block title %}
-    {% trans "Worker Form" %}
-{% endblock %}
 
-{% block content %}
-
-    <a class="btn btn-secondary btn-sm" href="{% url 'worker_list' %}" style="margin-top: 20px; margin-bottom: 20px">{% trans "Back" %}</a>
-    <div>
-        <form action="" class="form-control" method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" class="btn btn-success btn-sm" value="{% trans "Submit" %}">
-        </form>
+{% csrf_token %}
+<div class="container">
+    <div class="row">
+        {% for field in form %}
+            <div class="col-md-4 mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                <div class="invalid-feedback" id="error_{{ field.name }}"></div>
+            </div>
+        {% endfor %}
     </div>
-
-{% endblock %}
+</div>

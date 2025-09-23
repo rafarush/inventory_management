@@ -1,45 +1,43 @@
-{% extends "layouts/base/base.html" %}
 {% load static %}
 {% load i18n %}
 
-{% block title %}
-    {% trans "Worker" %}: {{ worker.id }}
-{% endblock %}
-
-{% block content %}
-
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="ps-xl-3 mt-3 mt-xl-0">
-                                <h4 class="mb-3">ID: <span class="text-body me-2">{{ worker.id }}</span></h4>
-                                <h4 class="mb-3">{% trans "Name" %}: <span class="text-body me-2">{{ worker.name }}</span></h4>
-                                <h4 class="mb-4">{% trans "Salary" %}: <span class="text-body me-2">${{ worker.salary }} CUP</span></h4>
-                                {% if worker.phone %}
-                                    <h4>{% trans "Phone" %}: <span class="text-body me-2">{{ worker.phone }}</span></h4>
-                                {% else %}
-                                    <h4>{% trans "Phone" %}: <span class="text-muted">{% trans "Not provided" %}</span></h4>
-                                {% endif %}
-                                <h4 class="mb-4">Estado: <span class="text-body me-2">{{ worker.get_status_display }} </span></h4>
-                            </div>
-                        </div>
+<div class="container py-3">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">{% trans "Worker Details" %} - {{ worker.name }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light d-flex align-items-center">
+                        <i class="bi bi-card-text me-2"></i>
+                        <strong>ID:</strong> <span class="ms-1">{{ worker.id }}</span>
                     </div>
-                    <!-- end row -->
                 </div>
-            </div> <!-- end card-->
-        </div> <!-- end col-->
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light d-flex align-items-center">
+                        <i class="bi bi-cash-stack me-2"></i>
+                        <strong>{% trans "Salary" %}:</strong> <span class="ms-1">${{ worker.salary }} CUP</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light d-flex align-items-center">
+                        <i class="bi bi-telephone me-2"></i>
+                        <strong>{% trans "Phone" %}:</strong>
+                        {% if worker.phone %}
+                            <span class="ms-1">{{ worker.phone }}</span>
+                        {% else %}
+                            <span class="ms-1 text-muted">{% trans "Not provided" %}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light d-flex align-items-center">
+                        <i class="bi bi-person-badge me-2"></i>
+                        <strong>{% trans "Status" %}:</strong> <span class="ms-1">{{ worker.get_status_display }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- end row-->
-
-    {% if is_admin %}
-        <a class="btn btn-danger btn-sm" href="{% url 'worker_delete' pk=worker.id %}">{% trans "Delete" %}</a>
-    {% endif %}
-    {% if is_admin %}
-        <a class="btn btn-outline-warning btn-sm" href="{% url 'worker_update' pk=worker.id %}">{% trans "Modify" %}</a>
-    {% endif %}
-    <a class="btn btn-secondary btn-sm" href="{% url 'worker_list' %}">{% trans "Back" %}</a>
-
-{% endblock %}
+</div>
