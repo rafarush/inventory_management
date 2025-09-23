@@ -4,6 +4,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ✅ Responsivo -->
     <title>{% block title %}{% endblock %}</title>
 
     <!-- App favicon -->
@@ -28,66 +29,6 @@
     <!-- Custom css -->
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" type="text/css" />
 
-    <!-- Modal Form CSS -->
-    <style>
-        .modal-dialog-centered {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1050;
-            width: 80%;
-            max-width: 800px;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-            position: relative;
-            background-color: #fff;
-            border-radius: 0.3rem;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-            padding: 1rem;
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .modal-body {
-            padding: 1rem 0;
-        }
-
-        .btn-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .btn-close i {
-            pointer-events: none;
-        }
-
-        .mb-3 label {
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .fixed-size-description {
-            width: 100%;
-            height: 70px;
-            resize: none;
-            overflow: auto;
-        }
-
-    </style>
-
     {% block styles %}{% endblock %}
 </head>
 <body>
@@ -95,12 +36,12 @@
     {% include 'layouts/partials/navbar.html' %}
 
     <div class="d-flex flex-column min-vh-100">
-        <div class="d-flex flex-grow-1">
-            <!-- Menu -->
+        <div class="d-flex flex-grow-1 flex-wrap"> <!-- ✅ wrap para pantallas pequeñas -->
+
+            <!-- Menu lateral -->
             <div id="app-menu" class="app-menu">
                 <div class="logo-box">
                     <a href="{% url 'index' %}" class="logo-dark">
-{#                        <h1>La Carretilla</h1>#}
                         <img src="{% static 'assets/images/logo-dark.png'%}" alt="dark logo" class="logo-lg">
                         <img src="{% static 'assets/images/logo-sm.png'%}" alt="small logo" class="logo-sm">
                     </a>
@@ -113,82 +54,75 @@
                             <li class="menu-item">
                                 <a href="{% url 'product_list' %}" class="menu-link">
                                     <span class="menu-icon"><i class="bi bi-basket"></i></span>
-                                    <span class="menu-text">{% trans "Products" %} </span>
+                                    <span class="menu-text">{% trans "Products" %}</span>
                                 </a>
                             </li>
                         {% endif %}
-
                         {% if perms.inventory_management.view_worker %}
                             <li class="menu-item">
-                            <a href="{% url 'worker_list' %}" class="menu-link">
-                                <span class="menu-icon"><i data-feather="users"></i></span>
-                                <span class="menu-text"> {% trans "Workers" %} </span>
-                            </a>
-                        </li>
+                                <a href="{% url 'worker_list' %}" class="menu-link">
+                                    <span class="menu-icon"><i data-feather="users"></i></span>
+                                    <span class="menu-text">{% trans "Workers" %}</span>
+                                </a>
+                            </li>
                         {% endif %}
-
                         {% if perms.inventory_management.view_cart %}
                             <li class="menu-item">
                                 <a href="{% url 'cart_list' %}" class="menu-link">
                                     <span class="menu-icon"><i data-feather="shopping-cart"></i></span>
-                                    <span class="menu-text"> {% trans "Carts" %} </span>
+                                    <span class="menu-text">{% trans "Carts" %}</span>
                                 </a>
                             </li>
                         {% endif %}
-
                         {% if perms.inventory_management.view_chargecart %}
                             <li class="menu-item">
                                 <a href="{% url 'charge_cart_list' %}" class="menu-link">
                                     <span class="menu-icon"><i data-feather="package"></i></span>
-                                    <span class="menu-text">{% trans "Cart Loads" %} </span>
+                                    <span class="menu-text">{% trans "Cart Loads" %}</span>
                                 </a>
                             </li>
                         {% endif %}
-
-                        {% if perms.inventory_management.view_dailypartcart %}
+                        {% if perms.inventory_management.products.view_dailypartcart %}
                             <li class="menu-item">
                                 <a href="{% url 'daily_part_cart_list' %}" class="menu-link">
-                                    <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard.svg' %}" alt="Clipboard icon"></span>
-                                    <span class="menu-text">{% trans "Daily Part Cart" %} </span>
+                                    <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard.svg' %}" alt="Clipboard"></span>
+                                    <span class="menu-text">{% trans "Daily Part Cart" %}</span>
                                 </a>
                             </li>
                         {% endif %}
-
                         {% if perms.inventory_management.view_dailypart %}
                             <li class="menu-item">
                                 <a href="{% url 'daily_part_list' %}" class="menu-link">
-                                    <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard2-check.svg' %}" alt="Clipboard icon"></span>
-                                    <span class="menu-text">{% trans "Daily Part" %} </span>
+                                    <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard2-check.svg' %}" alt="Clipboard"></span>
+                                    <span class="menu-text">{% trans "Daily Part" %}</span>
                                 </a>
                             </li>
                         {% endif %}
-
                         {% if perms.inventory_management.view_wastagerecord %}
-                        	<li class="menu-item">
+                            <li class="menu-item">
                                 <a href="{% url 'wastage_record_list' %}" class="menu-link">
                                     <span class="menu-icon"><i class="bi bi-bag-x"></i></span>
-                                    <span class="menu-text"> {% trans "Wastage Records" %} </span>
+                                    <span class="menu-text">{% trans "Wastage Records" %}</span>
                                 </a>
                             </li>
                         {% endif %}
-
                         {% if perms.inventory_management.view_store %}
-                        	<li class="menu-item">
+                            <li class="menu-item">
                                 <a href="{% url 'store_detail' %}" class="menu-link">
                                     <span class="menu-icon"><i data-feather="archive"></i></span>
-                                    <span class="menu-text"> {% trans "Store" %} </span>
+                                    <span class="menu-text">{% trans "Store" %}</span>
                                 </a>
                             </li>
                         {% endif %}
-
                     </ul>
+
                     {% if perms.inventory_management.view_customuser %}
                         <ul class="menu">
                             <li class="menu-title">{% trans "User Control" %}</li>
                             <li class="menu-item">
                                 <a href="{% url 'custom_user_list' %}" class="menu-link">
                                     <span class="menu-icon"><i class="mdi mdi-account-multiple"></i></span>
-                                    <span class="menu-text"> Users </span>
+                                    <span class="menu-text">Users</span>
                                 </a>
                             </li>
                         </ul>
@@ -196,69 +130,37 @@
 
                     <ul class="menu">
                         <li class="menu-title">{% trans "Reports" %}</li>
-                        <li class="menu-item">
-                            <a href="{% url 'reports:top_products' %}" class="menu-link">
-                                <span class="menu-icon"><i data-feather="pie-chart"></i></span>
-                                <span class="menu-text">{% trans "Best-Selling Products" %}</span>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="{% url 'reports:sales_report' %}" class="menu-link">
-                                <span class="menu-icon"><i data-feather="bar-chart-2"></i></span>
-                                <span class="menu-text">{% trans "Sales" %}</span>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="{% url 'reports:worker_report' %}" class="menu-link">
-                                <span class="menu-icon"><i data-feather="bar-chart"></i></span>
-                                <span class="menu-text">{% trans "Worker" %}</span>
-                            </a>
-                        </li>
-                        
                     </ul>
-                    <div class="clearfix"></div>
                 </div>
             </div>
-            <!-- End Menu -->
+            <!-- Fin menu -->
 
-
-
-            <!-- Main Content -->
+            <!-- Contenido principal -->
             <div class="main-content flex-grow-1">
                 <div class="page-content">
                     <div class="container-fluid">
-                        {% block content %}
-                        {% endblock %}
+                        {% block content %}{% endblock %}
                     </div>
                 </div>
             </div>
-            <!-- End Main Content -->
         </div>
     </div>
 
-
     <!-- Vendor js -->
     <script src="{% static 'assets/js/vendor.min.js' %}"></script>
-
-    <!-- App js -->
     <script src="{% static 'assets/js/app.min.js' %}"></script>
-
-    <!-- Plugins js-->
     <script src="{% static 'assets/libs/flatpickr/flatpickr.min.js' %}"></script>
     <script src="{% static 'assets/libs/apexcharts/apexcharts.min.js' %}"></script>
     <script src="{% static 'assets/libs/selectize/js/standalone/selectize.min.js' %}"></script>
-
-    <!-- Dashboard 1 init js-->
     <script src="{% static 'assets/js/pages/dashboard-1.init.js' %}"></script>
 
     {% block scripts %}
-        <script src="{% static 'assets/js/toggle-menu-action/toggle-menu-action.js' %}"></script>
-        <script>
-            $(document).ready(function() {
-                $('.select2').select2();
-            });
-        </script>
+    <script src="{% static 'assets/js/toggle-menu-action/toggle-menu-action.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
     {% endblock %}
 </body>
 </html>
-
