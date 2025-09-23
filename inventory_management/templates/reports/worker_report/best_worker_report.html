@@ -1,0 +1,113 @@
+{% extends "layouts/base/base.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Workers Profit Report" %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">{% trans "Workers Profit Report" %}</h2>
+
+    <!-- Filtros de fecha -->
+    <form id="date-filter-form" method="get" class="row g-2 mb-4">
+        <div class="col-auto">
+            <input type="date" id="start_date" name="start_date" class="form-control"
+                   value="{{ start_date }}">
+        </div>
+        <div class="col-auto">
+            <input type="date" id="end_date" name="end_date" class="form-control"
+                   value="{{ end_date }}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary btn-sm">{% trans "Filter" %}</button>
+        </div>
+    </form>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const startInput = document.getElementById('start_date');
+        const endInput = document.getElementById('end_date');
+        const form = document.getElementById('date-filter-form');
+
+        startInput.addEventListener('change', () => {
+            endInput.min = startInput.value;
+            if (endInput.value && endInput.value < startInput.value) {
+                endInput.value = startInput.value;
+            }
+        });
+
+        form.addEventListener('submit', (e) => {
+            if (startInput.value && endInput.value) {
+                const startDate = new Date(startInput.value);
+                const endDate = new Date(endInput.value);
+
+                // Validación: fecha final >= inicial
+                if (endDate < startDate) {
+                    e.preventDefault();
+                    alert("{% trans 'The end date cannot be earlier than the start date.' %}");
+                    endInput.focus();
+                }
+
+                // Validación: rango máximo 1 año
+                const diffDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
+                if (diffDays > 365) {
+                    e.preventDefault();
+                    alert("{% trans 'The maximum allowed range is 1 year.' %}");
+                    endInput.focus();
+                }
+            }
+        });
+    });
+    </script>
+
+    <!-- Botones de exportación -->
+    <div class="mb-3">
+        <a href="?format=pdf{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}"
+           class="btn btn-outline-blue btn-sm" target="_blank">
+            {% trans "Generate PDF" %} <span class="menu-icon"><i data-feather="file"></i></span>
+        </a>
+
+        <a href="?format=excel{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}"
+           class="btn btn-outline-success btn-sm">
+            {% trans "Generate Excel" %} <span class="menu-icon"><i data-feather="file-text"></i></span>
+        </a>
+    </div>
+
+    <!-- Tabla de resultados -->
+    {% if df %}
+        <table class="table table-striped table-sm mt-2">
+            <thead>
+                <tr>
+                    <th>{% trans "Worker" %}</th>
+                    <th>{% trans "Net Profit" %}</th>
+                    <th>{% trans "Revenue" %}</th>
+                    <th>{% trans "Money Invested" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in df %}
+                    <tr>
+                        <td>{{ row.worker }}</td>
+                        <td>{{ row.net_profit }}</td>
+                        <td>{{ row.revenue }}</td>
+                        <td>{{ row.money_invested }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h5 class="text-muted">{% trans "No data available for the selected range." %}</h5>
+    {% endif %}
+
+    <!-- Gráfico -->
+    {% if chart %}
+        <div class="text-center mt-4">
+            <img src="data:image/png;base64,{{ chart }}"
+                 alt="{% trans 'Workers Profit Chart' %}"
+                 class="img-fluid rounded shadow-sm"/>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

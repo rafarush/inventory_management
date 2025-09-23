@@ -1,0 +1,108 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "Top Products Report" %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .filters {
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            border: 1px solid #555;
+            padding: 8px 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #2c3e50;
+            color: #fff;
+        }
+        td.sold {
+            font-weight: bold;
+            color: #27ae60;
+        }
+        .no-data {
+            text-align: center;
+            font-style: italic;
+            color: #888;
+        }
+        .chart {
+            text-align: center;
+            margin-top: 20px;
+        }
+        img {
+            max-width: 90%;
+            height: auto;
+        }
+        .export-info {
+            font-size: 10px;
+            text-align: right;
+            color: #555;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📊{% trans "Best Selling Products Report" %}</h1>
+
+<div class="filters">
+    {% if request.GET.start_date or request.GET.end_date %}
+        {% trans "Date range:" %}
+        {{ request.GET.start_date|default:"--" }} - {{ request.GET.end_date|default:"--" }}
+    {% endif %}
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>{% trans "Products" %}</th>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Quantity sold" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in df %}
+        <tr>
+            <td>{{ row.product }}</td>
+            <td>{{ row.name }}</td>
+            <td class="sold">{{ row.sold }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3" class="no-data">{% trans "There are no products to show" %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if chart %}
+<div class="chart">
+    <img src="data:image/png;base64,{{ chart }}" 
+         alt="{% trans 'Best-selling products chart' %}">
+</div>
+{% endif %}
+
+<div class="export-info">
+    {% trans "Automatically generated" %}  {{ now|date:"d/m/Y H:i" }}
+</div>
+
+</body>
+</html>

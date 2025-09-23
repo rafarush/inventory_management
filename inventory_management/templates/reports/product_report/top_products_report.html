@@ -1,0 +1,104 @@
+{% extends "layouts/base/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Top Products Report" %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">{% trans "Best Selling Products" %}</h2>
+
+    <form id="date-filter-form" method="get" class="row g-2 mb-4">
+    <div class="col-auto">
+        <input type="date" id="start_date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+    </div>
+    <div class="col-auto">
+        <input type="date" id="end_date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary btn-sm">{% trans "Filter" %}</button>
+    </div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const startInput = document.getElementById('start_date');
+    const endInput = document.getElementById('end_date');
+    const form = document.getElementById('date-filter-form');
+
+    // Actualiza min del endInput al cambiar startInput
+    startInput.addEventListener('change', () => {
+        endInput.min = startInput.value;
+        // Opcional: si la fecha final actual es menor que la nueva mínima, la resetea
+        if (endInput.value && endInput.value < startInput.value) {
+            endInput.value = startInput.value;
+        }
+    });
+
+    // Validación al enviar el formulario
+    form.addEventListener('submit', (e) => {
+        if (startInput.value && endInput.value) {
+            const startDate = new Date(startInput.value);
+            const endDate = new Date(endInput.value);
+
+            if (endDate < startDate) {
+                e.preventDefault();
+                alert("La fecha final no puede ser anterior a la fecha inicial.");
+                endInput.focus();
+            }
+        }
+    });
+});
+</script>
+
+
+    <!-- Exportar -->
+    <div class="mb-3">
+        <a href="?format=pdf{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}"
+           class="btn btn-outline-blue btn-sm" target="_blank">
+            {% trans "Generate PDF" %} <span class="menu-icon"><i data-feather="file"></i></span>
+        </a>
+
+        <a href="?format=excel{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}"
+           class="btn btn-outline-success btn-sm">
+            {% trans "Generate Excel" %} <span class="menu-icon"><i data-feather="file-text"></i></span>
+        </a>
+    </div>
+
+    <!-- Tabla de productos -->
+    {% if df %}
+        <table class="table" id="product-table">
+            <thead>
+                <tr>
+                    <th scope="col">{% trans "Products" %}</th>
+                    <th scope="col">{% trans "Name" %}</th>
+                    <th scope="col">{% trans "Quantity sold" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in df %}
+                    <tr>
+                        <td>{{ row.product }}</td>
+                        <td>{{ row.name }}</td>
+                        <td>{{ row.sold }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h3 class="text-muted">{% trans "There are no products to show" %}</h3>
+    {% endif %}
+
+    <!-- Gráfico -->
+    {% if chart %}
+    <div class="text-center mt-4">
+        <img src="data:image/png;base64,{{ chart }}"
+             alt="{% trans 'Best-selling products chart' %}"
+             class="img-fluid rounded shadow">
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
