@@ -57,10 +57,14 @@ document.addEventListener('DOMContentLoaded', function() {
     <!-- Exportar -->
     <div class="mb-3">
         <a href="?format=pdf{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}"
-           class="btn btn-danger btn-sm" target="_blank">📄 {% trans "Generate PDF" %}</a>
+           class="btn btn-outline-blue btn-sm" target="_blank">
+            {% trans "Generate PDF" %} <span class="menu-icon"><i data-feather="file"></i></span>
+        </a>
 
         <a href="?format=excel{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}"
-           class="btn btn-success btn-sm">📥 {% trans "Generate Excel" %}</a>
+           class="btn btn-outline-success btn-sm">
+            {% trans "Generate Excel" %} <span class="menu-icon"><i data-feather="file-text"></i></span>
+        </a>
     </div>
 
     <!-- Tabla de productos -->
