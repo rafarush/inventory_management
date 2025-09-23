@@ -5,10 +5,17 @@ from inventory_management.modules.charge_cart.models import ChargeCart
 from inventory_management.reports.base_report import BaseReportView
 import pandas as pd
 from django.utils.translation import gettext as _
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
-class TopProductsReportView(BaseReportView):
+class TopProductsReportView(BaseReportView, LoginRequiredMixin, PermissionRequiredMixin):
     template_name = 'reports/product_report/top_products_report.html'
+    permission_required = 'inventory_management.view_product'
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
     def get(self, request, *args, **kwargs):
         # --- 1. Filtro por rango de fechas ---

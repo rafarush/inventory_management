@@ -1,4 +1,5 @@
 # views/reports/daily_part.py
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.http import HttpResponse
@@ -9,12 +10,18 @@ from inventory_management.modules.daily_part.models import DailyPart
 from inventory_management.reports.base_report import BaseReportView
 
 
-class SalesReportView(BaseReportView):
+class SalesReportView(BaseReportView, LoginRequiredMixin, PermissionRequiredMixin):
     """
     Vista para generar reportes de ventas (utilidad neta, inversión, retornos).
     Permite visualizar en HTML, exportar a Excel o PDF, y muestra gráficos.
     """
     template_name = 'reports/daily_part_report/sales_report.html'
+    permission_required = 'inventory_management.view_product'
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return render(self.request, 'access_denied.html', status=403)
+        return super().handle_no_permission()
 
     def get(self, request, *args, **kwargs):
         # --- 1. Rango de fechas ---
