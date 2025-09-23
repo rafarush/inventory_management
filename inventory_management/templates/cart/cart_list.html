@@ -9,49 +9,14 @@
 {% block content %}
 <div class="container-fluid">
 
-    {% if perms.inventory_management.add_cart  %}
-        <div style="margin-top: 20px;">
-            <button id="open-cart-dialog" class="btn btn-success btn-sm float-end">{% trans "Create" %}</button>
+    {% if perms.inventory_management.add_cart %}
+        <div class="mt-3">
+            <!-- Botón para abrir modal -->
+            <button type="button" class="btn btn-success btn-sm float-end" data-bs-toggle="modal" data-bs-target="#cartModal">
+                {% trans "Create" %}
+            </button>
         </div>
     {% endif %}
-
-    <!-- Cart Form Dialog -->
-    <div id="cart-form-dialog" class="modal-dialog-centered" style="display:none;">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center justify-content-between">
-                <h4 class="modal-title">{% trans "Create Cart" %}</h4>
-                <button type="button" class="btn-close" id="close-cart-dialog" aria-label="Close">
-                    <i data-feather="x"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="cartForm" action="{% url 'cart_create' %}" method="POST">
-                    {% csrf_token %}
-                    <div class="container">
-                        <div class="row">
-                            {% for field in form %}
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        {{ field.label_tag }}
-                                        {{ field }}
-                                        {% if field.help_text %}
-                                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                                        {% endif %}
-                                        {% for error in field.errors %}
-                                            <div class="invalid-feedback">{{ error }}</div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <input type="submit" class="btn btn-success btn-sm" value="{% trans "Submit" %}">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <!-- Filter -->
     <div class="container-fluid mt-3">
@@ -64,7 +29,7 @@
     </div>
 
     <!-- Cards -->
-    <div id="list" class="row" style="margin-top: 20px">
+    <div id="list" class="row mt-4">
         {% for cart in carts %}
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" data-cart-id="{{ cart.id }}">
                 <div class="card">
@@ -72,9 +37,6 @@
 
                         {% if perms.inventory_management.delete_cart %}
                             <div class="cart-action mb-2">
-{#                                <a href="{% url 'cart_update' pk=cart.pk %}" class="btn btn-success btn-xs">#}
-{#                                    <i class="mdi mdi-pencil"></i>#}
-{#                                </a>#}
                                 <a href="{% url 'cart_delete' pk=cart.pk %}" class="btn btn-danger btn-xs">
                                     <i class="mdi mdi-close"></i>
                                 </a>
@@ -87,53 +49,108 @@
                             </h5>
                             <h4 class="mb-4">{% trans "Status" %}: <span class="text-body me-2">{{ cart.get_status_display }} </span></h4>
                         </div>
-                    </div> <!-- end card body -->
-                </div> <!-- end card -->
-            </div> <!-- end col -->
+                    </div>
+                </div>
+            </div>
         {% empty %}
             <p>{% trans "No carts available." %}</p>
         {% endfor %}
-    </div> <!-- end row -->
+    </div>
+</div>
 
-</div> <!-- end container-fluid -->
+<!-- Modal Crear Cart -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="cartFormModal" method="POST" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="cartModalLabel">{% trans "Create Cart" %}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+        </div>
+        <div class="modal-body">
+            {% csrf_token %}
+            <div class="container">
+                <div class="row">
+                    {% for field in form %}
+                        <div class="col-md-6 mb-3">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                            <div class="invalid-feedback" id="error_{{ field.name }}"></div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">{% trans "Submit" %}</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Close" %}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Modal open/close
-        const openCartDialogButton = document.getElementById('open-cart-dialog');
-        const closeCartDialogButton = document.getElementById('close-cart-dialog');
-        const cartFormDialog = document.getElementById('cart-form-dialog');
+document.addEventListener('DOMContentLoaded', function() {
+    // Filtro de búsqueda
+    const cartSearch = document.getElementById('cartSearch');
+    const cartCards = document.querySelectorAll('#list .col-12');
 
-        if (openCartDialogButton && closeCartDialogButton && cartFormDialog) {
-            openCartDialogButton.addEventListener('click', function() {
-                cartFormDialog.style.display = 'block';
-            });
+    cartSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        cartCards.forEach(card => {
+            const cartId = card.dataset.cartId.toLowerCase();
+            card.style.display = cartId.includes(searchTerm) ? '' : 'none';
+        });
+    });
 
-            closeCartDialogButton.addEventListener('click', function() {
-                cartFormDialog.style.display = 'none';
-            });
-        }
+    // Envío AJAX del formulario dentro del modal
+    const form = document.getElementById('cartFormModal');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const url = "{% url 'cart_create' %}";
+        const formData = new FormData(form);
 
-        // Search filter
-        const cartSearch = document.getElementById('cartSearch');
-        const cartCards = document.querySelectorAll('#list .col-12');
-
-        cartSearch.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-
-            cartCards.forEach(card => {
-                const cartId = card.dataset.cartId.toLowerCase();
-                if (cartId.includes(searchTerm)) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+        // Limpiar errores previos
+        document.querySelectorAll('.invalid-feedback').forEach(div => {
+            div.innerText = '';
+            div.style.display = 'none';
         });
 
-        feather.replace();
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.errors) {
+                // Mostrar errores
+                Object.keys(data.errors).forEach(function(key) {
+                    const errorDiv = document.getElementById('error_' + key);
+                    if (errorDiv) {
+                        errorDiv.innerText = data.errors[key].join(', ');
+                        errorDiv.style.display = 'block';
+                    }
+                });
+            } else if (data.success) {
+                // Cerrar modal y recargar lista
+                const modalEl = document.getElementById('cartModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                modal.hide();
+                location.reload();
+            }
+        });
     });
+
+    feather.replace();
+});
 </script>
 {% endblock %}

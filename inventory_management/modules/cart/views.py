@@ -24,12 +24,26 @@ class CartListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return super().handle_no_permission()
 
 
+from django.http import JsonResponse
+
+
 class CartCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Cart
     success_url = reverse_lazy('cart_list')
     template_name = 'cart/cart_form.html'
     form_class = CartForm
     permission_required = 'inventory_management.add_cart'
+
+    def form_invalid(self, form):
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'errors': form.errors}, status=400)
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': True})
+        return super().form_valid(form)
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
