@@ -7,58 +7,18 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="container-fluid">
 
     {% if perms.inventory_management.add_worker %}
-        <div style="margin-top: 20px;">
-            <button id="open-worker-dialog" class="btn btn-success btn-sm float-end">{% trans "Create Worker" %}</button>
+        <div class="mt-3">
+            <button type="button" class="btn btn-success btn-sm float-end" data-bs-toggle="modal" data-bs-target="#workerModal">
+                {% trans "Create Worker" %}
+            </button>
         </div>
     {% endif %}
 
-    <!-- Worker Form Dialog -->
-    <div id="worker-form-dialog" class="modal-dialog-centered" style="display:none;">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center justify-content-between">
-                <h4 class="modal-title">{% trans "Create Worker" %}</h4>
-                <button type="button" class="btn-close" id="close-worker-dialog" aria-label="Close">
-                    <i data-feather="x"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="workerForm" action="{% url 'worker_create' %}" method="POST">
-                    {% csrf_token %}
-                    <div class="container">
-                        <div class="row">
-                            {% for field in form %}
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        {{ field.label_tag }}
-                                        {{ field }}
-                                        {% if field.help_text %}
-                                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                                        {% endif %}
-                                        {% for error in field.errors %}
-                                            <div class="invalid-feedback">{{ error }}</div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                {% if forloop.counter|divisibleby:3 and not forloop.last %}
-                                    </div><div class="row">
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <input type="submit" class="btn btn-success btn-sm" value="{% trans "Submit" %}">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <!-- Filter -->
-    <div class="container-fluid">
+    <div class="container-fluid mt-3">
         <h4>{% trans "Filter workers by id or name:" %}</h4>
         <div class="row mb-3">
             <div class="col-md-6">
@@ -89,16 +49,22 @@
                         <td>{{ worker.get_status_display }}</td>
                         <td>
                             {% if perms.inventory_management.view_worker %}
-                                <a class="btn btn-outline-info btn-sm" href="{% url 'worker_detail' pk=worker.pk %}">{% trans "Details" %}</a>
+                                <button type="button"
+                                        class="btn btn-outline-info btn-sm btn-detail-worker"
+                                        data-url="{% url 'worker_detail' pk=worker.pk %}">
+                                    {% trans "Details" %}
+                                </button>
                             {% endif %}
                             {% if perms.inventory_management.change_worker %}
-                                <a class="btn btn-outline-warning btn-sm" href="{% url 'worker_update' pk=worker.pk %}">{% trans "Modify" %}</a>
+                                <button type="button"
+                                        class="btn btn-outline-warning btn-sm btn-edit-worker"
+                                        data-url="{% url 'worker_update' pk=worker.pk %}">
+                                    {% trans "Modify" %}
+                                </button>
                             {% endif %}
                             {% if perms.inventory_management.delete_worker %}
                                 <a class="btn btn-danger btn-sm" href="{% url 'worker_delete' pk=worker.pk %}">{% trans "Delete" %}</a>
                             {% endif %}
-
-
                         </td>
                     </tr>
                 {% endfor %}
@@ -109,64 +75,208 @@
     {% endif %}
 </div> <!-- end container-fluid -->
 
+<!-- Modal Crear Worker -->
+<div class="modal fade" id="workerModal" tabindex="-1" aria-labelledby="workerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form id="workerFormModal" method="POST" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="workerModalLabel">{% trans "Create Worker" %}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+        </div>
+        <div class="modal-body">
+            {% csrf_token %}
+            <div class="container">
+                <div class="row">
+                    {% for field in form %}
+                        <div class="col-md-4 mb-3">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                            <div class="invalid-feedback" id="error_{{ field.name }}"></div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">{% trans "Submit" %}</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Close" %}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Editar Worker -->
+<div class="modal fade" id="workerEditModal" tabindex="-1" aria-labelledby="workerEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form id="workerFormEdit" method="POST" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="workerEditModalLabel">{% trans "Edit Worker" %}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+        </div>
+        <div class="modal-body" id="workerEditBody">
+          <!-- Aquí se cargará el formulario por AJAX -->
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">{% trans "Submit" %}</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Close" %}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detalles Worker -->
+<div class="modal fade" id="workerDetailModal" tabindex="-1" aria-labelledby="workerDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="workerDetailModalLabel">{% trans "Worker Details" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+      </div>
+      <div class="modal-body" id="workerDetailBody">
+        <!-- Aquí se cargará el HTML de detalle vía AJAX -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Close" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Change view
-        const changeBtn = document.getElementById('change-view-btn');
-        if (changeBtn) {
-            changeBtn.addEventListener('click', function() {
-                let list = document.getElementById('list');
-                let table = document.getElementById('table');
-                if (list.style.display === 'none') {
-                    list.style.display = 'block';
-                    table.style.display = 'none';
-                } else {
-                    list.style.display = 'none';
-                    table.style.display = 'table';
-                }
-            });
-        }
+document.addEventListener('DOMContentLoaded', function() {
+    // Buscar trabajadores
+    const workerSearch = document.getElementById('workerSearch');
+    const workerRows = document.querySelectorAll('#worker-table tbody tr');
 
-        // Worker modal dialog
-        const openDialogBtn = document.getElementById('open-worker-dialog');
-        const closeDialogBtn = document.getElementById('close-worker-dialog');
-        const workerDialog = document.getElementById('worker-form-dialog');
-
-        if (openDialogBtn && closeDialogBtn && workerDialog) {
-            openDialogBtn.addEventListener('click', function() {
-                workerDialog.style.display = 'block';
-            });
-            closeDialogBtn.addEventListener('click', function() {
-                workerDialog.style.display = 'none';
-            });
-        }
-
-        feather.replace(); // Feather icons
-    });
-
-    //Filter workers
-    document.addEventListener('DOMContentLoaded', function() {
-        const workerSearch = document.getElementById('workerSearch');
-        const workerRow = document.querySelectorAll('#worker-table tbody tr');
-
+    if (workerSearch) {
         workerSearch.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
-
-            workerRow.forEach(row => {
+            workerRows.forEach(row => {
                 const workerId = row.dataset.workerId;
                 const workerName = row.dataset.workerName.toLowerCase();
-                if (workerId.includes(searchTerm) || workerName.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+                row.style.display = (workerId.includes(searchTerm) || workerName.includes(searchTerm)) ? '' : 'none';
+            });
+        });
+    }
+
+    // Crear trabajador (AJAX)
+    const formCreate = document.getElementById('workerFormModal');
+    if (formCreate) {
+        formCreate.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const url = "{% url 'worker_create' %}";
+            const formData = new FormData(formCreate);
+
+            // Limpiar errores previos
+            document.querySelectorAll('.invalid-feedback').forEach(div => {
+                div.innerText = '';
+                div.style.display = 'none';
+            });
+
+            fetch(url, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.errors) {
+                    Object.keys(data.errors).forEach(function(key) {
+                        const errorDiv = document.getElementById('error_' + key);
+                        if (errorDiv) {
+                            errorDiv.innerText = data.errors[key].join(', ');
+                            errorDiv.style.display = 'block';
+                        }
+                    });
+                } else if (data.success) {
+                    const modalEl = document.getElementById('workerModal');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    modal.hide();
+                    location.reload();
                 }
             });
         });
-    });
-</script>
+    }
 
+    // Abrir modal de edición con AJAX
+    document.querySelectorAll('.btn-edit-worker').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const url = this.dataset.url;
+            fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('workerEditBody').innerHTML = html;
+                    const modalEl = new bootstrap.Modal(document.getElementById('workerEditModal'));
+                    modalEl.show();
+                });
+        });
+    });
+
+    // Enviar formulario de edición por AJAX
+    const formEdit = document.getElementById('workerFormEdit');
+    if (formEdit) {
+        formEdit.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const innerForm = form.querySelector('form'); // el form cargado en workerEditBody
+            const url = innerForm?.action || window.location.href;
+            const formData = new FormData(innerForm || form);
+
+            // limpiar errores previos
+            document.querySelectorAll('#workerEditBody .invalid-feedback').forEach(div => {
+                div.innerText = '';
+                div.style.display = 'none';
+            });
+
+            fetch(url, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.errors) {
+                    Object.keys(data.errors).forEach(function(key) {
+                        const errorDiv = document.getElementById('error_' + key);
+                        if (errorDiv) {
+                            errorDiv.innerText = data.errors[key].join(', ');
+                            errorDiv.style.display = 'block';
+                        }
+                    });
+                } else if (data.success) {
+                    const modalEl = document.getElementById('workerEditModal');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    modal.hide();
+                    location.reload();
+                }
+            });
+        });
+    }
+
+    // Abrir modal de detalles con AJAX
+    document.querySelectorAll('.btn-detail-worker').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const url = this.dataset.url;
+            fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('workerDetailBody').innerHTML = html;
+                    const modalEl = new bootstrap.Modal(document.getElementById('workerDetailModal'));
+                    modalEl.show();
+                });
+        });
+    });
+
+    feather.replace(); // íconos
+});
+</script>
 {% endblock %}
