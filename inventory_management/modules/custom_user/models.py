@@ -18,7 +18,7 @@ class CustomUser(AbstractUser, BaseModel):
     def send_email(self, subject, template_name, context, from_email=settings.EMAIL_HOST_USER):
         to_email = self.email
         text_content = "Este correo requiere soporte para HTML."
-        html_content = render_to_string(template_name, context)
+        html_content = render_to_string(template_name, context, request=context.get('request'))
 
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
         msg.attach_alternative(html_content, "text/html")

@@ -74,17 +74,20 @@
                     <td>{{ user.last_name }}</td>
                     <td>{{ user.groups.all.0.name }}</td>
                     <td>
-                        {% if perms.inventory_management.delete_customuser %}
-                        	<a class="btn btn-danger btn-sm" href="{% url 'custom_user_delete' pk=user.id %}">{% trans "Delete" %}</a>
-                        {% endif %}
-                        {% if perms.inventory_management.change_customuser %}
-                            <button class="btn btn-outline-warning btn-sm open-user-update-dialog" data-user-id="{{ user.id }}">
-                                {% trans "Modify" %}
-                            </button>
-                            <button class="btn btn-outline-warning btn-sm open-user-set-pass-dialog" data-user-id="{{ user.id }}">
-                                {% trans "Set Password" %}
-                            </button>
-                        {% endif %}
+                        {% if user.username != 'admin' or user.username != 'manager' %}
+                        	{% if perms.inventory_management.delete_customuser %}
+                                <a class="btn btn-danger btn-sm" href="{% url 'custom_user_delete' pk=user.id %}">{% trans "Delete" %}</a>
+                            {% endif %}
+                            {% if perms.inventory_management.change_customuser %}
+                                <button class="btn btn-outline-warning btn-sm open-user-update-dialog" data-user-id="{{ user.id }}">
+                                    {% trans "Modify" %}
+                                </button>
+                                <button class="btn btn-outline-warning btn-sm open-user-set-pass-dialog" data-user-id="{{ user.id }}">
+                                    {% trans "Set Password" %}
+                                </button>
+                            {% endif %}
+                        {% endif %} 
+
                     </td>
                 </tr>
             {% empty %}

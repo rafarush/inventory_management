@@ -203,6 +203,11 @@ class CustomUserSetPasswordView(LoginRequiredMixin, PermissionRequiredMixin, Vie
     permission_required = 'inventory_management.change_customuser'
 
     def get(self, request, *args, **kwargs):
+        user_id = kwargs.get('pk')
+        user = CustomUser.objects.get(id=user_id)
+        if user.username == 'admin' or user.username == 'manager':
+            errors = {'error': str(_('Admin and manager cannot be edited'))}
+            return JsonResponse({'success': False, 'errors': errors})
         form = CustomUserSetPasswordForm()
         html = render_to_string('custom_user/partials/custom_user_form.html', {'form': form}, request=request)
         return JsonResponse({'html': html})
@@ -225,6 +230,7 @@ class CustomUserSetPasswordView(LoginRequiredMixin, PermissionRequiredMixin, Vie
                 'target_user': user,
                 'domain': current_site.domain,
                 'new_pass': new_password,
+                'request': request,
             }
 
             user.send_email(mail_subject, 'emails/email_password_changed_template.html', context)
