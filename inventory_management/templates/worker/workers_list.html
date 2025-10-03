@@ -11,7 +11,9 @@
 
     {% if perms.inventory_management.add_worker %}
         <div class="mt-3">
-            <button type="button" class="btn btn-success btn-sm float-end" data-bs-toggle="modal" data-bs-target="#workerModal">
+            <button type="button" class="btn btn-success btn-sm float-end"
+                    id="btn-create-worker"
+                    data-url="{% url 'worker_create' %}">
                 {% trans "Create Worker" %}
             </button>
         </div>
@@ -22,7 +24,7 @@
         <h4>{% trans "Filter workers by id or name:" %}</h4>
         <div class="row mb-3">
             <div class="col-md-6">
-                <input type="text" id="workerSearch" class="form-control" placeholder="{% trans "Search workers..." %}">
+                <input type="text" id="workerSearch" class="form-control" placeholder="{% trans 'Search workers...' %}">
             </div>
         </div>
     </div>
@@ -41,242 +43,199 @@
             </thead>
             <tbody>
                 {% for worker in workers %}
-                    <tr data-worker-id="{{ worker.id }}" data-worker-name="{{ worker.name }}">
-                        <td>{{ worker.id }}</td>
-                        <td>{{ worker.name }}</td>
-                        <td>${{ worker.salary }}</td>
-                        <td>{{ worker.phone }}</td>
-                        <td>{{ worker.get_status_display }}</td>
-                        <td>
-                            {% if perms.inventory_management.view_worker %}
-                                <button type="button"
-                                        class="btn btn-outline-info btn-sm btn-detail-worker"
-                                        data-url="{% url 'worker_detail' pk=worker.pk %}">
-                                    {% trans "Details" %}
-                                </button>
-                            {% endif %}
-                            {% if perms.inventory_management.change_worker %}
-                                <button type="button"
-                                        class="btn btn-outline-warning btn-sm btn-edit-worker"
-                                        data-url="{% url 'worker_update' pk=worker.pk %}">
-                                    {% trans "Modify" %}
-                                </button>
-                            {% endif %}
-                            {% if perms.inventory_management.delete_worker %}
-                                <a class="btn btn-danger btn-sm" href="{% url 'worker_delete' pk=worker.pk %}">{% trans "Delete" %}</a>
-                            {% endif %}
-                        </td>
-                    </tr>
+                <tr data-worker-id="{{ worker.id }}" data-worker-name="{{ worker.name }}">
+                    <td>{{ worker.id }}</td>
+                    <td>{{ worker.name }}</td>
+                    <td>${{ worker.salary }}</td>
+                    <td>{{ worker.phone }}</td>
+                    <td>{{ worker.get_status_display }}</td>
+                    <td>
+                        {% if perms.inventory_management.view_worker %}
+                        <button type="button" class="btn btn-outline-info btn-sm btn-detail-worker"
+                                data-url="{% url 'worker_detail' pk=worker.pk %}">
+                            {% trans "Details" %}
+                        </button>
+                        {% endif %}
+                        {% if perms.inventory_management.change_worker %}
+                        <button type="button" class="btn btn-outline-warning btn-sm btn-edit-worker"
+                                data-url="{% url 'worker_update' pk=worker.pk %}">
+                            {% trans "Modify" %}
+                        </button>
+                        {% endif %}
+                        {% if perms.inventory_management.delete_worker %}
+                        <button type="button" class="btn btn-danger btn-sm btn-delete-worker"
+                                data-url="{% url 'worker_delete' pk=worker.pk %}">
+                            {% trans "Delete" %}
+                        </button>
+                        {% endif %}
+                    </td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% else %}
         <h3>{% trans "No workers to display" %}</h3>
     {% endif %}
-</div> <!-- end container-fluid -->
 
-<!-- Modal Crear Worker -->
-<div class="modal fade" id="workerModal" tabindex="-1" aria-labelledby="workerModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <form id="workerFormModal" method="POST" novalidate>
-        <div class="modal-header">
-          <h5 class="modal-title" id="workerModalLabel">{% trans "Create Worker" %}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
-        </div>
-        <div class="modal-body">
-            {% csrf_token %}
-            <div class="container">
-                <div class="row">
-                    {% for field in form %}
-                        <div class="col-md-4 mb-3">
-                            {{ field.label_tag }}
-                            {{ field }}
-                            {% if field.help_text %}
-                                <small class="form-text text-muted">{{ field.help_text }}</small>
-                            {% endif %}
-                            <div class="invalid-feedback" id="error_{{ field.name }}"></div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">{% trans "Submit" %}</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Close" %}</button>
-        </div>
-      </form>
-    </div>
-  </div>
 </div>
 
-<!-- Modal Editar Worker -->
-<div class="modal fade" id="workerEditModal" tabindex="-1" aria-labelledby="workerEditModalLabel" aria-hidden="true">
+<!-- Modal único para crear/editar -->
+<div class="modal fade" id="workerModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <form id="workerFormEdit" method="POST" novalidate>
-        <div class="modal-header">
-          <h5 class="modal-title" id="workerEditModalLabel">{% trans "Edit Worker" %}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
-        </div>
-        <div class="modal-body" id="workerEditBody">
-          <!-- Aquí se cargará el formulario por AJAX -->
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">{% trans "Submit" %}</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Close" %}</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Detalles Worker -->
-<div class="modal fade" id="workerDetailModal" tabindex="-1" aria-labelledby="workerDetailModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="workerDetailModalLabel">{% trans "Worker Details" %}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+      <div class="modal-body" id="workerModalBody">
+        <!-- Se cargará el formulario de create/update por AJAX -->
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal detalles -->
+<div class="modal fade" id="workerDetailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
       <div class="modal-body" id="workerDetailBody">
-        <!-- Aquí se cargará el HTML de detalle vía AJAX -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Close" %}</button>
+        <!-- Se cargará el HTML de detalle por AJAX -->
       </div>
     </div>
   </div>
 </div>
+
+<!-- Modal eliminar -->
+<div class="modal fade" id="workerDeleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body" id="workerDeleteBody">
+        <!-- Se cargará el HTML de confirmación de eliminación por AJAX -->
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Buscar trabajadores
-    const workerSearch = document.getElementById('workerSearch');
+    const workerModal = new bootstrap.Modal(document.getElementById('workerModal'));
+    const modalBody = document.getElementById('workerModalBody');
+    const workerDetailModal = new bootstrap.Modal(document.getElementById('workerDetailModal'));
+    const detailBody = document.getElementById('workerDetailBody');
+    const workerDeleteModal = new bootstrap.Modal(document.getElementById('workerDeleteModal'));
+    const deleteBody = document.getElementById('workerDeleteBody');
+
+    // Filtro de búsqueda
+    const searchInput = document.getElementById('workerSearch');
     const workerRows = document.querySelectorAll('#worker-table tbody tr');
-
-    if (workerSearch) {
-        workerSearch.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            workerRows.forEach(row => {
-                const workerId = row.dataset.workerId;
-                const workerName = row.dataset.workerName.toLowerCase();
-                row.style.display = (workerId.includes(searchTerm) || workerName.includes(searchTerm)) ? '' : 'none';
-            });
+    searchInput?.addEventListener('input', function() {
+        const term = this.value.toLowerCase();
+        workerRows.forEach(row => {
+            const id = row.dataset.workerId.toLowerCase();
+            const name = row.dataset.workerName.toLowerCase();
+            row.style.display = (id.includes(term) || name.includes(term)) ? '' : 'none';
         });
-    }
+    });
 
-    // Crear trabajador (AJAX)
-    const formCreate = document.getElementById('workerFormModal');
-    if (formCreate) {
-        formCreate.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const url = "{% url 'worker_create' %}";
-            const formData = new FormData(formCreate);
-
-            // Limpiar errores previos
-            document.querySelectorAll('.invalid-feedback').forEach(div => {
-                div.innerText = '';
-                div.style.display = 'none';
-            });
-
-            fetch(url, {
-                method: 'POST',
-                headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                body: formData
-            })
-            .then(response => response.json())
+    // Abrir modal crear
+    document.getElementById('btn-create-worker')?.addEventListener('click', function() {
+        fetch(this.dataset.url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(res => res.json())
             .then(data => {
-                if (data.errors) {
-                    Object.keys(data.errors).forEach(function(key) {
-                        const errorDiv = document.getElementById('error_' + key);
-                        if (errorDiv) {
-                            errorDiv.innerText = data.errors[key].join(', ');
-                            errorDiv.style.display = 'block';
-                        }
-                    });
-                } else if (data.success) {
-                    const modalEl = document.getElementById('workerModal');
-                    const modal = bootstrap.Modal.getInstance(modalEl);
-                    modal.hide();
-                    location.reload();
-                }
+                modalBody.innerHTML = data.html;
+                workerModal.show();
+                initWorkerForm(modalBody.querySelector('form'));
             });
-        });
-    }
+    });
 
-    // Abrir modal de edición con AJAX
+    // Abrir modal editar
     document.querySelectorAll('.btn-edit-worker').forEach(btn => {
         btn.addEventListener('click', function() {
-            const url = this.dataset.url;
-            fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('workerEditBody').innerHTML = html;
-                    const modalEl = new bootstrap.Modal(document.getElementById('workerEditModal'));
-                    modalEl.show();
+            fetch(this.dataset.url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(res => res.json())
+                .then(data => {
+                    modalBody.innerHTML = data.html;
+                    workerModal.show();
+                    initWorkerForm(modalBody.querySelector('form'));
                 });
         });
     });
 
-    // Enviar formulario de edición por AJAX
-    const formEdit = document.getElementById('workerFormEdit');
-    if (formEdit) {
-        formEdit.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const form = e.target;
-            const innerForm = form.querySelector('form'); // el form cargado en workerEditBody
-            const url = innerForm?.action || window.location.href;
-            const formData = new FormData(innerForm || form);
+    // Abrir modal detalles
+    document.querySelectorAll('.btn-detail-worker').forEach(btn => {
+        btn.addEventListener('click', function() {
+            fetch(this.dataset.url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(res => res.text())
+                .then(html => {
+                    detailBody.innerHTML = html;
+                    workerDetailModal.show();
+                });
+        });
+    });
 
-            // limpiar errores previos
-            document.querySelectorAll('#workerEditBody .invalid-feedback').forEach(div => {
-                div.innerText = '';
-                div.style.display = 'none';
-            });
+    // Abrir modal eliminar
+    document.querySelectorAll('.btn-delete-worker').forEach(btn => {
+        btn.addEventListener('click', function() {
+            fetch(this.dataset.url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(res => res.text())
+                .then(html => {
+                    deleteBody.innerHTML = html;
+                    workerDeleteModal.show();
+                    initDeleteForm(deleteBody.querySelector('form'));
+                });
+        });
+    });
+
+    // Inicializa el envío AJAX de formulario create/update
+    function initWorkerForm(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const url = form.action;
+            const formData = new FormData(form);
+
+            form.querySelectorAll('.invalid-feedback').forEach(div => div.innerText = '');
 
             fetch(url, {
                 method: 'POST',
                 headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 body: formData
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 if (data.errors) {
-                    Object.keys(data.errors).forEach(function(key) {
+                    Object.keys(data.errors).forEach(key => {
                         const errorDiv = document.getElementById('error_' + key);
-                        if (errorDiv) {
-                            errorDiv.innerText = data.errors[key].join(', ');
-                            errorDiv.style.display = 'block';
-                        }
+                        if (errorDiv) errorDiv.innerText = data.errors[key].join(', ');
                     });
                 } else if (data.success) {
-                    const modalEl = document.getElementById('workerEditModal');
-                    const modal = bootstrap.Modal.getInstance(modalEl);
-                    modal.hide();
+                    workerModal.hide();
                     location.reload();
                 }
             });
-        });
+        }, { once: true });
     }
 
-    // Abrir modal de detalles con AJAX
-    document.querySelectorAll('.btn-detail-worker').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const url = this.dataset.url;
-            fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('workerDetailBody').innerHTML = html;
-                    const modalEl = new bootstrap.Modal(document.getElementById('workerDetailModal'));
-                    modalEl.show();
-                });
-        });
-    });
+    // Inicializa envío AJAX de eliminar
+    function initDeleteForm(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const url = form.action;
+            const formData = new FormData(form);
 
-    feather.replace(); // íconos
+            fetch(url, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    workerDeleteModal.hide();
+                    location.reload();
+                }
+            });
+        }, { once: true });
+    }
+
 });
 </script>
 {% endblock %}

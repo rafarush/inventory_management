@@ -1,17 +1,51 @@
 {% load i18n %}
+{% load widget_tweaks %}
 
-{% csrf_token %}
-<div class="container">
-    <div class="row">
-        {% for field in form %}
-            <div class="col-md-4 mb-3">
-                {{ field.label_tag }}
-                {{ field }}
-                {% if field.help_text %}
-                    <small class="form-text text-muted">{{ field.help_text }}</small>
-                {% endif %}
-                <div class="invalid-feedback" id="error_{{ field.name }}"></div>
-            </div>
-        {% endfor %}
+{% block title %}
+    {% trans "Form" %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Card principal -->
+    <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 fw-bold text-primary">
+                <i class="bi bi-pencil-square me-2"></i> {% block header %}{% trans "Form" %}{% endblock %}
+            </h4>
+        </div>
+        <hr class="m-0">
+
+        <div class="card-body px-4 py-4">
+            <form action="" method="POST" enctype="multipart/form-data" class="row g-4">
+                {% csrf_token %}
+
+                <!-- Render de campos -->
+                {% for field in form %}
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">{{ field.label }}:</label>
+                        {{ field|add_class:"form-control" }}
+                        {% if field.help_text %}
+                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <!-- Botones -->
+                <div class="col-12 text-end mt-3">
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="bi bi-check-circle me-1"></i> {% block submit_text %}{% trans "Submit" %}{% endblock %}
+                    </button>
+                    <a href="{% url 'worker_list' %}" class="btn btn-outline-secondary px-4 ms-2">
+                        <i class="bi bi-x-circle me-1"></i> {% trans "Cancel" %}
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+{% endblock %}

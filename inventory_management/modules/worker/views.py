@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.http import JsonResponse
-from django.shortcuts import render
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Worker
@@ -66,6 +67,15 @@ class WorkerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
             return JsonResponse({"success": True})
         return super().form_valid(form)
 
+    def get(self, request, *args, **kwargs):
+        form = self.get_form()
+        context = {'form': form}
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            # Devuelve solo el HTML del form
+            html = render_to_string(self.template_name, context, request=request)
+            return JsonResponse({"success": True, "html": html})
+        return super().get(request, *args, **kwargs)
+
 # Update worker
 class WorkerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Worker
@@ -83,6 +93,15 @@ class WorkerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
             return JsonResponse({"errors": form.errors}, status=400)
         return super().form_invalid(form)
+
+    def get(self, request, *args, **kwargs):
+        form = self.get_form()
+        context = {'form': form}
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            # Devuelve solo el HTML del form
+            html = render_to_string(self.template_name, context, request=request)
+            return JsonResponse({"success": True, "html": html})
+        return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
         self.object = form.save()
@@ -102,3 +121,21 @@ class WorkerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
         if self.request.user.is_authenticated:
             return render(self.request, 'access_denied.html', status=403)
         return super().handle_no_permission()
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            html = render_to_string(self.template_name, {"worker": self.object}, request=request)
+            return HttpResponse(html)
+        return super().get(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"success": True})
+        return redirect(self.success_url)
+
+    def post(self, request, *args, **kwargs):
+        """Django DeleteView usa POST para confirmar, aquí redirigimos a delete"""
+        return self.delete(request, *args, **kwargs)

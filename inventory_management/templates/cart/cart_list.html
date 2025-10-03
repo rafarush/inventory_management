@@ -11,14 +11,14 @@
 
     {% if perms.inventory_management.add_cart %}
         <div class="mt-3">
-            <!-- Botón para abrir modal -->
-            <button type="button" class="btn btn-success btn-sm float-end" data-bs-toggle="modal" data-bs-target="#cartModal">
-                {% trans "Create" %}
+            <!-- Botón para abrir modal crear -->
+            <button class="btn btn-success btn-sm float-end" id="open-create-modal" data-url="{% url 'cart_create' %}">
+                {% trans "Create Cart" %}
             </button>
         </div>
     {% endif %}
 
-    <!-- Filter -->
+    <!-- Filtro -->
     <div class="container-fluid mt-3">
         <h4>{% trans "Filter carts by ID" %}:</h4>
         <div class="row mb-3">
@@ -28,26 +28,32 @@
         </div>
     </div>
 
-    <!-- Cards -->
+    <!-- Listado -->
     <div id="list" class="row mt-4">
         {% for cart in carts %}
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" data-cart-id="{{ cart.id }}">
                 <div class="card">
                     <div class="card-body">
 
-                        {% if perms.inventory_management.delete_cart %}
-                            <div class="cart-action mb-2">
-                                <a href="{% url 'cart_delete' pk=cart.pk %}" class="btn btn-danger btn-xs">
+                        <div class="cart-action mb-2">
+                            {% if perms.inventory_management.change_cart %}
+                                <button type="button" class="btn btn-success btn-xs me-1 open-update-modal"
+                                        data-url="{% url 'cart_update' pk=cart.pk %}">
+                                    <i class="mdi mdi-pencil"></i>
+                                </button>
+                            {% endif %}
+
+                            {% if perms.inventory_management.delete_cart %}
+                                <button type="button" class="btn btn-danger btn-xs open-delete-modal"
+                                        data-url="{% url 'cart_delete' pk=cart.pk %}">
                                     <i class="mdi mdi-close"></i>
-                                </a>
-                            </div>
-                        {% endif %}
+                                </button>
+                            {% endif %}
+                        </div>
 
                         <div class="cart-info">
-                            <h5 class="font-16 mt-0">
-                                <p class="text-dark">ID: {{ cart.id }}</p>
-                            </h5>
-                            <h4 class="mb-4">{% trans "Status" %}: <span class="text-body me-2">{{ cart.get_status_display }} </span></h4>
+                            <h5 class="font-16 mt-0 text-dark">ID: {{ cart.id }}</h5>
+                            <p class="mb-0">{% trans "Status" %}: <span class="text-body">{{ cart.get_status_display }}</span></p>
                         </div>
                     </div>
                 </div>
@@ -58,37 +64,24 @@
     </div>
 </div>
 
-<!-- Modal Crear Cart -->
-<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<!-- Modal genérico (Create / Update) -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-      <form id="cartFormModal" method="POST" novalidate>
-        <div class="modal-header">
-          <h5 class="modal-title" id="cartModalLabel">{% trans "Create Cart" %}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+        <div class="modal-body" id="cartModalBody">
+            <!-- Contenido AJAX (formulario entero con sus botones) -->
         </div>
-        <div class="modal-body">
-            {% csrf_token %}
-            <div class="container">
-                <div class="row">
-                    {% for field in form %}
-                        <div class="col-md-6 mb-3">
-                            {{ field.label_tag }}
-                            {{ field }}
-                            {% if field.help_text %}
-                                <small class="form-text text-muted">{{ field.help_text }}</small>
-                            {% endif %}
-                            <div class="invalid-feedback" id="error_{{ field.name }}"></div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal eliminar -->
+<div class="modal fade" id="cartDeleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-body" id="cartDeleteBody">
+            <!-- Template delete por AJAX -->
         </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">{% trans "Submit" %}</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Close" %}</button>
-        </div>
-      </form>
     </div>
   </div>
 </div>
@@ -96,61 +89,92 @@
 
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Filtro de búsqueda
-    const cartSearch = document.getElementById('cartSearch');
-    const cartCards = document.querySelectorAll('#list .col-12');
+document.addEventListener("DOMContentLoaded", function () {
+    const cartModalEl = document.getElementById("cartModal");
+    const cartModal = new bootstrap.Modal(cartModalEl);
+    const modalBody = document.getElementById("cartModalBody");
 
-    cartSearch.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        cartCards.forEach(card => {
-            const cartId = card.dataset.cartId.toLowerCase();
-            card.style.display = cartId.includes(searchTerm) ? '' : 'none';
+    const cartDeleteModalEl = document.getElementById("cartDeleteModal");
+    const cartDeleteModal = new bootstrap.Modal(cartDeleteModalEl);
+    const deleteBody = document.getElementById("cartDeleteBody");
+
+    function fetchHtml(url) {
+        return fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(res => res.text());
+    }
+
+    function initModalForms() {
+        const form = modalBody.querySelector('form');
+        if (!form) return;
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const url = form.action;
+            const formData = new FormData(form);
+
+            fetch(url, {
+                method: "POST",
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    cartModal.hide();
+                    location.reload();
+                } else if (data.errors) {
+                    Object.keys(data.errors).forEach(function(key) {
+                        const fieldEl = form.querySelector('[name="'+ key +'"]');
+                        if (fieldEl) {
+                            let container = fieldEl.closest('.mb-3') || fieldEl.parentElement;
+                            let sp = container.querySelector('.text-danger') || document.createElement('div');
+                            sp.className = 'text-danger small';
+                            sp.innerText = data.errors[key].join(', ');
+                            container.appendChild(sp);
+                        }
+                    });
+                }
+            });
+        }, { once: true });
+    }
+
+    // CREATE
+    document.getElementById("open-create-modal")?.addEventListener("click", function () {
+        fetchHtml(this.dataset.url).then(html => {
+            modalBody.innerHTML = html;
+            cartModal.show();
+            initModalForms();
         });
     });
 
-    // Envío AJAX del formulario dentro del modal
-    const form = document.getElementById('cartFormModal');
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const url = "{% url 'cart_create' %}";
-        const formData = new FormData(form);
-
-        // Limpiar errores previos
-        document.querySelectorAll('.invalid-feedback').forEach(div => {
-            div.innerText = '';
-            div.style.display = 'none';
-        });
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.errors) {
-                // Mostrar errores
-                Object.keys(data.errors).forEach(function(key) {
-                    const errorDiv = document.getElementById('error_' + key);
-                    if (errorDiv) {
-                        errorDiv.innerText = data.errors[key].join(', ');
-                        errorDiv.style.display = 'block';
-                    }
-                });
-            } else if (data.success) {
-                // Cerrar modal y recargar lista
-                const modalEl = document.getElementById('cartModal');
-                const modal = bootstrap.Modal.getInstance(modalEl);
-                modal.hide();
-                location.reload();
-            }
+    // UPDATE
+    document.querySelectorAll(".open-update-modal").forEach(btn => {
+        btn.addEventListener("click", function () {
+            fetchHtml(this.dataset.url).then(html => {
+                modalBody.innerHTML = html;
+                cartModal.show();
+                initModalForms();
+            });
         });
     });
 
-    feather.replace();
+    // DELETE
+    document.querySelectorAll(".open-delete-modal").forEach(btn => {
+        btn.addEventListener("click", function () {
+            fetchHtml(this.dataset.url).then(html => {
+                deleteBody.innerHTML = html;
+                cartDeleteModal.show();
+            });
+        });
+    });
+
+    // SEARCH
+    document.getElementById("cartSearch")?.addEventListener("input", function () {
+        const term = this.value.toLowerCase();
+        document.querySelectorAll('#list [data-cart-id]').forEach(card => {
+            const id = (card.dataset.cartId || '').toLowerCase();
+            card.style.display = id.includes(term) ? '' : 'none';
+        });
+    });
 });
 </script>
 {% endblock %}

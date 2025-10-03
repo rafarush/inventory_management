@@ -1,23 +1,24 @@
 {% load i18n %}
 {% load widget_tweaks %}
 
+{% block title %}
+    {% trans "Update Product" %}
+{% endblock %}
+
+{% block content %}
 <div class="container py-4">
+
     <!-- Card principal -->
     <div class="card shadow-lg border-0 rounded-3">
         <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-            <h4 class="mb-0 fw-bold text-primary">
-                <i class="bi bi-cart4 me-2"></i> {% trans "Cart Form" %}
+            <h4 class="mb-0 fw-bold text-success">
+                <i class="bi bi-pencil-square me-2"></i> {% trans "Update Product" %}
             </h4>
         </div>
         <hr class="m-0">
 
         <div class="card-body px-4 py-4">
-            <form
-                method="post"
-                enctype="multipart/form-data"
-                class="row g-4"
-                action="{% if cart %}{% url 'cart_update' pk=cart.pk %}{% else %}{% url 'cart_create' %}{% endif %}"
-            >
+            <form action="" method="POST" enctype="multipart/form-data" class="row g-4">
                 {% csrf_token %}
 
                 <!-- Render de campos -->
@@ -34,15 +35,17 @@
                     </div>
                 {% endfor %}
 
-                <div class="modal-footer d-flex justify-content-end">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        {% trans "Cancel" %}
+                <!-- Botones -->
+                <div class="col-12 text-end mt-3">
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="bi bi-check-circle me-1"></i> {% trans "Save Changes" %}
                     </button>
-                    <button type="submit" class="btn btn-success">
-                        {% trans "Submit" %}
-                    </button>
+                    <a href="{% url 'product_list' %}" class="btn btn-outline-secondary px-4 ms-2">
+                        <i class="bi bi-x-circle me-1"></i> {% trans "Cancel" %}
+                    </a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+{% endblock %}
