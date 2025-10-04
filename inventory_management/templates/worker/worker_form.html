@@ -18,10 +18,9 @@
         <hr class="m-0">
 
         <div class="card-body px-4 py-4">
-            <form action="" method="POST" enctype="multipart/form-data" class="row g-4">
+            <form action="{{ action_url }}" method="POST" enctype="multipart/form-data" class="row g-4">
                 {% csrf_token %}
 
-                <!-- Render de campos -->
                 {% for field in form %}
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">{{ field.label }}:</label>
@@ -29,13 +28,11 @@
                         {% if field.help_text %}
                             <small class="form-text text-muted">{{ field.help_text }}</small>
                         {% endif %}
-                        {% for error in field.errors %}
-                            <div class="invalid-feedback d-block">{{ error }}</div>
-                        {% endfor %}
+                        <!-- Div de error vacío, se llenará por JS -->
+                        <div class="invalid-feedback d-block"></div>
                     </div>
                 {% endfor %}
 
-                <!-- Botones -->
                 <div class="col-12 text-end mt-3">
                     <button type="submit" class="btn btn-success px-4">
                         <i class="bi bi-check-circle me-1"></i> {% block submit_text %}{% trans "Submit" %}{% endblock %}
@@ -45,6 +42,7 @@
                     </a>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
