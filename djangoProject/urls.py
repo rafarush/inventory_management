@@ -30,3 +30,8 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = "inventory_management.views.error_404"
+handler400 = "inventory_management.views.error_400"
+handler403 = "inventory_management.views.error_403"
+handler500 = "inventory_management.views.error_500"
