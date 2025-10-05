@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, DetailView, UpdateView
@@ -137,13 +137,16 @@ class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
         return super().delete(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            obj = self.get_object()
-            html = render_to_string(self.template_name, {'product': obj, 'action_url': self.request.path},
-                                    request=request)
-            return JsonResponse({'success': True, 'html': html})
+        self.object = self.get_object()
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            html = render_to_string(self.template_name, {"product": self.object}, request=request)
+            return HttpResponse(html)  # 👈 devolvemos HTML directamente, no dentro de JSON
         return super().get(request, *args, **kwargs)
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
             return render(self.request, 'access_denied.html', status=403)
         return super().handle_no_permission()
+
+
+
+
