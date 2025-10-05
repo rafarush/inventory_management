@@ -69,12 +69,15 @@ class WorkerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
     def get(self, request, *args, **kwargs):
         form = self.get_form()
-        context = {'form': form}
+        context = {
+            'form': form,
+            'action_url': reverse_lazy('worker_create')  # o 'worker_update'
+        }
         if request.headers.get("x-requested-with") == "XMLHttpRequest":
-            # Devuelve solo el HTML del form
             html = render_to_string(self.template_name, context, request=request)
             return JsonResponse({"success": True, "html": html})
         return super().get(request, *args, **kwargs)
+
 
 # Update worker
 class WorkerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -89,19 +92,22 @@ class WorkerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
             return render(self.request, 'access_denied.html', status=403)
         return super().handle_no_permission()
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()  # Esto trae la instancia del worker
+        form = self.get_form()  # Formulario ya inicializado con la instancia
+        context = {
+            'form': form,
+            'action_url': reverse_lazy('worker_update', kwargs={'pk': self.object.pk})
+        }
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            html = render_to_string(self.template_name, context, request=request)
+            return JsonResponse({"success": True, "html": html})
+        return super().get(request, *args, **kwargs)
+
     def form_invalid(self, form):
         if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
             return JsonResponse({"errors": form.errors}, status=400)
         return super().form_invalid(form)
-
-    def get(self, request, *args, **kwargs):
-        form = self.get_form()
-        context = {'form': form}
-        if request.headers.get("x-requested-with") == "XMLHttpRequest":
-            # Devuelve solo el HTML del form
-            html = render_to_string(self.template_name, context, request=request)
-            return JsonResponse({"success": True, "html": html})
-        return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
         self.object = form.save()

@@ -185,13 +185,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Inicializa el envío AJAX de formulario create/update
+    // Inicializa envío AJAX de formulario create/update
     function initWorkerForm(form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             const url = form.action;
             const formData = new FormData(form);
 
+            // Limpiar errores previos
             form.querySelectorAll('.invalid-feedback').forEach(div => div.innerText = '');
 
             fetch(url, {
@@ -203,8 +204,14 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.errors) {
                     Object.keys(data.errors).forEach(key => {
-                        const errorDiv = document.getElementById('error_' + key);
-                        if (errorDiv) errorDiv.innerText = data.errors[key].join(', ');
+                        const fieldEl = form.querySelector('[name="' + key + '"]');
+                        if (fieldEl) {
+                            const container = fieldEl.parentElement;
+                            const errorDiv = container.querySelector('.invalid-feedback');
+                            if (errorDiv) {
+                                errorDiv.innerText = data.errors[key].join(', ');
+                            }
+                        }
                     });
                 } else if (data.success) {
                     workerModal.hide();

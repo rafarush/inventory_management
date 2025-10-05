@@ -1,44 +1,62 @@
-{% extends "layouts/base/base.html" %}
 {% load static %}
 {% load i18n %}
 
-{% block title %}
-	{% trans "Product:"%} {{ product.id }}
-{% endblock %}
+<div class="container py-3">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">
+                {% trans "Product Details" %} - {{ product.id }}
+            </h5>
+        </div>
 
-{% block content %}
-
-    <h1>{{ product.id }}</h1>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="ps-xl-3 mt-3 mt-xl-0">
-                                <h4 class="mb-3">{% trans "Nombre"%}: <span class="text-body me-2">{{ product.id }}</span></h4>
-                                <h4 class="mb-4">{% trans "Price"%}: <span class="text-body me-2">${{ product.price }} CUP</span></h4>
-                                {% if product.amount > 0 %}
-                                    <h4><span class="badge bg-soft-success text-success mb-4">{% trans "Quantity"%}: {{ product.amount }}</span></h4>
-                                {% else %}
-                                    <h4><span class="badge bg-soft-danger text-danger mb-4">{% trans "There is no stock" %}</span></h4>
-                                {% endif %}
-                            </div>
-                        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <!-- ID -->
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light d-flex align-items-center">
+                        <i class="bi bi-upc-scan me-2"></i>
+                        <strong>ID:</strong>
+                        <span class="ms-1">{{ product.id }}</span>
                     </div>
-                    <!-- end row -->
                 </div>
-            </div> <!-- end card-->
-        </div> <!-- end col-->
+
+                <!-- Price -->
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light d-flex align-items-center">
+                        <i class="bi bi-cash-stack me-2"></i>
+                        <strong>{% trans "Price" %}:</strong>
+                        <span class="ms-1">${{ product.price }} CUP</span>
+                    </div>
+                </div>
+
+                <!-- Name -->
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light d-flex align-items-center">
+                        <i class="bi bi-box-seam me-2"></i>
+                        <strong>{% trans "Name" %}:</strong>
+                        <span class="ms-1">{{ product.name }}</span>
+                    </div>
+                </div>
+
+                <!-- Quantity -->
+                <div class="col-md-6">
+                    <div class="p-3 border rounded bg-light d-flex align-items-center">
+                        <i class="bi bi-archive me-2"></i>
+                        <strong>{% trans "Quantity" %}:</strong>
+                        {% if product.amount > 0 %}
+                            <span class="ms-1 text-success fw-bold">{{ product.amount }}</span>
+                        {% else %}
+                            <span class="ms-1 text-danger fw-bold">{% trans "There is no stock" %}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer text-center bg-light">
+            <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}">
+                <i class="bi bi-arrow-left"></i> {% trans "Back" %}
+            </a>
+        </div>
     </div>
-    <!-- end row-->
-
-    {% if perms.inventory_management.delete_product %}
-        <a class="btn btn-danger btn-sm" href="{% url 'product_delete' pk=product.id %}">{% trans "Delete"%}</a>
-    {% endif %}
-    {% if perms.inventory_management.change_product %}
-        <a class="btn btn-outline-warning btn-sm" href="{% url 'product_update' pk=product.id %}">{% trans "Modify"%}</a>
-    {% endif %}
-    <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}">{% trans "Back"%}</a>
-
-{% endblock %}
+</div>

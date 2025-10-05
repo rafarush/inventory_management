@@ -1,20 +1,38 @@
-{% extends "layouts/base/base.html" %}
 {% load i18n %}
-{% block title %}
-	{% trans "Product Form" %}
-{% endblock %}
+{% load widget_tweaks %}
 
+<div class="container py-4">
+    <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 fw-bold text-primary">
+                <i class="bi bi-box-seam me-2"></i> {% block header %}{% trans "Product Form" %}{% endblock %}
+            </h4>
+        </div>
+        <hr class="m-0">
 
-{% block content %}
+        <div class="card-body px-4 py-4">
+            <form action="{{ action_url }}" method="POST" enctype="multipart/form-data" class="row g-4">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">{{ field.label }}:</label>
+                    {{ field|add_class:"form-control" }}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    <div class="invalid-feedback d-block"></div>
+                </div>
+                {% endfor %}
 
-    <a class="btn btn-secondary btn-sm" href="{% url 'product_list' %}" style="margin-top: 20px; margin-bottom: 20px">{% trans "Back" %}</a>
-    <div>
-        <form action="" class="form-control" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" class="btn btn-success btn-sm" value="{% trans "Submit" %}">
-        </form>
+                <div class="col-12 text-end mt-3">
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="bi bi-check-circle me-1"></i> {% trans "Save" %}
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary px-4 ms-2" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> {% trans "Cancel" %}
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-
-
-{% endblock %}
+</div>
