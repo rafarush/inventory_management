@@ -1,17 +1,19 @@
 {% load static %}
 {% load i18n %}
+
 {% block title %}
-	{% trans "Delete Confirmation:" %} {{ product.id }}
+    {% trans "Delete Confirmation:" %} {{ product.id }}
 {% endblock %}
 
-
 {% block content %}
-	<h1>{% trans "Are you sure you want to delete:" %} {{ product.id }}?</h1>
+    <h1>{% trans "Are you sure you want to delete" %}: {{ product.id }}?</h1>
 
-    <form method="post">
+    <form method="post" action="{% url 'product_delete' pk=product.pk %}">
         {% csrf_token %}
-        <input type="submit" class="btn btn-danger btn-sm" value="{% trans "Confirm Delete:" %}">
-        <button type="button" class="btn btn-info btn-sm" onclick="window.location.href='{% url 'product_list' %}'">{% trans "Cancel" %}</button>
+        <input type="submit" class="btn btn-danger btn-sm" value="{% trans "Confirm Delete" %}">
+        <button type="button" class="btn btn-info btn-sm"
+                onclick="window.location.href='{% url 'product_list' %}'">
+            {% trans "Cancel" %}
+        </button>
     </form>
-
 {% endblock %}

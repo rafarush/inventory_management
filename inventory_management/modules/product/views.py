@@ -73,7 +73,7 @@ class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         self.object = self.get_object()
         # Selección de formulario según grupo
         if request.user.groups.filter(name='Administrators').exists():
-            self.form_class = ProductAdminForm
+            self.form_class = ProductUpdateForm
 
         form = self.get_form()
         context = {
@@ -146,6 +146,11 @@ class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
         if self.request.user.is_authenticated:
             return render(self.request, 'access_denied.html', status=403)
         return super().handle_no_permission()
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+
 
 
 
