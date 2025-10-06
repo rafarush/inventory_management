@@ -82,7 +82,7 @@
                                 </a>
                             </li>
                         {% endif %}
-                        {% if perms.inventory_management.view_dailypartcart %}
+                        {% if perms.inventory_management.products.view_dailypartcart %}
                             <li class="menu-item">
                                 <a href="{% url 'daily_part_cart_list' %}" class="menu-link">
                                     <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard.svg' %}" alt="Clipboard"></span>
