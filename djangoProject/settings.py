@@ -99,7 +99,7 @@ def can_connect_to_supabase():
         return False
 
 
-if can_connect_to_supabase() and False:
+if can_connect_to_supabase():
     print("Conexión real a Supabase exitosa")
     DATABASES = {
         'default': {
