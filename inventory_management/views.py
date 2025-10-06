@@ -2,14 +2,21 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
+from inventory_management.models import Product, Worker, Cart  # ajusta según tus modelos
 
-
-# Create your views here.
 class Home(LoginRequiredMixin, TemplateView):
     template_name = 'index.html'
     redirect_field_name = 'next'
 
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Agregamos datos de resumen
+        context['total_products'] = Product.objects.count()
+        context['total_workers'] = Worker.objects.count()
+        context['total_carts'] = Cart.objects.count()
+        return context
 
 def error_404(request, exception):
     return render(request, "errors/404.html", status=404)
