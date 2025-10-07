@@ -33,13 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <div class="container-fluid mt-3 mb-3">
     <form method="get" class="row g-2 align-items-center">
-        <div class="col-md-6">
-            <input type="text" 
-                   name="search" 
-                   class="form-control" 
-                   placeholder="{% trans "Search daily part..." %}"
-                   value="{{ search_term }}">
-        </div>
 
         <div class="col-md-4  align-items-center">
             <select class="form-select" name="order_by" onchange="this.form.submit()">

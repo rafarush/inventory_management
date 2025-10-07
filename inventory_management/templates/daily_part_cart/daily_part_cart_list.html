@@ -103,54 +103,66 @@ document.addEventListener('DOMContentLoaded', function() {
 
 {% if daily_part_carts %}
     <table class="table" id="daily-part-cart-table">
-        <thead>
-            <tr>
-                <th scope="col">{% trans "Worker" %}</th>
-                <th scope="col">{% trans "Cart" %}</th>
-                <th scope="col">{% trans "Returned Money Total" %}</th>
-                <th scope="col">{% trans "Net Profit" %}</th>
-                <th scope="col">{% trans "Worker Payment" %}</th>
-                <th scope="col">{% trans "Revenue" %}</th>
-                <th scope="col">{% trans "Date" %}</th>
-                <th scope="col">{% trans "Invested Money" %}</th>
-                <th scope="col">{% trans "Status" %}</th>
-                <th scope="col">{% trans "Actions" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for part in daily_part_carts %}
-                <tr data-worker-name="{{ part.worker.name }}">
-                    <td>{{ part.worker.name }}</td>
-                    <td>{{ part.cart.id }}</td>
-                    <td>${{ part.money_return_total }}</td>
-                    <td>${{ part.net_profit }}</td>
-                    <td>${{ part.worker_payment }}</td>
-                    <td>${{ part.revenue }}</td>
-                    <td>{{ part.date }}</td>
-                    <td>{{ part.money_invested }}</td>
-                    <td>{{ part.get_status_display }}</td>
-                    <td>
-                        <div class="btn-group d-flex" role="group" aria-label="acciones">
-                            <a class="btn btn-outline-info btn-sm me-1" href="{% url 'daily_part_cart_detail' pk=part.pk %}">{% trans "Details" %}</a>
+    <thead>
+        <tr>
+            <th scope="col">{% trans "Worker" %}</th>
+            <th scope="col">{% trans "Cart" %}</th>
+            <th scope="col">{% trans "Returned Money Total" %}</th>
+            <th scope="col">{% trans "Net Profit" %}</th>
+            <th scope="col">{% trans "Worker Payment" %}</th>
+            <th scope="col">{% trans "Revenue" %}</th>
+            <th scope="col">{% trans "Date" %}</th>
+            <th scope="col">{% trans "Invested Money" %}</th>
+            <th scope="col">{% trans "Status" %}</th>
+            <th scope="col">{% trans "Actions" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for part in daily_part_carts %}
+        <tr data-worker-name="{{ part.worker.name }}" style="vertical-align: middle;">
+            <td>{{ part.worker.name }}</td>
+            <td>{{ part.cart.id }}</td>
+            <td>${{ part.money_return_total }}</td>
+            <td>${{ part.net_profit }}</td>
+            <td>${{ part.worker_payment }}</td>
+            <td>${{ part.revenue }}</td>
+            <td>{{ part.date }}</td>
+            <td>{{ part.money_invested }}</td>
+            <td>{{ part.get_status_display }}</td>
+            <td style="vertical-align: middle;">
+                <div class="btn-group d-flex justify-content-center align-items-center"
+                     role="group" aria-label="acciones"
+                     style="min-height: 38px;">
 
-                            {% if perms.daily_part_cart.change_dailypartcart and part.status != "finalizado" %}
-                                <a class="btn btn-outline-warning btn-sm me-1" href="{% url 'daily_part_cart_update' pk=part.pk %}">{% trans "Modify" %}</a>
-                            {% endif %}
+                    <a class="btn btn-outline-info btn-sm me-1"
+                       href="{% url 'daily_part_cart_detail' pk=part.pk %}">
+                        {% trans "Details" %}
+                    </a>
 
-                            {% if part.status == "trabajando" %}
-                                <form method="post" action="{% url 'daily_part_cart_finish' part.id %}" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-success btn-sm">{% trans "Finish Daily Part Cart" %}</button>
-                                </form>
-                            {% endif %}
-                        </div>
-                    </td>
+                    {% if perms.daily_part_cart.change_dailypartcart and part.status != "finalizado" %}
+                        <a class="btn btn-outline-warning btn-sm me-1"
+                           href="{% url 'daily_part_cart_update' pk=part.pk %}">
+                            {% trans "Modify" %}
+                        </a>
+                    {% endif %}
 
+                    {% if part.status == "trabajando" %}
+                        <form method="post"
+                              action="{% url 'daily_part_cart_finish' part.id %}"
+                              style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-success btn-sm">
+                                {% trans "Finish Daily Part Cart" %}
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 {% else %}
     <h3>{% trans "There is no records to show" %}</h3>
 {% endif %}

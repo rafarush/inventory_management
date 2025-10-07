@@ -41,27 +41,13 @@
     <!-- Filter -->
     <div class="container-fluid mt-3 mb-3">
         <form method="get" class="row g-2 align-items-center">
-            <div class="col-md-6">
-                <input type="text"
-                       name="search"
-                       class="form-control"
-                       placeholder="{% trans "Filter by product name..." %}"
-                       value="{{ search_term }}">
-            </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4  align-items-center">
                 <select class="form-select" name="order_by" onchange="this.form.submit()">
-                    <option value="">-- {% trans "Order by" %} --</option>
+                    <option value="">{% trans "-- Order by --" %}</option>
+                    <option value="-date" {% if current_order == '-date' %}selected{% endif %}>{% trans "Date" %}</option>
                     <option value="product" {% if current_order == 'product' %}selected{% endif %}>{% trans "Product" %}</option>
-                    <option value="amount_sent" {% if current_order == 'amount_sent' %}selected{% endif %}>{% trans "Sent Quantity" %}</option>
-                    <option value="price_sent" {% if current_order == 'price_sent' %}selected{% endif %}>{% trans "Sent Price" %}</option>
-                    <option value="amount_received" {% if current_order == 'amount_received' %}selected{% endif %}>{% trans "Received Quantity" %}</option>
-                    <option value="revenue" {% if current_order == 'revenue' %}selected{% endif %}>{% trans "Income" %}</option>
-                    <option value="revenue_total" {% if current_order == 'revenue_total' %}selected{% endif %}>{% trans "Total Income" %}</option>
-                    <option value="money_returned" {% if current_order == 'money_returned' %}selected{% endif %}>{% trans "Returned Money" %}</option>
-                    <option value="status" {% if current_order == 'status' %}selected{% endif %}>{% trans "Status" %}</option>
                 </select>
-
             </div>
         </form>
     </div>

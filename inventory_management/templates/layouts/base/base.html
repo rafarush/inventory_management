@@ -4,7 +4,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ✅ Responsivo -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
 
     <!-- App favicon -->
@@ -36,7 +36,7 @@
     {% include 'layouts/partials/navbar.html' %}
 
     <div class="d-flex flex-column min-vh-100">
-        <div class="d-flex flex-grow-1 flex-wrap"> <!-- ✅ wrap para pantallas pequeñas -->
+        <div class="d-flex flex-grow-1 flex-wrap">
 
             <!-- Menu lateral -->
             <div id="app-menu" class="app-menu">
@@ -82,7 +82,7 @@
                                 </a>
                             </li>
                         {% endif %}
-                        {% if perms.inventory_management.products.view_dailypartcart %}
+                        {% if perms.inventory_management.view_dailypartcart %}
                             <li class="menu-item">
                                 <a href="{% url 'daily_part_cart_list' %}" class="menu-link">
                                     <span class="menu-icon"><img src="{% static 'assets/libs/bootstrap-icons/icons/clipboard.svg' %}" alt="Clipboard"></span>
