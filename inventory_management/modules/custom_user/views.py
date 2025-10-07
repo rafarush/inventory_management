@@ -185,7 +185,7 @@ class CustomUserFormView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 'password': raw_password,
             }
 
-            user.send_email(mail_subject, 'emails/email_confirmation_template.html', context)
+            user.send_email_async(mail_subject, 'emails/email_confirmation_template.html', context)
 
             return JsonResponse({'success': True})
 
@@ -227,7 +227,7 @@ class CustomUserSetPasswordView(LoginRequiredMixin, PermissionRequiredMixin, Vie
                 'new_pass': new_password,
             }
 
-            user.send_email(mail_subject, 'emails/email_password_changed_template.html', context)
+            user.send_email_async(mail_subject, 'emails/email_password_changed_template.html', context)
             return JsonResponse({'success': True})
 
         errors = {field: error.get_json_data() for field, error in form.errors.items()}

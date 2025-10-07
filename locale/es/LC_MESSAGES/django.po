@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-06 15:25+0200\n"
+"POT-Creation-Date: 2025-10-07 06:36-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,7 +77,6 @@ msgstr "Contraseña"
 msgid "Cannot finish Daily Part: there are pending daily part carts."
 msgstr "No se puede finalizar el Parte Diario: hay partes por carretillas pendientes"
 
-
 #: .\inventory_management\modules\daily_part\views.py:128
 #: .\inventory_management\modules\daily_part_cart\views.py:174
 msgid "Daily Part finished successfully"
@@ -95,9 +94,7 @@ msgstr "No tiene permisos para realizar esta acción"
 #: .\inventory_management\templates\daily_part\daily_part_detail.html:110
 #: .\inventory_management\templates\daily_part_cart\daily_part_cart_list.html:81
 msgid "Today's Daily Part finished, you cant add a Daily Part Cart. "
-msgstr "Parte Diario del día actual fue finalizado, no se pueden agregar más partes "
-"por carretilla"
-
+msgstr "Parte Diario del día actual fue finalizado, no se pueden agregar más partes"
 
 #: .\inventory_management\modules\daily_part_cart\views.py:133
 msgid "Daily Part Cart and its Load Carts deleted successfully."
@@ -105,9 +102,7 @@ msgstr "Parte Diario por Carretilla y sus cargas eliminados satisfactoriamente"
 
 #: .\inventory_management\modules\daily_part_cart\views.py:145
 msgid "Daily Part cannot be finished: there is some cart loads pending."
-msgstr "Parte Diario por Carretilla no puede finalizar: existen cargas por "
-"carretillas pendientes"
-
+msgstr "Parte Diario por Carretilla no puede finalizar: existen cargas por carretillas pendientes"
 
 #: .\inventory_management\modules\product\forms.py:29
 #: .\inventory_management\modules\product\forms.py:47
@@ -279,7 +274,7 @@ msgstr "¿Está seguro de que desea eliminar"
 #: .\inventory_management\templates\product\product_update.html:44
 #: .\inventory_management\templates\wastage_records\wastage_record_confirm_delete.html:15
 #: .\inventory_management\templates\worker\worker_confirm_delete.html:17
-#: .\inventory_management\templates\worker\worker_form.html:41
+#: .\inventory_management\templates\worker\worker_form.html:38
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -293,7 +288,7 @@ msgstr "Formulario de Carretilla"
 #: .\inventory_management\templates\custom_user\custom_user_update.html:16
 #: .\inventory_management\templates\custom_user\partials\custom_user_form.html:23
 #: .\inventory_management\templates\wastage_records\wastage_record_form.html:34
-#: .\inventory_management\templates\worker\worker_form.html:38
+#: .\inventory_management\templates\worker\worker_form.html:35
 msgid "Submit"
 msgstr "Enviar"
 
@@ -490,10 +485,10 @@ msgid "Back"
 msgstr "Atrás"
 
 #: .\inventory_management\templates\custom_user\custom_user_form.html:7
-#: .\inventory_management\templates\custom_user\custom_user_update.html:6
 #: .\inventory_management\templates\layouts\partials\new_client_modal.html:8
-msgid "Create User"
-msgstr "Crear Usuario"
+#, fuzzy
+msgid "User Form"
+msgstr "Formulario de Trabajador"
 
 #: .\inventory_management\templates\custom_user\custom_user_list.html:6
 msgid "User List"
@@ -544,6 +539,10 @@ msgstr "Contraseña"
 #: .\inventory_management\templates\custom_user\custom_user_list.html:91
 msgid "No users to display"
 msgstr "No hay usuarios para mostrar"
+
+#: .\inventory_management\templates\custom_user\custom_user_update.html:6
+msgid "Create User"
+msgstr "Crear Usuario"
 
 #: .\inventory_management\templates\daily_part\daily_part_detail.html:6
 #: .\inventory_management\templates\daily_part_cart\daily_part_cart_detail.html:6
@@ -766,9 +765,12 @@ msgstr "Nombre de usuario"
 msgid "Your password have been changed successfully."
 msgstr "Su contraseña ha sido cambiada exitosamente."
 
-#: .\inventory_management\templates\emails\email_password_changed_template.html:5
-msgid "If it was you, ignore this email, otherwise click below to change it"
-msgstr "Si fuiste tú, ignora este correo; de lo contrario, haz clic abajo para cambiarla."
+
+#: .\inventory_management\templates\emails\email_password_changed_template.html:6
+#, fuzzy
+#| msgid "Password"
+msgid "New Password: "
+msgstr "Nueva Contraseña: "
 
 #: .\inventory_management\templates\errors\400.html:6
 msgid "Error 400 - Bad Request"
@@ -779,9 +781,8 @@ msgid "Bad Request"
 msgstr "Solicitud Incorrecta"
 
 #: .\inventory_management\templates\errors\400.html:14
-msgid ""
-"The server could not understand your request. Please check the URL or "
-"submitted data."
+msgid "The server could not understand your request. Please check the URL or submitted data."
+
 msgstr "El servidor no pudo entender su solicitud. Por favor, verifique la URL o los datos enviados."
 
 #: .\inventory_management\templates\errors\400.html:15
@@ -1223,8 +1224,7 @@ msgstr "Detalles"
 msgid "Phone"
 msgstr "Teléfono"
 
-#: .\inventory_management\templates\worker\worker_form.html:5
-#: .\inventory_management\templates\worker\worker_form.html:15
+#: .\inventory_management\templates\worker\worker_form.html:12
 #, fuzzy
 #| msgid "Cart Form"
 msgid "Form"
@@ -1276,10 +1276,6 @@ msgstr "No hay trabajadores para mostrar"
 
 #~ msgid "Stock(Product list)"
 #~ msgstr "Productos"
-
-#, fuzzy
-#~ msgid "Worker Form"
-#~ msgstr "Formulario de Trabajador"
 
 #, fuzzy
 #~| msgid "Modify"
